@@ -1,0 +1,62 @@
+﻿.frontColorBar {
+    background-color: #00ABE1;    
+    width: 100%;
+    height: 80px;
+}
+
+.frontColorBarTitle {
+    color: white;
+    font-size: 50px;
+    padding-top: 10px;
+    padding-left: 50px;
+}
+.loginGrayBox {
+    display: flex;
+    background-color: #FAFAFA;
+    margin: 120px auto;
+    width: 500px;
+    height: 700px;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.grayBoxName {
+    color: #666666;
+    font-size: 40px;
+    font-weight: bold;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.grayBoxContainer {
+    color: #B37D7E;
+    font-size: 30px;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-left:4px;
+}
+
+.grayBoxInput {
+    font-size: 30px;
+    width: 435px;
+    height: 50px;
+}
+
+.login {
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    background-color: #009DD6;
+    width: 441px;
+    height: 60px;
+    margin-top:60px;
+}
+
+.message {
+    color:red;
+}
+
+body {
+}
