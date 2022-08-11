@@ -10,7 +10,7 @@
 </head>
     <script type="text/javascript" src="/js/backendLogin.js"> </script>
     <script src="/js/jquery-2.1.4.js"></script>
-<body>           
+<body>
        <div class="frontColorBar">
            <div class="frontColorBarTitle">Shopping後台管理系統</div>
        </div>
@@ -21,9 +21,9 @@
                 <input type="text" class="grayBoxInput" id="txbGetId" oninput="NoSpaceKey()" value=""/>
                 <p>密碼</p>
                 <input type="password" class="grayBoxInput" id="txbGetPwd" value=""/><br/>
-                <span class="message" id="wrongMessage"></span>
+                <span class="message" id="message"></span>
             </div>
-            <input type="button" class="login" id="btnLogin" onclick="LoginVerify()" value="登入"/>        
+            <input type="button" class="login" id="btnLogin" onclick="LoginVerify()" value="登入"/>
        </div>
 </body>
 </html>
