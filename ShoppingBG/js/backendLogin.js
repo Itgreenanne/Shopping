@@ -1,23 +1,26 @@
-﻿//驗証帳號密碼
+﻿//驗証帳密
 function LoginVerify() {
     var loginIdInput = $('#txbGetId').val();
     var loginPwdInput = $('#txbGetPwd').val();
-    $('#message').html("");
+    $('#message').html('');
 
     if (!loginIdInput || !loginPwdInput) {
-        $('#message').html('請重新輸入帳號或密碼');
+        $('#message').html('請輸入帳號密碼');
     } else {
         $.ajax({
             url: '/ajax/AjaxLogin.aspx',
             type: 'POST',
             data: { getId: loginIdInput, getPwd: loginPwdInput },
             success: function (data) {
-                console.log(data);
+                console.log(data); 
+                
                 if (data == 0) {
                     $('#message').html('帳號密碼正確');
                 } else if (data == 1) {
                     $('#message').html('帳號或密碼錯誤');
-                }
+                } else if (data == 2)
+                    $('#message').html('請輸入帳號密碼');
+
             },
             error: function (err) {
                 str = JSON.stringify(err, null, 2);
@@ -27,6 +30,7 @@ function LoginVerify() {
             }
         })
     }
+
 }
 
 //不能輸入空白鍵

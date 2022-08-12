@@ -21,7 +21,7 @@
                 <input type="text" class="grayBoxInput" id="txbGetId" oninput="NoSpaceKey()" value=""/>
                 <p>密碼</p>
                 <input type="password" class="grayBoxInput" id="txbGetPwd" value=""/><br/>
-                <span class="message" id="message"></span>
+                <div id="message"></div>
             </div>
             <input type="button" class="login" id="btnLogin" onclick="LoginVerify()" value="登入"/>
        </div>

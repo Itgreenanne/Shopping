@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.Configuration;
+///using System.Web.Configuration;
 
 namespace Shopping.ajax
 {
@@ -20,26 +20,30 @@ namespace Shopping.ajax
             //summary
             //輸入錯誤
             //summary
-            wrongLogin
+            wrongLogin,
+            //summary
+            //空字串請重新輸入
+            NullEmptyInput
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             LoginVerify();
         }
-
-        //登入帳密驗証
+               
+        ///登入帳密驗証
         private void LoginVerify() 
         {
+            var a = string.IsNullOrEmpty(null);
             int msgValue;            
             string correctId = WebConfigurationManager.AppSettings["loginId"];
             string correctPwd = WebConfigurationManager.AppSettings["loginPwd"];
             string apiGetId = Request.Form["getId"];
             string apiGetPwd = Request.Form["getPwd"];
 
-            if (apiGetId.IndexOf(" ") > 0 || apiGetPwd.IndexOf(" ") > 0)
+            if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd))
             {
-                msgValue = (int)msgType.wrongLogin;
+                msgValue = (int)msgType.NullEmptyInput;
                 Response.Write(msgValue);
             } else {
                 if (apiGetId == correctId && apiGetPwd == correctPwd)
@@ -52,5 +56,8 @@ namespace Shopping.ajax
             }
 
         }
+
+
+
     }
 }

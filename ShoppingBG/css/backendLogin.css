@@ -54,7 +54,7 @@
     margin-top: 60px;
 }
 
-.message {
-    height:100px;
+#message {    
+    height:60px;
     color: red;
 }
