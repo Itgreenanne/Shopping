@@ -32,53 +32,134 @@ namespace ShoppingBG.ajax
         {
             LoginVerify();
         }
-               
-        ///登入帳密驗証
-        private void LoginVerify() 
+
+        //登入帳密驗証
+        private void LoginVerify()
         {
-            int msgValue;           
+            int msgValue;
             string apiGetId = Request.Form["getId"];
             string apiGetPwd = Request.Form["getPwd"];
+
+
+
+
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
-            SqlCommand cmd = new SqlCommand(string.Empty, conn);
+            SqlCommand cmd = new SqlCommand("beginningSP ", conn);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "beginningSP";
-            //cmd.Connection = conn;
-
+            conn.Open();
             try
             {
-                conn.Open(); //開啟資料庫
-                Console.WriteLine(conn.ServerVersion);
-                Console.WriteLine(conn.State);
                 if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd))
                 {
                     msgValue = (int)msgType.NullEmptyInput;
                     Response.Write(msgValue);
-                } else {
-                    cmd.Parameters.Add("@id", SqlDbType.NVarChar,20).Value=apiGetId;
-                    
-                    cmd.ExecuteNonQuery();
-                    SqlParameter retValParam = cmd.Parameters.Add("@idVerify", SqlDbType.NVarChar, 20);
-                    retValParam.Direction = ParameterDirection.Output;
-                    Console.Write("取得的輸出資料: " + retValParam.Value);
                 }
+                else
+                {
+                    //將登入頁輸入的帳號與密碼傳至beginningSP
+                    cmd.Parameters.Add(new SqlParameter("@id",apiGetId));
+                    cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
+                    //設定接收從beginningSP傳回的正確帳號跟密碼
+                    SqlParameter correctId = new SqlParameter("@correctId", SqlDbType.NVarChar,20);
+                    correctId.Direction = ParameterDirection.Output;
+                    SqlParameter random = new SqlParameter("@random", SqlDbType.Int);
+                    random.Direction = ParameterDirection.Output;
 
-            } catch(Exception ex) {
+                    cmd.Parameters.Add(correctId);
+                    cmd.Parameters.Add(random);
+
+
+                    //執行beginningSP
+                    cmd.ExecuteNonQuery();
+                    Console.WriteLine(correctId.Value);
+                    Console.WriteLine(random.Value);
+
+
+
+                    if (correctId.Value!=System.DBNull.Value)
+                    {
+                        msgValue = (int)msgType.correctLogin;
+                    } else {
+                        msgValue = (int)msgType.wrongLogin;
+                    }
+
+                    Response.Write(msgValue);
+                }
+            }
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
                 throw ex.GetBaseException();
             }
-            finally {
+            finally
+            {
                 conn.Close();
                 conn.Dispose();
-            }            
-                //if (apiGetId == correctId && apiGetPwd == correctPwd)
-                //{
-                //    msgValue = (int)msgType.correctLogin;
-                //} else {
-                //    msgValue = (int)msgType.wrongLogin;
-                //}
-                //Response.Write(msgValue);
+            }
         }
     }
 }
+
+///備用
+//private void LoginVerify()
+//{
+//    int msgValue;
+//    string apiGetId = Request.Form["getId"];
+//    string apiGetPwd = Request.Form["getPwd"];
+
+
+
+
+//    string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+//    SqlConnection conn = new SqlConnection(strConnString);
+//    SqlCommand cmd = new SqlCommand("beginningSP ", conn);
+//    cmd.CommandType = CommandType.StoredProcedure;
+//    conn.Open();
+//    try
+//    {
+//        if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd))
+//        {
+//            msgValue = (int)msgType.NullEmptyInput;
+//            Response.Write(msgValue);
+//        }
+//        else
+//        {
+//            //將登入頁輸入的帳號與密碼傳至beginningSP
+//            cmd.Parameters.Add(new SqlParameter("@id", apiGetId));
+//            cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
+//            //設定接收從beginningSP傳回的正確帳號跟密碼
+//            SqlParameter correctId = new SqlParameter("@correctId", SqlDbType.NVarChar, 20);
+//            SqlParameter correctPwd = new SqlParameter("@correctPwd", SqlDbType.NVarChar, 20);
+//            correctId.Direction = ParameterDirection.Output;
+//            correctPwd.Direction = ParameterDirection.Output;
+//            cmd.Parameters.Add(correctId);
+//            cmd.Parameters.Add(correctPwd);
+//            //執行beginningSP
+//            cmd.ExecuteNonQuery();
+//            Console.WriteLine(correctId.Value);
+//            Console.WriteLine(correctPwd.Value);
+
+//            if (correctId.Value != System.DBNull.Value && correctPwd.Value != System.DBNull.Value)
+//            {
+//                msgValue = (int)msgType.correctLogin;
+//            }
+//            else
+//            {
+//                msgValue = (int)msgType.wrongLogin;
+//            }
+
+//            Response.Write(msgValue);
+//        }
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine(ex);
+//        throw ex.GetBaseException();
+//    }
+//    finally
+//    {
+//        conn.Close();
+//        conn.Dispose();
+//    }
+//}
