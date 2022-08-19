@@ -25,11 +25,7 @@ namespace ShoppingBG.ajax
             wrongLogin,
             ///summary
             ///空字串請重新輸入
-            NullEmptyInput,
-            ///summary
-            ///資料庫無資料
-            ///summary
-            NullEmptyDb
+            NullEmptyInput
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -37,15 +33,14 @@ namespace ShoppingBG.ajax
             LoginVerify();
         }
 
-        //登入帳密驗証
+        ///登入帳密驗証
         private void LoginVerify()
         {
-            msgType msgValue=msgType.correctLogin;
+            msgType msgValue = msgType.wrongLogin;
             string apiGetId = Request.Form["getId"];
             string apiGetPwd = Request.Form["getPwd"];
 
-            if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd))
-            {
+            if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd)) {
                 msgValue = msgType.NullEmptyInput;
                 Response.Write(msgValue);
             } else {
@@ -60,29 +55,25 @@ namespace ShoppingBG.ajax
                     //將登入頁輸入的帳號與密碼傳至beginningSP
                     cmd.Parameters.Add(new SqlParameter("@id", apiGetId));
                     cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
-                    SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-                    if (reader.Read())
-                    {
-                        msgValue = msgType.correctLogin;
-                    } else {
-                        msgValue = msgType.wrongLogin;
+                    //SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows) {
+                        while (reader.Read()) {
+                            msgValue = msgType.correctLogin;
+                        }
                     }
 
                     Response.Write((int)msgValue);
+
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     Console.WriteLine(ex);
                     throw ex.GetBaseException();
-                }
-                finally
-                {
+                } finally {
                     conn.Close();
                     conn.Dispose();
                 }
             }
-
         }
     }
 }

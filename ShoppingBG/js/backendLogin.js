@@ -20,10 +20,7 @@ function LoginVerify() {
                     $('#message').html('帳號或密碼錯誤');
                 } else if (data == 2) {
                     $('#message').html('請輸入帳號密碼');
-                } else if (data == 3) {
-                    $('#message').html('資料庫無資料');
                 }
-
 
             },
             error: function (err) {
