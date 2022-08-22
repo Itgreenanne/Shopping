@@ -67,6 +67,7 @@
     <Content Include="js\backendLogin.js" />
     <Content Include="js\jquery-2.1.4.js" />
     <Content Include="js\main.js" />
+    <Content Include="view\default1.aspx" />
     <Content Include="view\loginPage.aspx" />
     <Content Include="view\main.aspx" />
     <Content Include="Web.config" />
@@ -80,6 +81,13 @@
       <DependentUpon>AjaxLogin.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="view\default1.aspx.cs">
+      <DependentUpon>default1.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="view\default1.aspx.designer.cs">
+      <DependentUpon>default1.aspx</DependentUpon>
+    </Compile>
     <Compile Include="view\loginPage.aspx.cs">
       <DependentUpon>loginPage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -11,9 +11,10 @@
 </head>
 <script type="text/javascript" src="/js/main.js"> </script>
 <script src="/js/jquery-2.1.4.js"></script>    
-<body>    
+<body>          
         <div class="frontColorBar">
            <div class="frontColorBarTitle">Shopping後台管理系統</div> 
+           <div id="loginState" ></div>
        </div>
        <div class="menuBox">
             <ul class="drop-down-menu">

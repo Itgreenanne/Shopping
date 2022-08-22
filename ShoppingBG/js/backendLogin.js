@@ -12,13 +12,13 @@ function LoginVerify() {
             type: 'POST',
             data: { getId: loginIdInput, getPwd: loginPwdInput },
             success: function (data) {
-                console.log(data); 
-                
+                console.log(data);
+
                 if (data == 0) {
-                    $('#message').html('帳號密碼正確');
+                    window.location.href = "/view/default1.aspx";
                 } else if (data == 1) {
-                    $('#message').html('帳號或密碼錯誤');
-                } else if (data == 2) {
+                    $('#message').html('請輸入帳號密碼');
+                } else if(data == 2) {
                     $('#message').html('請輸入帳號密碼');
                 }
 
@@ -31,7 +31,6 @@ function LoginVerify() {
             }
         })
     }
-
 }
 
 //不能輸入空白鍵

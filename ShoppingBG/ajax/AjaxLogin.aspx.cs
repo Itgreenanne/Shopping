@@ -9,9 +9,10 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 
 namespace ShoppingBG.ajax
-{
+{   
     public partial class ajaxLogin : System.Web.UI.Page
     {
+        //public string loginState { get; set; }
         //用enum新增登入狀態
         public enum msgType
         {
@@ -40,9 +41,9 @@ namespace ShoppingBG.ajax
             string apiGetId = Request.Form["getId"];
             string apiGetPwd = Request.Form["getPwd"];
 
-            if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd)) {
+            if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty (apiGetPwd)) {
                 msgValue = msgType.NullEmptyInput;
-                Response.Write(msgValue);
+                Response.Write((int)msgValue);
             } else {
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
@@ -55,16 +56,16 @@ namespace ShoppingBG.ajax
                     //將登入頁輸入的帳號與密碼傳至beginningSP
                     cmd.Parameters.Add(new SqlParameter("@id", apiGetId));
                     cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
-                    //SqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) {
                         while (reader.Read()) {
-                            msgValue = msgType.correctLogin;
+                            Session["typeId"] = reader.Read();
                         }
+                        msgValue = msgType.correctLogin;
+                        Response.Write((int)msgValue);
                     }
 
                     Response.Write((int)msgValue);
-
                 }
                 catch (Exception ex) {
                     Console.WriteLine(ex);
@@ -72,8 +73,10 @@ namespace ShoppingBG.ajax
                 } finally {
                     conn.Close();
                     conn.Dispose();
+                    
                 }
             }
         }
     }
 }
+

@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="loginPage.aspx.cs" Inherits="Shopping.temp.WebForm1" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="loginPage.aspx.cs" Inherits="ShoppingBG.view.loginPage" %>
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -11,6 +11,7 @@
     <script type="text/javascript" src="/js/backendLogin.js"> </script>
     <script src="/js/jquery-2.1.4.js"></script>
 <body>
+    <form id="Form1" runat="server">
        <div class="frontColorBar">
            <div class="frontColorBarTitle">Shopping後台管理系統</div>
        </div>
@@ -20,10 +21,12 @@
                 <p>帳號</p>
                 <input type="text" class="grayBoxInput" id="txbGetId" oninput="NoSpaceKey()" value=""/>
                 <p>密碼</p>
-                <input type="password" class="grayBoxInput" id="txbGetPwd" value=""/><br/>
+                <input type="password" class="grayBoxInput" id="txbGetPwd"  value=""/><br/>
                 <div id="message"></div>
             </div>
-            <input type="button" class="login" id="btnLogin" onclick="LoginVerify()" value="登入"/>
+            <input type="button" class="login" id="btnLogin" runat="server" onclick="LoginVerify()" value="登入"/>
+           
        </div>
+    </form>
 </body>
 </html>

@@ -12,6 +12,14 @@ namespace Shopping.temp
         protected void Page_Load(object sender, EventArgs e)
         {
 
+            if (Session["typeId"] != null)
+            {
+                //Response.Write();
+            }
+            else
+            {
+                //loginState.Text = "Sesson was not created";
+            }
         }
     }
 }
