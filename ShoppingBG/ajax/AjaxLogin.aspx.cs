@@ -59,7 +59,8 @@ namespace ShoppingBG.ajax
                     SqlDataReader reader = cmd.ExecuteReader();
                     if (reader.HasRows) {
                         while (reader.Read()) {
-                            Session["typeId"] = reader.Read();
+                            Session["typeId"] = reader["f_typeId"];
+                            Session["account"] = reader["f_account"];
                         }
                         msgValue = msgType.correctLogin;
                         Response.Write((int)msgValue);

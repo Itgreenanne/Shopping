@@ -15,7 +15,7 @@ function LoginVerify() {
                 console.log(data);
 
                 if (data == 0) {
-                    window.location.href = "/view/default1.aspx";
+                    window.location.href = "/view/main.aspx";
                 } else if (data == 1) {
                     $('#message').html('請輸入帳號密碼');
                 } else if(data == 2) {

@@ -7,11 +7,11 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace Shopping.temp
+namespace ShoppingBG.view
 {
 
 
-    public partial class WebForm2
+    public partial class main
     {
     }
 }
