@@ -27,23 +27,23 @@ namespace ShoppingBG.ajax
             wrongLogin,
             ///summary
             ///空字串請重新輸入
-            NullEmptyInput
+            nullEmptyInput
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoginVerify();
+           LoginVerify();
         }
 
         ///登入帳密驗証
         private void LoginVerify()
-        {
+        {            
             msgType msgValue = msgType.wrongLogin;
             string apiGetId = Request.Form["getId"];
             string apiGetPwd = Request.Form["getPwd"];
 
             if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty (apiGetPwd)) {
-                msgValue = msgType.NullEmptyInput;
+                msgValue = msgType.nullEmptyInput;
                 Response.Write((int)msgValue);
             } else {
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;

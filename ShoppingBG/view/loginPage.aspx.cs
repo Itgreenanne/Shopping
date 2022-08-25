@@ -14,7 +14,10 @@ namespace ShoppingBG.view
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            //int a = 0;            
+            Session.RemoveAll();
+            //if (Session["userInfo"] == null) 
+            //    a = 4;
         }
     }
 }
