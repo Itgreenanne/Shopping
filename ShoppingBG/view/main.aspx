@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="main.aspx.cs" Inherits="ShoppingBG.view.main" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Main.aspx.cs" Inherits="ShoppingBG.view.Main" %>
 
 <!DOCTYPE html>
 
@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>後台主頁</title>
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/Main.css">
 </head>
 <script src="/js/jquery-2.1.4.js"></script>
-<script type="text/javascript" src="/js/main.js"> </script>    
+<script type="text/javascript" src="/js/Main.js"> </script>    
 <body>          
         <div class="frontColorBar">
            <div class="frontColorBarTitle">Shopping後台管理系統</div> 
-           <div class="loginState" ><%=DisplayLogin()%></div>
-           <div class="logout" >登出</div>
+           <div class="loginState" id="loginAccount" ></div>
+           <div><a href="#"  class="logout" id="logout">登出</a></div>
        </div>
        <div class="menuBox">
             <ul class="drop-down-menu">

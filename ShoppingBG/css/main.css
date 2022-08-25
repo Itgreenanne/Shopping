@@ -6,17 +6,16 @@
     flex-direction: column-reverse;
     align-items: center;
     justify-content: flex-end;
-    align-content: space-around;
+    align-content: flex-start;
     flex-wrap: wrap;
     min-width: 1800px;
 }
+
 .frontColorBarTitle {
     display: inline-block;
     color: white;
     font-size: 50px;
-    text-align: center;
-    width: 500px;
-    height: 60px;
+    text-align: center;    
     padding-top: 10px;
     padding-left: 50px;
 }
@@ -38,14 +37,19 @@
     color: white;
     width: 100px;
     height: 60px;
+    text-decoration: none;
 }
-
-.menuBox {
-    display: inline-block;
-    height: 1090px;
-    background-color: #90e0ef;
-    width: 300px;
+.logout:hover,
+.logout:active {
+    color: red;
 }
+    
+ .menuBox {
+        display: inline-block;
+        height: 1090px;
+        background-color: #90e0ef;
+        width: 300px;
+    }
 
 ul li {
     list-style-type: none;

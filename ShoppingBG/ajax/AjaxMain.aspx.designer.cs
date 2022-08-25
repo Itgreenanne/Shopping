@@ -7,11 +7,11 @@
 // </自动生成>
 //------------------------------------------------------------------------------
 
-namespace ShoppingBG.view
+namespace ShoppingBG.ajax
 {
 
 
-    public partial class Main
+    public partial class AjaxMain
     {
     }
 }

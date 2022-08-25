@@ -7,9 +7,10 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.Configuration;
+using ShoppingBG.models;
 
 namespace ShoppingBG.ajax
-{   
+{
     public partial class ajaxLogin : System.Web.UI.Page
     {
         //public string loginState { get; set; }
@@ -57,11 +58,14 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@id", apiGetId));
                     cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
                     SqlDataReader reader = cmd.ExecuteReader();
-                    if (reader.HasRows) {
+                    UserInfo userInfo = new UserInfo();
+
+                    if (reader.HasRows) {  
                         while (reader.Read()) {
-                            Session["typeId"] = reader["f_typeId"];
-                            Session["account"] = reader["f_account"];
+                            userInfo.Account = reader["f_account"].ToString();
+                            userInfo.TypeId= Convert.ToInt16(reader["f_typeId"]);
                         }
+                        Session["userInfo"] = userInfo;                        
                         msgValue = msgType.correctLogin;
                         Response.Write((int)msgValue);
                     }
@@ -80,4 +84,3 @@ namespace ShoppingBG.ajax
         }
     }
 }
-

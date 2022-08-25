@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="loginPage.aspx.cs" Inherits="ShoppingBG.view.loginPage" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="LoginPage.aspx.cs" Inherits="ShoppingBG.view.LoginPage" %>
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>後台登入</title>
-    <link rel="stylesheet" href="/css/backendLogin.css"/>
+    <link rel="stylesheet" href="/css/BackendLogin.css"/>
 </head>
-    <script type="text/javascript" src="/js/backendLogin.js"> </script>
+    <script type="text/javascript" src="/js/BackendLogin.js"> </script>
     <script src="/js/jquery-2.1.4.js"></script>
 <body>
     <form id="Form1" runat="server">

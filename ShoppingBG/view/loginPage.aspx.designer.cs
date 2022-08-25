@@ -11,7 +11,7 @@ namespace ShoppingBG.view
 {
 
 
-    public partial class loginPage
+    public partial class LoginPage
     {
 
         /// <summary>
