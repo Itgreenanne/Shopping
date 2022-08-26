@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/Main.css">
 </head>
 <script src="/js/jquery-2.1.4.js"></script>
-<script type="text/javascript" src="/js/Main.js"> </script>    
+<script type="text/javascript" src="/js/Main.js"> </script>
 <body>          
         <div class="frontColorBar">
            <div class="frontColorBarTitle">Shopping後台管理系統</div> 
@@ -21,7 +21,7 @@
             <ul class="drop-down-menu">
                 <li><a href="#">職責</a>
                     <ul>
-                        <li><a href="#">職責新增</a></li>
+                        <li id="itemAddDuty"><a href="#">職責新增</a></li>
                         <li><a href="#">職責查詢</a></li>
                     </ul>
                 </li>
@@ -46,7 +46,23 @@
                 <li><a href="#">訂單查詢</a></li>
                 <li><a href="#">操作紀錄查詢</a></li>
             </ul>
-       </div>
+       </div>       
+            <div class="addDutyBlock" id="addDutyBlock"><p class="addDuty">職責新增</p>               
+                <label for="addDutyName">職責名稱: </label>
+                <input type:"text" class="addDutyName" id="addDutyName" value=""/>
+                
+                <div class="chkAddDutyBlock">
+                     <label for="canAddUser">新增使用者</label>
+                     <input type="checkbox" id="canAddUser" value="1" />
+                     <label for="canMangProduct">產品上下架</label>
+                     <input type="checkbox" id="canMangProduct" value="1"/><br/>                  
+                     <label for="canMangOrder">訂單管理</label>
+                     <input type="checkbox" id="canMangOrder" value="1"/>
+                     <label for="customerServe">客戶管理</label>
+                     <input type="checkbox" id="customerServe" value="1"/>
+                </div>
+                <button class="btnAddDuty" id="dutyConfirm">確定</button>
+            </div>       
     
 </body>
 </html>

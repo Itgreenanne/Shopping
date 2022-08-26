@@ -46,7 +46,7 @@
     
  .menuBox {
         display: inline-block;
-        height: 1090px;
+        height: 1100px;
         background-color: #90e0ef;
         width: 300px;
     }
@@ -65,7 +65,7 @@ ul {
 .drop-down-menu > li > a {
     color: gray;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 35px;
     padding: 10px;
 }
 
@@ -87,11 +87,67 @@ ul {
 /*子選項字的大小跟顏色*/
 .drop-down-menu ul li a {
     color: gray;
-    font-size: 25px;
+    font-size: 35px;
     margin: 10px;
 }
 
 .drop-down-menu li a:hover,
 .drop-down-menu lia.active {
     color: #fff;
+}
+
+.addDutyBlock{
+    display: flex;
+    font-size: 35px;
+    text-align: center;
+    font-size: 40px;
+    color: gray;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: flex-end;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/*.addDutyBlock {
+    display: inline-block;   
+    font-size: 35px;
+    text-align: center;   
+    font-size: 40px;
+    color: gray;
+}*/
+
+
+input[type=checkbox] {
+    display: inline-block;
+    width:40px;
+    height:40px;    
+}
+
+.addDutyName {
+    margin-top:10px;
+    width:435px;
+    height:50px;
+}
+
+.chkAddDutyBlock {
+    margin-top:40px;
+}
+
+.btnAddDuty {
+    margin-top: 40px;
+    font-size: 40px;
+    color: gray;
+}
+
+button {
+    width: 200px;
+    height: 60px;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }

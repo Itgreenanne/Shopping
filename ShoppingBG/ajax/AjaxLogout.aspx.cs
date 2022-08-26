@@ -28,23 +28,29 @@ namespace ShoppingBG.ajax
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            logoutType logoutTypeValue= logoutType.valueNotExist;
+            logoutType logoutTypeValue = logoutType.valueNotExist;
 
             if (Session.Timeout == 20)
             {
                 logoutTypeValue = logoutType.runOutTime;
             }
-            else if (Session["userInfo"] == null) {
+            else if (Session["userInfo"] == null)
+            {
                 logoutTypeValue = logoutType.valueNotExist;
             } //else if(manual)<---手動登出需要從js收到一個值來判斷
 
             Response.Write((int)logoutTypeValue);
 
-            //Session.Abandon();
-            //Session.RemoveAll();
+
             //UserInfo userInfo = (UserInfo)Session["userInfo"];
-            //JObject result = new JObject();            
-            //if (userInfo == null)
+            //JObject result = new JObject();
+            //Session.Abandon();            
+            //Session.RemoveAll();
+
+
+
+
+            //if (Session["userInfo.Account"] == null)
             //{
             //    result.Add("SessionIsNull", null);
             //    Response.Write(result);

@@ -21,6 +21,8 @@ $(document).ready(function () {
         }
     });
 
+    $("#addDutyBlock").hide();
+
 	$('.drop-down-menu > li > a').click(function (event) {
 		event.preventDefault();	
 		//所有的大選項移除class
@@ -33,9 +35,16 @@ $(document).ready(function () {
 		$(this).siblings('ul').slideDown(500);
     });
 
-    $('#logout').click(function (event) {
+    $("#itemAddDuty").click(function (event) {
+        $("#addDutyBlock").show();
+
+    });
+       
+       $('#logout').click(function (event) {
         window.location.href = "/view/LoginPage.aspx";        
     });
+ 
+ 
 })
 
     // $('#logout').click(function (event) {
@@ -48,15 +57,19 @@ $(document).ready(function () {
     //            window.location.href = "/view/LoginPage.aspx";
     //       }
     //    })       
-    //});
+//    //});
 
 //$('#logout').click(function (event) {
-//    window.location.href = "/view/LoginPage.aspx";
+
 //    $.ajax({
 //        url: '/ajax/AjaxLogout.aspx',
 //        type: 'POST'
-//    })
+//    });
+//    window.location.href = "/view/LoginPage.aspx";
 //});
+
+
+
 
  
 
