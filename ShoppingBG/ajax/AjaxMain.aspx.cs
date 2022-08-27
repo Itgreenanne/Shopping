@@ -20,7 +20,7 @@ namespace ShoppingBG.ajax
                 Account = "Anne",
                 TypeId = 1
             };*/
-            UserInfo userInfo = (UserInfo)Session["userInfo"];             
+            UserInfo userInfo = (UserInfo)Session["userInfo"];           
             JObject result = new JObject();
 
             if (userInfo != null)

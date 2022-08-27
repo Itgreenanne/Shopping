@@ -64,6 +64,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ajax\AddDuty.aspx" />
     <Content Include="ajax\AjaxLogin.aspx" />
     <Content Include="ajax\AjaxLogout.aspx" />
     <Content Include="ajax\AjaxMain.aspx" />
@@ -77,6 +78,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ajax\AddDuty.aspx.cs">
+      <DependentUpon>AddDuty.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ajax\AddDuty.aspx.designer.cs">
+      <DependentUpon>AddDuty.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ajax\AjaxLogin.aspx.cs">
       <DependentUpon>AjaxLogin.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

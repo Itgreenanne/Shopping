@@ -107,6 +107,7 @@ ul {
     align-content: flex-end;
     justify-content: flex-start;
     align-items: center;
+    margin-left:50px;
 }
 
 /*.addDutyBlock {
@@ -117,17 +118,18 @@ ul {
     color: gray;
 }*/
 
+.addDutyName {
+    margin-top: 10px;
+    font-size: 30px;
+    color: #CEAB93;
+    width: 435px;
+    height: 50px;
+}
 
 input[type=checkbox] {
     display: inline-block;
-    width:40px;
-    height:40px;    
-}
-
-.addDutyName {
-    margin-top:10px;
-    width:435px;
-    height:50px;
+    width: 40px;
+    height: 40px;
 }
 
 .chkAddDutyBlock {
@@ -138,11 +140,13 @@ input[type=checkbox] {
     margin-top: 40px;
     font-size: 40px;
     color: gray;
-}
-
-button {
     width: 200px;
     height: 60px;
+}
+
+.message {
+    margin-top:10px;
+    color:red;
 }
 
 body {

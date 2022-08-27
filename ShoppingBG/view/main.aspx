@@ -49,19 +49,20 @@
        </div>       
             <div class="addDutyBlock" id="addDutyBlock"><p class="addDuty">職責新增</p>               
                 <label for="addDutyName">職責名稱: </label>
-                <input type:"text" class="addDutyName" id="addDutyName" value=""/>
+                <input type:"text" class="addDutyName" id="inputDutyName" oninput="NoSpaceKey('inputDutyName')" value=""/>
                 
                 <div class="chkAddDutyBlock">
                      <label for="canAddUser">新增使用者</label>
-                     <input type="checkbox" id="canAddUser" value="1" />
+                     <input name="chkDutyType"type="checkbox" id="canAddUser" value="1"/>
                      <label for="canMangProduct">產品上下架</label>
-                     <input type="checkbox" id="canMangProduct" value="1"/><br/>                  
+                     <input name="chkDutyType" type="checkbox" id="canMangProduct" value="1"/><br/>                  
                      <label for="canMangOrder">訂單管理</label>
-                     <input type="checkbox" id="canMangOrder" value="1"/>
+                     <input name="chkDutyType" type="checkbox" id="canMangOrder" value="1"/>
                      <label for="customerServe">客戶管理</label>
-                     <input type="checkbox" id="customerServe" value="1"/>
-                </div>
-                <button class="btnAddDuty" id="dutyConfirm">確定</button>
+                     <input name="chkDutyType" type="checkbox" id="customerServe" value="1"/><br/>
+                     <button class="btnAddDuty" id="dutyConfirm" onclick="getDataAddDuty()">確定</button>
+                     <div class="message" id="message"></div>
+                </div>               
             </div>       
     
 </body>
