@@ -64,26 +64,28 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ajax\AddDuty.aspx" />
+    <Content Include="ajax\AjaxDuty.aspx" />
     <Content Include="ajax\AjaxLogin.aspx" />
     <Content Include="ajax\AjaxLogout.aspx" />
     <Content Include="ajax\AjaxMain.aspx" />
     <Content Include="css\BackendLogin.css" />
     <Content Include="css\Main.css" />
+    <Content Include="css\MainDuty.css" />
     <Content Include="js\BackendLogin.js" />
     <Content Include="js\jquery-2.1.4.js" />
     <Content Include="js\Main.js" />
+    <Content Include="js\MainDuty.js" />
     <Content Include="view\LoginPage.aspx" />
     <Content Include="view\Main.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ajax\AddDuty.aspx.cs">
-      <DependentUpon>AddDuty.aspx</DependentUpon>
+    <Compile Include="ajax\AjaxDuty.aspx.cs">
+      <DependentUpon>AjaxDuty.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ajax\AddDuty.aspx.designer.cs">
-      <DependentUpon>AddDuty.aspx</DependentUpon>
+    <Compile Include="ajax\AjaxDuty.aspx.designer.cs">
+      <DependentUpon>AjaxDuty.aspx</DependentUpon>
     </Compile>
     <Compile Include="ajax\AjaxLogin.aspx.cs">
       <DependentUpon>AjaxLogin.aspx</DependentUpon>

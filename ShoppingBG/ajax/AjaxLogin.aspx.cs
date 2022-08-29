@@ -11,23 +11,21 @@ using ShoppingBG.models;
 
 namespace ShoppingBG.ajax
 {
-    public partial class ajaxLogin : System.Web.UI.Page
+    public partial class AjaxLogin : System.Web.UI.Page
     {
-        //public string loginState { get; set; }
-        //用enum新增登入狀態
-        public enum msgType
+        public enum MsgType
         {
             ///summary
             ///輸入正確
             ///summary
-            correctLogin,
+            CorrectLogin,
             ///summary
             ///輸入錯誤
             ///summary
-            wrongLogin,
+            WrongLogin,
             ///summary
             ///空字串請重新輸入
-            nullEmptyInput
+            NullEmptyInput
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -38,12 +36,12 @@ namespace ShoppingBG.ajax
         ///登入帳密驗証
         private void LoginVerify()
         {            
-            msgType msgValue = msgType.wrongLogin;
+            MsgType msgValue = MsgType.WrongLogin;
             string apiGetId = Request.Form["getId"];
             string apiGetPwd = Request.Form["getPwd"];
 
             if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty (apiGetPwd)) {
-                msgValue = msgType.nullEmptyInput;
+                msgValue = MsgType.NullEmptyInput;
                 Response.Write((int)msgValue);
             } else {
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
@@ -66,7 +64,7 @@ namespace ShoppingBG.ajax
                             userInfo.TypeId= Convert.ToInt16(reader["f_typeId"]);
                         }
                         Session["userInfo"] = userInfo;                        
-                        msgValue = msgType.correctLogin;
+                        msgValue = MsgType.CorrectLogin;
                         Response.Write((int)msgValue);
                     }
 

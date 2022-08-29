@@ -11,32 +11,32 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxLogout : System.Web.UI.Page
     {
-        public enum logoutType
+        public enum LogoutType
         {
             /// <summary>
             /// 登入逾期
             /// </summary>
-            runOutTime,
+            RunOutTime,
             /// <summary>
             /// Session裡的值不存在
             /// </summary>
-            valueNotExist,
+            ValueNotExist,
             /// <summary>
             /// 手動登出
             /// </summary>
-            manual
+            Manual
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            logoutType logoutTypeValue = logoutType.valueNotExist;
+            LogoutType logoutTypeValue = LogoutType.ValueNotExist;
 
             if (Session.Timeout == 20)
             {
-                logoutTypeValue = logoutType.runOutTime;
+                logoutTypeValue = LogoutType.RunOutTime;
             }
             else if (Session["userInfo"] == null)
             {
-                logoutTypeValue = logoutType.valueNotExist;
+                logoutTypeValue = LogoutType.ValueNotExist;
             } //else if(manual)<---手動登出需要從js收到一個值來判斷
 
             Response.Write((int)logoutTypeValue);

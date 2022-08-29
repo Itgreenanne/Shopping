@@ -96,59 +96,6 @@ ul {
     color: #fff;
 }
 
-.addDutyBlock{
-    display: flex;
-    font-size: 35px;
-    text-align: center;
-    font-size: 40px;
-    color: gray;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-content: flex-end;
-    justify-content: flex-start;
-    align-items: center;
-    margin-left:50px;
-}
-
-/*.addDutyBlock {
-    display: inline-block;   
-    font-size: 35px;
-    text-align: center;   
-    font-size: 40px;
-    color: gray;
-}*/
-
-.addDutyName {
-    margin-top: 10px;
-    font-size: 30px;
-    color: #CEAB93;
-    width: 435px;
-    height: 50px;
-}
-
-input[type=checkbox] {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-}
-
-.chkAddDutyBlock {
-    margin-top:40px;
-}
-
-.btnAddDuty {
-    margin-top: 40px;
-    font-size: 40px;
-    color: gray;
-    width: 200px;
-    height: 60px;
-}
-
-.message {
-    margin-top:10px;
-    color:red;
-}
-
 body {
     display: flex;
     flex-direction: row;

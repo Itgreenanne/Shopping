@@ -11,7 +11,7 @@ namespace ShoppingBG.ajax
 {
 
 
-    public partial class AddDuty
+    public partial class AjaxDuty
     {
     }
 }

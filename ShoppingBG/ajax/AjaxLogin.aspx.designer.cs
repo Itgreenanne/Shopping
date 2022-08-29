@@ -11,7 +11,7 @@ namespace ShoppingBG.ajax
 {
 
 
-    public partial class ajaxLogin
+    public partial class AjaxLogin
     {
     }
 }

@@ -22,6 +22,7 @@ $(document).ready(function () {
     });
 
     $("#addDutyBlock").hide();
+    $("#searchDutyBlock").hide();
 
 	$('.drop-down-menu > li > a').click(function (event) {
 		event.preventDefault();	
@@ -38,7 +39,11 @@ $(document).ready(function () {
     //新增職責
     $("#itemAddDuty").click(function (event) {
         $("#addDutyBlock").show();       
-    });    
+    });
+
+    $("#itemSearchDuty").click(function (event) {
+        $("#searchDutyBlock").show();
+    });  
 
     //登出
     $('#logout').click(function (event) {
@@ -47,52 +52,7 @@ $(document).ready(function () {
  
 })
 
-//不能輸入空白鍵
-function NoSpaceKey(inputDutyName) {
-    var inputText = $('#inputDutyName').val();
-    inputText = inputText.replace(/\s/g, '');
-    $('#inputDutyName').val(inputText);
-}
 
-//新增職責傳資料至後端
-function getDataAddDuty() {
-    var inputDutyNameJs = $('#inputDutyName').val();
-    var canAddUserJs = $('#canAddUser').is(':checked');
-    var canMangProductJs = $('#canMangProduct').is(':checked');
-    var canMangOrderJs = $('#canMangOrder').is(':checked');
-    var customerServeJs = $('#customerServe').is(':checked');
-    var check = $("input[name='chkDutyType']:checked").length;
-    $('#message').html('');    
-    
-    if ((!inputDutyNameJs) || check == 0) {
-        $('#message').html('請檢查是否名稱沒輸入或是所有選項都沒勾選');
-    } else {
-        $.ajax({
-            url: '/ajax/AddDuty.aspx',
-            type: 'POST',
-            data: {
-                getDutyName: inputDutyNameJs, ifAddUser: canAddUserJs,
-                ifMangProduct: canMangProductJs, ifMangOrder: canMangOrderJs,
-                ifCustomerServe: customerServeJs
-            },
-            success: function (data) {
-                console.log(data);
-
-                if (data == 0) {
-                    $('#message').html('新增職責成功');
-                } else if (data == 1) {
-                    $('#message').html('已有此職責');
-                }
-            },
-            error: function (err) {
-                str = JSON.stringify(err, null, 2);
-                console.log('err:');
-                console.log(err);
-                alert(str);
-            }
-        })
-    }
-}
 
 
 
