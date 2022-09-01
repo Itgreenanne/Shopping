@@ -6,6 +6,8 @@ function LoginVerify() {
 
     if (!loginIdInput || !loginPwdInput) {
         $('#message').text('請輸入帳號密碼');
+    } else if (loginIdInput.length > 20 || loginPwdInput.length > 20) {
+        $('#message').html('輸入超過20字元');
     } else {
         $.ajax({
             url: '/ajax/AjaxLogin.aspx',
@@ -18,10 +20,11 @@ function LoginVerify() {
                     window.location.href = "/view/main.aspx";
                 } else if (data == 1) {
                     $('#message').text('請輸入帳號密碼');
-                } else if(data == 2) {
+                } else if (data == 2) {
+                    $('#message').text('請輸入帳號密碼');
+                } else if (data == 3) {
                     $('#message').text('請輸入帳號密碼');
                 }
-
             },
             error: function (err) {
                 str = JSON.stringify(err, null, 2);

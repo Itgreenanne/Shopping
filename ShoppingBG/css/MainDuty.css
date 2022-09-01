@@ -1,33 +1,51 @@
-﻿.addDutyBlock {
-    display: flex;
-    font-size: 35px;
-    text-align: center;
-    font-size: 40px;
-    color: gray;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    margin-left: 50px;
-    align-items: flex-start;
-    width: 1100px;
-    height: 1100px;
+﻿.contentBox {
+    position: absolute;
+    top: 90px;
+    left: 320px;
 }
 
-.addDutyName {
-    margin-top: 10px;
+/*職責新增*/
+.addDutyBlock {  
+    width:800px;
+    font-size: 35px;
+    text-align: left;
+    font-size: 40px;
+    color: grey;
+}
+
+.addDuty {
+    font-size: 45px;
+    color: #96C0CE;
+}
+
+.addDutyName {    
     font-size: 30px;
     color: #CEAB93;
     width: 435px;
     height: 50px;
+    outline: solid 1px grey;
+}
+
+.inputBlock {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: center;
 }
 
 input[type=checkbox] {
-    width: 40px;
-    height: 40px;
+    width: 39px;
+    height: 39px;
+    vertical-align: middle;
 }
 
 .chkAddDutyBlock {
+    display: inline-flex;
     margin-top: 40px;
+    align-content: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 
 .btnAddDuty {
@@ -35,11 +53,38 @@ input[type=checkbox] {
     font-size: 40px;
     color: gray;
     width: 200px;
-    height: 60px;
-    display: inherit;
+    height: 60px;    
 }
 
 .message {
-    margin-top: 10px;
+    margin-top: 20px;
     color: red;
+    text-align:left;
 }
+/*職責查詢*/
+.searchDutyBlock {
+    width: 800px;
+    font-size: 35px;
+    text-align: left;
+    font-size: 40px;
+    color: grey;
+}
+
+.searchDutyName {
+    font-size: 30px;
+    color: #CEAB93;
+    width: 435px;
+    height: 50px;
+    outline: solid 1px grey;
+    margin-top:40px;
+}
+
+.btnSearchDuty {
+    margin-top: 40px;
+    font-size: 40px;
+    color: gray;
+    width: 200px;
+    height: 60px;
+    text-align:center;
+}
+

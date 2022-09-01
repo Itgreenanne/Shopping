@@ -14,6 +14,10 @@ namespace ShoppingBG.view
     {        
         protected void Page_Load(object sender, EventArgs e)
         {
+            HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            HttpContext.Current.Response.Cache.SetNoServerCaching();
+            HttpContext.Current.Response.Cache.SetNoStore();
+
             if (Session["userInfo"] == null)
             {
                 Server.Transfer("LoginPage.aspx");

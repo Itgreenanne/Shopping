@@ -15,7 +15,7 @@
     display: inline-block;
     color: white;
     font-size: 50px;
-    text-align: center;    
+    text-align: center;
     padding-top: 10px;
     padding-left: 50px;
 }
@@ -39,23 +39,23 @@
     height: 60px;
     text-decoration: none;
 }
+
 .logout:hover,
 .logout:active {
     color: red;
 }
     
- .menuBox {
+.menuBox {
         display: inline-block;
         height: 1100px;
         background-color: #90e0ef;
         width: 300px;
-    }
+}
 
 ul li {
     list-style-type: none;
     padding-left: 20px;
 }
-
 
 ul {
     padding-left: 0;

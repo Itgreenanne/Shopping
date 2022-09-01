@@ -108,6 +108,7 @@
     <Compile Include="ajax\AjaxMain.aspx.designer.cs">
       <DependentUpon>AjaxMain.aspx</DependentUpon>
     </Compile>
+    <Compile Include="models\DutyInfo.cs" />
     <Compile Include="models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="view\LoginPage.aspx.cs">

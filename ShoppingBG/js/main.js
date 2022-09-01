@@ -1,5 +1,6 @@
 ﻿//當網頁文件就緒的時候，可以開始執行裡面的函式
 $(document).ready(function () {
+    BlockClear();
     $.ajax({
         url: '/ajax/AjaxMain.aspx',
         type: 'POST',
@@ -19,11 +20,9 @@ $(document).ready(function () {
             console.log(err);
             alert(str);
         }
-    });
+    });     
 
-    $("#addDutyBlock").hide();
-    $("#searchDutyBlock").hide();
-
+    //選單滑動
 	$('.drop-down-menu > li > a').click(function (event) {
 		event.preventDefault();	
 		//所有的大選項移除class
@@ -36,21 +35,64 @@ $(document).ready(function () {
 		$(this).siblings('ul').slideDown(500);
     });
 
-    //新增職責
-    $("#itemAddDuty").click(function (event) {
-        $("#addDutyBlock").show();       
+    //選取主頁上的內容
+    $('.menuItem > a').click(function(event) {
+        event.preventDefault();
+        BlockClear();
+        var selectedId = $(event.target).attr('id');
+        //var selectedId = $('.menuItem > a').attr('id');
+        console.log(selectedId);
+
+        switch (selectedId) {
+            case 'itemAddDuty':
+                $('#addDutyBlock').show();
+                break;
+            case 'itemSearchDuty':                
+                $('#searchDutyBlock').show();
+
+                break;
+        }
     });
 
-    $("#itemSearchDuty").click(function (event) {
-        $("#searchDutyBlock").show();
-    });  
+
+
+    //$('.drop-down-menu > li > ul > li > a').click(function (event) {
+    //    event.preventDefault();
+    //    BlockClear();
+    //    var selectedId = $('.drop-down-menu > li > ul > li > a').attr('id');
+    //    console.log(selectedId);
+
+    //    switch (selectedId) {
+    //        case ('itemAddDuty'):
+    //            $('#addDutyBlock').show();
+    //            break;
+    //        case ('itemSearchDuty'):
+    //            $('#searchDutyBlock').show();
+    //            break;
+    //    }
+    //});
+
+
+    ////新增職責
+    //$('#itemAddDuty').click(function (event) {
+    //    BlockClear();
+    //    $('#addDutyBlock').show();       
+    //});
+    ////查詢職責
+    //$('#itemSearchDuty').click(function (event) {
+    //    BlockClear();
+    //    $('#searchDutyBlock').show();
+    //});  
 
     //登出
     $('#logout').click(function (event) {
-        window.location.href = "/view/LoginPage.aspx";        
-    });  
- 
+        window.location.href = '/view/LoginPage.aspx';        
+    });
+    
 })
+
+
+
 
 
 

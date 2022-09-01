@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Configuration;
 using ShoppingBG.models;
+using Newtonsoft.Json.Linq;
 
 namespace ShoppingBG.ajax
 {
@@ -29,11 +30,24 @@ namespace ShoppingBG.ajax
             /// <summary>
             /// 空字串或是所有選項都沒勾選
             /// </summary>
-            NullEmptyInput
+            NullEmptyInput,
+            /// <summary>
+            /// 字串長度超過限制
+            /// </summary>
+            ToolongString
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            AddDutyVerify();
+            string fnSelected = Request.QueryString["fn"];
+            switch (fnSelected) { 
+                case "AddDutyVerify":                
+                    AddDutyVerify();
+                    break;
+           
+                case "SearchDutyVerify":
+                    SearchDutyVerify();
+                    break;
+            }
         }
 
         //新增職責到資料庫
@@ -49,25 +63,27 @@ namespace ShoppingBG.ajax
             bool apiMangRecord = Convert.ToBoolean(Request.Form["getMangRecord"]);
 
 
-            if (string.IsNullOrEmpty(apiGetDutyName) ||
-                ((apiMangDuty == false) && (apiMangUser == false) &&
-                (apiMangProType == false) && (apiMangProduct == false) &&
-                (apiMangOrder == false) && (apiMangRecord == false)))
-            {
+            //if (string.IsNullOrEmpty(apiGetDutyName) ||
+            //    ((!apiMangDuty) && (apiMangUser == false) &&
+            //    (apiMangProType == false) && (apiMangProduct == false) &&
+            //    (apiMangOrder == false) && (apiMangRecord == false)))
+            //{
+            //空字串驗証
+            if (string.IsNullOrEmpty(apiGetDutyName)) { 
                 msgValue = MsgType.NullEmptyInput;
                 Response.Write((int)msgValue);
-            }
-            else
-            {
+            //字串長度驗証
+            } else if (apiGetDutyName.Length > 20) {
+                msgValue = MsgType.ToolongString;
+                Response.Write((int)msgValue);
+            } else {
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
-                SqlCommand cmd = new SqlCommand("addDutySP ", conn);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_AddDuty", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 conn.Open();
 
-                try
-                {
-                    //將登入頁輸入的帳號與密碼傳至beginningSP
+                try {                    
                     cmd.Parameters.Add(new SqlParameter("@dutyName", apiGetDutyName));
                     cmd.Parameters.Add(new SqlParameter("@mangDuty", apiMangDuty));
                     cmd.Parameters.Add(new SqlParameter("@mangUser", apiMangUser));
@@ -76,14 +92,12 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@mangOrder", apiMangOrder));
                     cmd.Parameters.Add(new SqlParameter("@mangRecord", apiMangRecord));
                     SqlDataReader reader = cmd.ExecuteReader();
-
+                   
                     //判斷是否有此職責存在
-                    if (reader.HasRows)
-                    {
-                        while (reader.Read())
-                        {
-                            int a = Convert.ToInt16(reader.Read());
-                            if (a== 0) {
+                    if (reader.HasRows) {
+                        while (reader.Read()) {
+                            int result = Convert.ToInt16(reader["result"]);
+                            if (result== 0) {
                                 msgValue = MsgType.DutyExisted;
                                 break;
                             } else {
@@ -93,22 +107,84 @@ namespace ShoppingBG.ajax
                     }
 
                     Response.Write((int)msgValue);
+                } catch (Exception ex) {
+                    Console.WriteLine(ex);
+                    //99
+                    //throw ex.GetBaseException();
+                } finally {
+                    conn.Close();
+                    conn.Dispose();
                 }
+            }
+        }
+
+        private void SearchDutyVerify()
+        {
+            //MsgType msgValue = MsgType.WellAdded;
+            ////string apiGetDutyName = Request.Form["getDutyName"];
+
+            //if (string.IsNullOrEmpty(apiGetDutyName))
+            //{
+            //    msgValue = MsgType.NullEmptyInput;
+            //    Response.Write((int)msgValue);
+            //}
+            //else
+            //{
+                string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+                SqlConnection conn = new SqlConnection(strConnString);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_searchDuty ", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+
+                try
+                {
+                    //cmd.Parameters.Add(new SqlParameter("@dutyName", apiGetDutyName));                   
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    DutyInfo dutyinfo = new DutyInfo();
+                    JArray dutyResult = JArray.Parse(dutyinfo);
+
+
+                //判斷是否有此職責存在
+                if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {                            
+                            dutyinfo.DutyName = reader["f_name"].ToString();
+                            dutyinfo.MangDuty = Convert.ToInt16(reader["f_manageDuty"]);
+                            dutyinfo.MangUser = Convert.ToInt16(reader["f_manageUser"]);
+                            dutyinfo.MangProType = Convert.ToInt16(reader["f_manageProductType"]);
+                            dutyinfo.MangProduct = Convert.ToInt16(reader["f_manageProduct"]);
+                            dutyinfo.MangOrder = Convert.ToInt16(reader["f_manageOrder"]);
+                            dutyinfo.MangRecord = Convert.ToInt16(reader["f_manageRecord"]);
+                            dutyResult.Add("Name", dutyinfo.DutyName);
+                            dutyResult.Add("ManageDuty", dutyinfo.MangDuty);
+                            dutyResult.Add("ManageUser", dutyinfo.MangUser);
+                            dutyResult.Add("ManageProductType", dutyinfo.MangProType);
+                            dutyResult.Add("ManageProduct", dutyinfo.MangProduct);
+                            dutyResult.Add("ManageOrder", dutyinfo.MangOrder);
+                            dutyResult.Add("ManageRecord", dutyinfo.MangRecord);
+                            
+                    }
+                        //reader.NextResult();
+                }
+                Response.Write(dutyResult);
+            }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    throw ex.GetBaseException();//
+                    throw ex.GetBaseException();
                 }
                 finally
                 {
                     conn.Close();
                     conn.Dispose();
-
                 }
-            }
+            //}
         }
+
     }
 }
+
 
 
 
