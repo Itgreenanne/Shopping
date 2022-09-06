@@ -13,15 +13,16 @@ namespace ShoppingBG.ajax
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
-
+            //UserInfo userInfo = (UserInfo)Session["userInfo"];
             /*UserInfo userInfo = new UserInfo()
             {
                 Account = "Anne",
                 TypeId = 1
             };*/
-            UserInfo userInfo = (UserInfo)Session["userInfo"];           
+
+            
             JObject result = new JObject();
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
 
             if (userInfo != null)
             {

@@ -5,6 +5,9 @@ using System.Web;
 
 namespace ShoppingBG.models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class DutyInfo
     {
         /// <summary>

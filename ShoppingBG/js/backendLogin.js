@@ -2,12 +2,12 @@
 function LoginVerify() {
     var loginIdInput = $('#txbGetId').val();
     var loginPwdInput = $('#txbGetPwd').val();
-    $('#message').html('');
+    $('#message').text('');
 
     if (!loginIdInput || !loginPwdInput) {
         $('#message').text('請輸入帳號密碼');
     } else if (loginIdInput.length > 20 || loginPwdInput.length > 20) {
-        $('#message').html('輸入超過20字元');
+        $('#message').text('輸入超過20字元');
     } else {
         $.ajax({
             url: '/ajax/AjaxLogin.aspx',

@@ -63,28 +63,68 @@ input[type=checkbox] {
 }
 /*職責查詢*/
 .searchDutyBlock {
-    width: 800px;
-    font-size: 35px;
+    width: 1000px;
     text-align: left;
     font-size: 40px;
-    color: grey;
+    color: #466CA6;   
+}
+
+.inputSearchDutyBlock {
+    display: flex;
+    margin-top: 40px;
+    font-size: 20px;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .searchDutyName {
-    font-size: 30px;
+    font-size: 20px;
     color: #CEAB93;
-    width: 435px;
-    height: 50px;
-    outline: solid 1px grey;
-    margin-top:40px;
+    width: 200px;
+    height: 30px;
+    outline: solid 1px #466CA6;
+    margin-left: 10px;
 }
 
 .btnSearchDuty {
-    margin-top: 40px;
-    font-size: 40px;
-    color: gray;
-    width: 200px;
-    height: 60px;
-    text-align:center;
+    font-size: 20px;
+    color: #466CA6;
+    width: 80px;
+    height: 30px;
+    text-align: center;
+    border: solid 1px #466CA6;
+    margin-left: 10px;
+    background-color: #E3F2FD;
 }
 
+.dutyTable {
+    border: 1px solid #000;
+    font-size: 20px;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #009FCC;
+    padding: 10px;
+    text-align:center;
+    border: 1px solid #000;
+    color: #fff;
+}
+
+td {
+    border: 1px solid #000;
+    padding: 5px;
+    text-align: center;
+}
+.dutyTable tr:nth-child(even) {
+    background: #FFF;
+}
+
+.dutyTable tr:nth-child(odd) {
+    background: #E1F5FE;
+}
+
+/*游標所在的列會變色*/
+.dutyTable tr:hover {
+    background-color: #ECEFF1;    
+}

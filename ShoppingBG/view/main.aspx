@@ -84,29 +84,23 @@
                      <label for="manageRecord">操作紀錄管理</label>
                      <input name="chkDutyType" type="checkbox" id="manageRecord" value="1"/><br/>
                 </div> 
-                     <button class="btnAddDuty" id="dutyConfirm" onclick="getDataAddDuty()">確定</button>
+                     <button class="btnAddDuty" id="dutyConfirm" onclick="AddDuty()">確定</button>
                      <div class="message" id="megAddDuty"></div>
                               
             </div>
             <div class="searchDutyBlock" id="searchDutyBlock">
-                <p class="addDuty">職責查詢</p>                
-                <label for="searchDutyName">請輸入欲查詢職責名稱:</label>
-                <input type:"text" class="searchDutyName" id="searchDutyName" oninput="NoSpaceKey('searchDutyName')" value=""/><br/>                
-                <button class="btnSearchDuty" id="chkInputDutyName" onclick="getSerachDuty()">確定</button>
-                <div class="message" id="megSearchDuty"></div>
-                <table id="allDutyList">
-                <thead>
-                    <tr>
-                        <th>職責名稱</th>
-                        <th>職責管理</th>
-                        <th>人員管理</th>
-                        <th>產品類別管理</th>
-                        <th>產品管理</th>
-                        <th>訂單管理</th>
-                        <th>操作紀錄管理</th>
-                    </tr>
+                <p class="addDuty">職責查詢</p>
+                <div class="inputSearchDutyBlock">
+                    <label for="searchDutyName">請輸入欲查詢職責名稱:</label>
+                    <input type="text" class="searchDutyName" id="searchDutyName" autocomplete="off" oninput="NoSpaceKey('searchDutyName')" value=""/>
+                    <button class="btnSearchDuty" onclick="GetSerachDuty()">確定</button>
+                    <button class="btnSearchDuty" onclick="ClearSearchDuty()">清除</button>
+                </div>
+<%--                <div class="message" id="megSearchDuty"></div>--%>
+                <br/><table class="dutyTable" id="allDutyList">
+                <thead>                  
                 </thead>
-                <tbody>
+                <tbody>                    
                 </tbody>
             </table>
             </div>            
