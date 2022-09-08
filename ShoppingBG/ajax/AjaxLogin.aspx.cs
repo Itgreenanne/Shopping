@@ -59,7 +59,7 @@ namespace ShoppingBG.ajax
             } else {
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
-                SqlCommand cmd = new SqlCommand("pro_shoppingBG_login", conn);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_getLogin", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 conn.Open();
 

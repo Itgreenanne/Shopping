@@ -33,7 +33,7 @@
     align-items: center;
 }
 
-input[type=checkbox] {
+.chkAddDuty {
     width: 39px;
     height: 39px;
     vertical-align: middle;
@@ -128,3 +128,88 @@ td {
 .dutyTable tr:hover {
     background-color: #ECEFF1;    
 }
+
+.modifyDutyBlock {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    border: solid 1px black;
+    font-size: 30px;
+    color: #26C6DA;
+    flex-direction: column;
+    width: 600px;
+    height: 400px;
+    background-color: white;
+    box-shadow: 5px 5px 10px grey;
+    align-items: stretch;
+}
+
+.modifyDuty {
+    font-size: 35px;
+    color: #00ACC1;
+}
+
+.modifyDutyNameInput {
+    width: 300px;
+    height: 30px;
+    margin-left: 10px;
+    border: none;
+    outline: solid 1px #00BCD4;
+    color: #03A9F4;
+    font-size:20px;
+}
+
+.chkModifyDutyBox {
+    margin-left: 20px;
+}
+
+.chkModifyDuty {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;    
+}
+
+.chkModifyDutyBlock {
+    display: inline-flex;
+    margin-top: 40px;
+    align-content: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+
+}
+
+.modifyDuty {
+    text-align:center;
+}
+
+.modifyDutyInputBlock {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    align-content: flex-end;
+    flex-wrap: nowrap;
+    margin-left:20px;
+}
+
+.btnModifyDuty {
+    width: 100px;
+    height: 40px;
+    border: solid 1px #26C6DA;
+    background-color: #E0F7FA;
+    font-size: 20px;
+    color: #0277BD;
+}
+
+.btnModifyBlock {
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
+

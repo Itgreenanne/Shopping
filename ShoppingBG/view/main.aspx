@@ -15,7 +15,7 @@
 <script type="text/javascript" src="/js/Main.js"> </script>
 <script type="text/javascript" src="/js/MainDuty.js"> </script>
 <body>          
-        <div class="frontColorBar">
+       <div class="frontColorBar">
            <div class="frontColorBarTitle">Shopping後台管理系統</div> 
            <div class="loginState" id="loginAccount" ></div>
            <div><a href="#"  class="logout" id="logout">登出</a></div>
@@ -62,27 +62,27 @@
                 </div>
                 <div class="chkAddDutyBlock">
                      <label for="manageDuty">職責管理</label>
-                     <input name="chkDutyType"type="checkbox" id="manageDuty" value="1"/>
+                     <input name="chkDutyType"type="checkbox" class="chkAddDuty" id="manageDuty" value="1"/>
                 </div>
                 <div class="chkAddDutyBlock">
                      <label for="manageUser">人員管理</label>
-                     <input name="chkDutyType"type="checkbox" id="manageUser" value="1"/>
+                     <input name="chkDutyType"type="checkbox" class="chkAddDuty" id="manageUser" value="1"/>
                 </div> 
                 <div class="chkAddDutyBlock">
                      <label for="manageProductType">產品類別管理</label>
-                     <input name="chkDutyType" type="checkbox" id="manageProductType" value="1"/>
+                     <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageProductType" value="1"/>
                 </div><br/>
                 <div class="chkAddDutyBlock">
                      <label for="manageProduct">產品管理</label>
-                     <input name="chkDutyType" type="checkbox" id="manageProduct" value="1"/>
+                     <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageProduct" value="1"/>
                 </div>
                 <div class="chkAddDutyBlock">
                      <label for="manageOrder">訂單管理</label>
-                     <input name="chkDutyType" type="checkbox" id="manageOrder" value="1"/>
+                     <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageOrder" value="1"/>
                 </div> 
                 <div class="chkAddDutyBlock">
                      <label for="manageRecord">操作紀錄管理</label>
-                     <input name="chkDutyType" type="checkbox" id="manageRecord" value="1"/><br/>
+                     <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageRecord" value="1"/><br/>
                 </div> 
                      <button class="btnAddDuty" id="dutyConfirm" onclick="AddDuty()">確定</button>
                      <div class="message" id="megAddDuty"></div>
@@ -96,15 +96,49 @@
                     <button class="btnSearchDuty" onclick="GetSerachDuty()">確定</button>
                     <button class="btnSearchDuty" onclick="ClearSearchDuty()">清除</button>
                 </div>
-<%--                <div class="message" id="megSearchDuty"></div>--%>
-                <br/><table class="dutyTable" id="allDutyList">
-                <thead>                  
-                </thead>
-                <tbody>                    
-                </tbody>
+                <%--<div class="message" id="megSearchDuty"></div>--%>
+                <br/><table class="dutyTable" id="allDutyList">                
             </table>
             </div>            
-       </div>      
+       </div>
+            
+       <div class="modifyDutyBlock" id="modifyDutyBlock">
+            <p class="modifyDuty">職責修改</p>
+                <div class="modifyDutyInputBlock">
+                    <label for="modifyDutyName" class="labelModifyDutyName"">職責名稱: </label>
+                    <input type="text" class="modifyDutyNameInput" id="modifyDutyName" autocomplete="off" oninput="NoSpaceKey('modifyDutyName')" value=""/><br/>
+                </div>
+                <div class="chkModifyDutyBox">
+                    <div class="chkModifyDutyBlock">
+                        <label for="manageDutyMod">職責管理</label>
+                        <input name="chkDutyType"type="checkbox" class="chkModifyDuty" id="manageDutyMod" value="1"/>
+                    </div>
+                    <div class="chkModifyDutyBlock">
+                        <label for="manageUserMod">人員管理</label>
+                        <input name="chkDutyType"type="checkbox" class="chkModifyDuty" id="manageUserMod" value="1"/>
+                    </div> 
+                    <div class="chkModifyDutyBlock">
+                        <label for="manageProductType">產品類別管理</label>
+                        <input name="chkDutyType" type="checkbox" class="chkModifyDuty" id="manageProductTypeMod" value="1"/>
+                    </div><br/>
+                    <div class="chkModifyDutyBlock">
+                        <label for="manageProduct">產品管理</label>
+                        <input name="chkDutyType" type="checkbox" class="chkModifyDuty" id="manageProductMod" value="1"/>
+                    </div>
+                    <div class="chkModifyDutyBlock">
+                        <label for="manageOrder">訂單管理</label>
+                        <input name="chkDutyType" type="checkbox" class="chkModifyDuty" id="manageOrderMod" value="1"/>
+                    </div> 
+                    <div class="chkModifyDutyBlock">
+                        <label for="manageRecord">操作紀錄管理</label>
+                        <input name="chkDutyType" type="checkbox" class="chkModifyDuty" id="manageRecordMod" value="1"/><br/>
+                    </div>
+                </div>
+                <div class="btnModifyBlock">
+                    <button class="btnModifyDuty" id="ModifyDutyConfirm" onclick="ModifyDutyVerify()">確定</button>
+                    <button class="btnModifyDuty" id="ModifyDutyCancel" onclick="CancelDutyModifyBlock()">取消</button>
+                </div>
+       </div>
     
 </body>
 </html>
