@@ -15,6 +15,7 @@
 <script type="text/javascript" src="/js/Main.js"> </script>
 <script type="text/javascript" src="/js/MainDuty.js"> </script>
 <body>          
+      <div id="overlay"></div>
        <div class="frontColorBar">
            <div class="frontColorBarTitle">Shopping後台管理系統</div> 
            <div class="loginState" id="loginAccount" ></div>
@@ -93,7 +94,7 @@
                 <div class="inputSearchDutyBlock">
                     <label for="searchDutyName">請輸入欲查詢職責名稱:</label>
                     <input type="text" class="searchDutyName" id="searchDutyName" autocomplete="off" oninput="NoSpaceKey('searchDutyName')" value=""/>
-                    <button class="btnSearchDuty" onclick="GetSerachDuty()">確定</button>
+                    <button class="btnSearchDuty" onclick="GetSearchDutyByName()">確定</button>
                     <button class="btnSearchDuty" onclick="ClearSearchDuty()">清除</button>
                 </div>
                 <%--<div class="message" id="megSearchDuty"></div>--%>
@@ -135,10 +136,9 @@
                     </div>
                 </div>
                 <div class="btnModifyBlock">
-                    <button class="btnModifyDuty" id="ModifyDutyConfirm" onclick="ModifyDutyVerify()">確定</button>
+                    <button class="btnModifyDuty" id="ModifyDutyConfirm" onclick="ModifyDuty()">確定</button>
                     <button class="btnModifyDuty" id="ModifyDutyCancel" onclick="CancelDutyModifyBlock()">取消</button>
                 </div>
-       </div>
-    
+       </div>    
 </body>
 </html>

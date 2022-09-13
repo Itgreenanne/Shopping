@@ -11,6 +11,7 @@ $(document).ready(function () {
                 window.location.href = "/view/LoginPage.aspx";
             } else {
                 $('#loginAccount').text(JSON.parse(data)['Account']);
+                console.log(JSON.parse(data)['Account']);
             }
         },
         error: function (err) {
@@ -40,8 +41,7 @@ $(document).ready(function () {
         BlockClear();
         var selectedId = $(event.target).attr('id');
         //var selectedId = $('.menuItem > a').attr('id');
-        console.log(selectedId);
-
+        
         switch (selectedId) {
             case 'itemAddDuty':
                 $('#addDutyBlock').show();
