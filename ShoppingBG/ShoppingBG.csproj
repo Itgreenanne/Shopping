@@ -68,13 +68,16 @@
     <Content Include="ajax\AjaxLogin.aspx" />
     <Content Include="ajax\AjaxLogout.aspx" />
     <Content Include="ajax\AjaxMain.aspx" />
+    <Content Include="ajax\AjaxUser.aspx" />
     <Content Include="css\BackendLogin.css" />
     <Content Include="css\Main.css" />
     <Content Include="css\MainDuty.css" />
+    <Content Include="css\MainUser.css" />
     <Content Include="js\BackendLogin.js" />
     <Content Include="js\jquery-2.1.4.js" />
     <Content Include="js\Main.js" />
     <Content Include="js\MainDuty.js" />
+    <Content Include="js\MainUser.js" />
     <Content Include="view\LoginPage.aspx" />
     <Content Include="view\Main.aspx" />
     <Content Include="Web.config" />
@@ -107,6 +110,13 @@
     </Compile>
     <Compile Include="ajax\AjaxMain.aspx.designer.cs">
       <DependentUpon>AjaxMain.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ajax\AjaxUser.aspx.cs">
+      <DependentUpon>AjaxUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ajax\AjaxUser.aspx.designer.cs">
+      <DependentUpon>AjaxUser.aspx</DependentUpon>
     </Compile>
     <Compile Include="models\DutyInfo.cs" />
     <Compile Include="models\UserInfo.cs" />

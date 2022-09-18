@@ -1,24 +1,9 @@
 ﻿var dutyInfoGlobal=[];
-var dataIndex;
-
-//畫面清除
-function BlockClear() {
-    $('#overlay').hide();
-    $('#addDutyBlock').hide();
-    $('#searchDutyBlock').hide();
-    $('#allDutyList').hide();
-    $('#modifyDutyBlock').hide();
-}
-
-//不能輸入空白鍵
-function NoSpaceKey(inputDutyName) {
-    var inputText = $('#inputDutyName').val();
-    inputText = inputText.replace(/\s/g, '');
-    $('#inputDutyName').val(inputText);
-}
+var dataId;
 
 function ResetAll() {    
     $("input[type='text']").val('');
+    $("input[type='password']").val('');
     $('input[type=checkbox]').prop('checked', 0);
 }
 
@@ -82,10 +67,7 @@ function GetAllDuty() {
             if (!data) {
                 alert('資料錯誤');
             } else {
-                var jsonResult = JSON.parse(data);
-                //將區域變數值傳給全域變數當緩存
-                dutyInfoGlobal = JSON.parse(data);
-                console.log('global=', dutyInfoGlobal);
+                var jsonResult = JSON.parse(data);                
                 PrintDutyTable(jsonResult);
             }
         },
@@ -121,7 +103,7 @@ function GetSearchDutyByName() {
         //請求資料
     } else {
         $.ajax({
-            url: '/ajax/AjaxDuty.aspx?fn=GetSerachDutyByNmae',
+            url: '/ajax/AjaxDuty.aspx?fn=GetSearchDutyByNmae',
             type: 'POST',
             data: {
                 getDutyName: inputDutyName
@@ -133,8 +115,6 @@ function GetSearchDutyByName() {
                 } else {
                     var jsonResult = JSON.parse(data);
                     //將區域變數值傳給全域變數當緩存
-                    dutyInfoGlobal = JSON.parse(data);
-                    console.log('global=', dutyInfoGlobal);
                     PrintDutyTable(jsonResult);
                 }
             },
@@ -151,7 +131,6 @@ function GetSearchDutyByName() {
 //刪除職責
 function DeleteDuty(dutyId) {
     var deleteOrNot = confirm('確定要刪除此筆職責嗎?');
-    console.log(dutyId);
     
     if (deleteOrNot) { 
         $.ajax({
@@ -181,46 +160,43 @@ function DeleteDuty(dutyId) {
 }
 
 //修改職責(從前端讀選擇列的資料)
-function ModifyDutyReadFront(dutyId) {
-    var index;    
+function ModifyDutyReadFront(id) {
+    dataId = id;
     //修改職責的div跳出時的遮罩
     $('#overlay').show();        
     //重置所有checkbox
-    $('.chkModifyDuty').prop('checked', false);
+    $('.chkModifyDuty').prop('checked', false);   
 
-    //用dutyId找到index
-    for (var i = 0; i < dutyInfoGlobal.length; i++) {
-        if (dutyInfoGlobal[i].dutyId == dutyId) index = i;
-    }
-    
-    //將index值存入緩存
-    dataIndex = index;
+    //var data = { id: { dutyInfoGlobal } };
+    //console.log(data);
     //顯示跟選擇列資料一樣的資料
-    $('#modifyDutyName').val(dutyInfoGlobal[index].dutyName);
-    if (dutyInfoGlobal[index].mangDuty == 1) {
+    $('#modifyDutyName').val(dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).dutyName);
+    
+    if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangDuty == 1) {
         $('#manageDutyMod').prop('checked', true);
     }
-    if (dutyInfoGlobal[index].mangUser == 1) {
+    if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangUser == 1) {
         $('#manageUserMod').prop('checked', true);
     }
-    if (dutyInfoGlobal[index].mangProType == 1) {
+    if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangProType == 1) {
         $('#manageProductTypeMod').prop('checked', true);
     }
-    if (dutyInfoGlobal[index].mangProduct == 1) {
+    if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangProduct == 1) {
         $('#manageProductMod').prop('checked', true);
     }
-    if (dutyInfoGlobal[index].mangOrder == 1) {
+    if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangOrder == 1) {
         $('#manageOrderMod').prop('checked', true);
     }
-    if (dutyInfoGlobal[index].mangRecord == 1) {
+    if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangRecord == 1) {
         $('#manageRecordMod').prop('checked', true);
     }
     $('#modifyDutyBlock').show();    
 }
 
 function ModifyDutyReadBack(dutyId) {
+    $('#overlay').show();
     $.ajax({
-        url: '/ajax/AjaxDuty.aspx?fn=GetSerachDutyById',
+        url: '/ajax/AjaxDuty.aspx?fn=GetSearchDutyById',
         type: 'POST',
         data: {
             getDutyId: dutyId
@@ -232,7 +208,7 @@ function ModifyDutyReadBack(dutyId) {
             } else {
                 var jsonResult = JSON.parse(data);
                 //for ModifyDuty()裡的變數dutyInfo
-                dutyInfoGlobal[dataIndex] = jsonResult[0];
+                dataId = dutyId;
                 //重置所有checkbox
                 $('.chkModifyDuty').prop('checked', false);
                 //顯示跟選擇列資料一樣的資料                
@@ -270,8 +246,7 @@ function ModifyDutyReadBack(dutyId) {
 
 //修改職責
 function ModifyDuty() {
-    console.warn('dutyInfoGlobal[dataIndex=]', dutyInfoGlobal[dataIndex]);
-    var dutyInfo = dutyInfoGlobal[dataIndex];    
+    var dutyInfo = dutyInfoGlobal.find(function (x) { return x.dutyId === +dataId });
     var inputDutyName = $('#modifyDutyName').val();
     var manageDuty = $('#manageDutyMod').is(':checked');
     var manageUser = $('#manageUserMod').is(':checked');
@@ -333,10 +308,9 @@ function CancelDutyModifyBlock() {
 //建立職責表格   (20220906: 後面再看PrintTable)
 //data = []
 function PrintDutyTable(jsonResult) {
-    console.log('printtable()=',jsonResult);
     $('#allDutyList').html('');
     //將區域變數值傳給全域變數
-    //dutyInfoGlobal = jsonResult;    
+    dutyInfoGlobal = jsonResult;
     var tableRow = '';
     tableRow = '<tr>' +
         '<th>' + '職責名稱' + '</th>' +
@@ -350,21 +324,16 @@ function PrintDutyTable(jsonResult) {
         '</tr>';
 
     for (var i = 0; i < jsonResult.length; i++) {
-        FillMarks(jsonResult[i], 'mangDuty');
-        FillMarks(jsonResult[i], 'mangUser');
-        FillMarks(jsonResult[i], 'mangProType');
-        FillMarks(jsonResult[i], 'mangProduct');
-        FillMarks(jsonResult[i], 'mangOrder');
-        FillMarks(jsonResult[i], 'mangRecord');
+       
         tableRow +=
             '<tr>' +
-            '<td>' + jsonResult[i].dutyName + '</td>' +
-            '<td>' + jsonResult[i].mangDuty + '</td>' +
-            '<td>' + jsonResult[i].mangUser + '</td>' +
-            '<td>' + jsonResult[i].mangProType + '</td>' +
-            '<td>' + jsonResult[i].mangProduct + '</td>' +
-            '<td>' + jsonResult[i].mangOrder + '</td>' +
-            '<td>' + jsonResult[i].mangRecord + '</td>' +         
+            '<td>' + getMark(jsonResult[i], 'dutyName') + '</td>' +
+            '<td>' + getMark(jsonResult[i], 'mangDuty') + '</td>' +
+            '<td>' + getMark(jsonResult[i], 'mangUser') + '</td>' +
+            '<td>' + getMark(jsonResult[i], 'mangProType') + '</td>' +
+            '<td>' + getMark(jsonResult[i], 'mangProduct') + '</td>' +
+            '<td>' + getMark(jsonResult[i], 'mangOrder') + '</td>' +
+            '<td>' + getMark(jsonResult[i], 'mangRecord') + '</td>' +
             '<td> <button onclick="DeleteDuty(\'' + jsonResult[i].dutyId + '\')">' +
             '刪除' + '</button>' + ' ' +
             '<button onclick="ModifyDutyReadFront(\'' + jsonResult[i].dutyId + '\')">' + '修改(前)' + '</button>' + ' ' +
@@ -377,14 +346,24 @@ function PrintDutyTable(jsonResult) {
 }
 
 //將chkbox的0與1轉換成''與V
-function FillMarks(jsondata, key) {
-    if (jsondata[key] === 0) {
-        jsondata[key] = ' ';
-    } else if (jsondata[key] === 1) {
-        jsondata[key] = 'V';
+function getMark(jsonData, key) {
+    if (jsonData[key] === 0) {
+        return '';
+    } else if (jsonData[key] === 1) {
+        return 'V';
+    } else {
+        return jsonData[key];
     }
 }
 
+
+//var data = {
+//    1: { dutyName: 'aaaa' },
+//    2: { dutyName: 'bbb' },
+//    3: { ...}
+//};
+
+//data[dutyId number]
 
 
 //$.ajax({

@@ -40,8 +40,6 @@ $(document).ready(function () {
         event.preventDefault();
         BlockClear();
         var selectedId = $(event.target).attr('id');
-        //var selectedId = $('.menuItem > a').attr('id');
-        
         switch (selectedId) {
             case 'itemAddDuty':
                 $('#addDutyBlock').show();
@@ -50,6 +48,16 @@ $(document).ready(function () {
                 $('#searchDutyBlock').show();
                 GetAllDuty();
                 break;
+            case 'itemAddUser':
+                DutyTypeMenu('dutyTypeMenu');
+                $('#addUserBlock').show();
+                break;
+            case 'itemSearchUser':
+                DutyTypeMenu('allDutyMenu');
+                GetAllUser();
+                $('#searchUserBlock').show();
+                break;
+
         }
     });
 
@@ -57,4 +65,25 @@ $(document).ready(function () {
     $('#logout').click(function (event) {
         window.location.href = '/view/LoginPage.aspx';
     });
+
+    //畫面清除
+    function BlockClear() {
+        $('#overlay').hide();
+        $('#addDutyBlock').hide();
+        $('#searchDutyBlock').hide();
+        $('#allDutyList').hide();
+        $('#modifyDutyBlock').hide();
+        $('#addUserBlock').hide();
+        $('#searchUserBlock').hide();
+        $('#allUserList').hide();
+    }
 })
+
+
+//不能輸入空白鍵
+function NoSpaceKey(inputName) {
+    var id = '#' + inputName;
+    var inputText = $(id).val();
+    inputText = inputText.replace(/\s/g, '');
+    $(id).val(inputText);
+}

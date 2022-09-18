@@ -4,16 +4,19 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>後台主頁</title>
-    <link rel="stylesheet" href="/css/Main.css">
-    <link rel="stylesheet" href="/css/MainDuty.css">
+    <link rel="stylesheet" href="/css/Main.css" />
+    <link rel="stylesheet" href="/css/MainDuty.css" />
+    <link rel="stylesheet" href="/css/MainUser.css" />
 
 </head>
 <script src="/js/jquery-2.1.4.js"></script>
 <script type="text/javascript" src="/js/Main.js"> </script>
 <script type="text/javascript" src="/js/MainDuty.js"> </script>
+<script type="text/javascript" src="/js/MainUser.js"> </script>
+
 <body>          
       <div id="overlay"></div>
        <div class="frontColorBar">
@@ -31,8 +34,8 @@
                 </li>
                 <li><a href="#">人員</a>
                     <ul>
-                        <li class="menuItem"><a href="#">人員新增</a></li>
-                        <li class="menuItem"><a href="#">人員查詢</a></li>
+                        <li class="menuItem"><a href="#" id="itemAddUser">人員新增</a></li>
+                        <li class="menuItem"><a href="#" id="itemSearchUser">人員查詢</a></li>
                     </ul>
                 </li>
                 <li><a href="#">產品類別</a>
@@ -56,7 +59,7 @@
        </div> 
        <div class="contentBox"> 
             <div class="addDutyBlock" id="addDutyBlock">
-                <p class="addDuty">職責新增</p>
+                <p class="dutyBlockTitle">職責新增</p>
                 <div class="inputBlock">
                     <label for="addDutyName" class="labelAddDutyName"">職責名稱: </label>
                     <input type="text" class="addDutyName" id="inputDutyName" autocomplete="off" oninput="NoSpaceKey('inputDutyName')" value=""/><br/>
@@ -90,17 +93,45 @@
                               
             </div>
             <div class="searchDutyBlock" id="searchDutyBlock">
-                <p class="addDuty">職責查詢</p>
+                <p class="dutyBlockTitle">職責查詢</p>
                 <div class="inputSearchDutyBlock">
                     <label for="searchDutyName">請輸入欲查詢職責名稱:</label>
                     <input type="text" class="searchDutyName" id="searchDutyName" autocomplete="off" oninput="NoSpaceKey('searchDutyName')" value=""/>
                     <button class="btnSearchDuty" onclick="GetSearchDutyByName()">確定</button>
                     <button class="btnSearchDuty" onclick="ClearSearchDuty()">清除</button>
                 </div>
-                <%--<div class="message" id="megSearchDuty"></div>--%>
-                <br/><table class="dutyTable" id="allDutyList">                
-            </table>
-            </div>            
+                <br/><table class="dutyTable" id="allDutyList"></table>
+            </div>
+
+           <div class="addUserBlock" id="addUserBlock">
+                <p class="userBlockTitle">人員新增</p>
+                    <div class="addUserInputblock">
+                        <label for="addUserAccount" class="labelAddUserName">帳號： </label>
+                        <input type="text" class="userInfo" id="addUserAccount" autocomplete="off" oninput="NoSpaceKey('addUserAccount')" value=""/><br/>
+                    </div>
+                    <div class="addUserInputblock">
+                        <label for="addNickName" class="labelUserInfo">暱稱： </label>
+                        <input type="text" class="userInfo" id="addNickName" autocomplete="off" oninput="NoSpaceKey('addNickName')" value=""/><br/>
+                    </div>
+                    <div class="addUserInputblock">
+                        <label for="addNickName" class="labelUserInfo">密碼： </label>
+                        <input type="password" class="userInfo" id="userPwd" value="" autocomplete="off" /><br/>
+                    </div>                
+                    <div class="addUserInputblock">
+                        <label for="dutyType" class="labelDutyType">職責名稱： </label>
+                        <select name="dutyType" class="dutyTypeMenu" id="dutyTypeMenu" value=""></select><br/>
+                    </div>
+                    <button class="btnAddUser" id="btnUserConfirm" onclick="AddUser()">確定</button>                
+           </div>
+           <div class="searchUserBlock" id="searchUserBlock">
+                <p class="dutyBlockTitle">人員查詢</p>
+                <div class="DutyTypeInputblock">
+                        <label for="dutyType" class="labelDutyType">職責名稱： </label>
+                        <select name="dutyType" class="searchDutyTypeMenu" id="allDutyMenu" value=""></select>
+                        <button class="btnSearchUser" onclick="GetSearchUser()">確定</button>
+                </div>           
+                <br/><table class="userTable" id="allUserList"></table>
+           </div>
        </div>
             
        <div class="modifyDutyBlock" id="modifyDutyBlock">
@@ -139,6 +170,7 @@
                     <button class="btnModifyDuty" id="ModifyDutyConfirm" onclick="ModifyDuty()">確定</button>
                     <button class="btnModifyDuty" id="ModifyDutyCancel" onclick="CancelDutyModifyBlock()">取消</button>
                 </div>
+            
        </div>    
 </body>
 </html>

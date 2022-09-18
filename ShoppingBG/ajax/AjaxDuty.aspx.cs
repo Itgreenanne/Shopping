@@ -9,6 +9,8 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 using ShoppingBG.models;
 using Newtonsoft.Json.Linq;
+using System.Collections;
+
 
 namespace ShoppingBG.ajax
 {
@@ -57,12 +59,12 @@ namespace ShoppingBG.ajax
                     GetAllDuty();
                     break;
 
-                case "GetSerachDutyByNmae":
-                    GetSerachDutyByNmae();
+                case "GetSearchDutyByNmae":
+                    GetSearchDutyByNmae();
                     break;
 
-                case "GetSerachDutyById":
-                    GetSerachDutyById();
+                case "GetSearchDutyById":
+                    GetSearchDutyById();
                     break;
 
                 case "DeleteDuty":
@@ -75,7 +77,7 @@ namespace ShoppingBG.ajax
             }
         }
 
-        //新增職責到資料庫
+        ///新增職責到資料庫
         private void AddDutyVerify()
         {
             MsgType msgValue = MsgType.WellAdded;
@@ -208,7 +210,7 @@ namespace ShoppingBG.ajax
         /// <summary>
         /// 查詢並讀取輸入職責
         /// </summary>
-        private void GetSerachDutyByNmae()
+        private void GetSearchDutyByNmae()
         {
             MsgType msgValue = MsgType.WellAdded;
             string apiGetDutyName = Request.Form["getDutyName"];
@@ -293,17 +295,10 @@ namespace ShoppingBG.ajax
             }
         }
 
-        private void GetSerachDutyById()
+        private void GetSearchDutyById()
         {
             MsgType msgValue = MsgType.WellAdded;
-            int apiGetId = Convert.ToInt16(Request.Form["getDutyId"]);
-            //string apiGetDutyName = Request.Form["getDutyName"];
-
-            //if (string.IsNullOrEmpty(apiGetDutyName))
-            //{
-            //    msgValue = MsgType.NullEmptyInput;
-            //    Response.Write((int)msgValue);
-            //}
+            int apiGetId = Int32.Parse((Request.Form["getDutyId"]));
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
             SqlCommand cmd = new SqlCommand("pro_shoppingBG_getSearchDutyById", conn);
@@ -358,65 +353,59 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void DeleteDuty()
         {
-            MsgType msgValue = MsgType.WellAdded;
-            string apiGetDutyId = Request.Form["getDutyId"];
+            //MsgType msgValue = MsgType.WellAdded;
+            int apiGetId = Int32.Parse((Request.Form["getDutyId"]));
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
             SqlCommand cmd = new SqlCommand("pro_shoppingBG_delDuty ", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             conn.Open();
-            if (string.IsNullOrEmpty(apiGetDutyId))
-            {
-                msgValue = MsgType.NullEmptyInput;
-                Response.Write((int)msgValue);
-            }
-            else
-            {
-                try
-                {
-                    cmd.Parameters.Add(new SqlParameter("@dutyId", apiGetDutyId));
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    JArray resultArray = new JArray();
 
-                    //判斷是否有此職責存在
-                    if (reader.HasRows)
+            try
+            {
+                cmd.Parameters.Add(new SqlParameter("@dutyId", apiGetId));
+                SqlDataReader reader = cmd.ExecuteReader();
+                JArray resultArray = new JArray();
+
+                //判斷是否有此職責存在
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
                     {
-                        while (reader.Read())
-                        {
-                            JObject dutyinfo = new JObject();
-                            dutyinfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
-                            dutyinfo.Add("dutyName", reader["f_name"].ToString());
-                            dutyinfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
-                            dutyinfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
-                            dutyinfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
-                            dutyinfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
-                            dutyinfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
-                            dutyinfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
-                            resultArray.Add(dutyinfo);
-                        }
+                        JObject dutyinfo = new JObject();
+                        dutyinfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
+                        dutyinfo.Add("dutyName", reader["f_name"].ToString());
+                        dutyinfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
+                        dutyinfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
+                        dutyinfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
+                        dutyinfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
+                        dutyinfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
+                        dutyinfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
+                        resultArray.Add(dutyinfo);
                     }
-                    Response.Write(resultArray);
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    throw ex.GetBaseException();
-                }
-                finally
-                {
-                    conn.Close();
-                    conn.Dispose();
-                }
+                Response.Write(resultArray);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw ex.GetBaseException();
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+
         }
 
         /// <summary>
-        /// 修改職責(前端讀資料)
+        /// 修改職責
         /// </summary>
         private void ModifyDuty()
         {
             MsgType msgValue = MsgType.WellAdded;
-            int apiGetId= Convert.ToInt16(Request.Form["getDutyId"]);
+            int apiGetId= Int32.Parse((Request.Form["getDutyId"]));
             string apiGetDutyName = Request.Form["getDutyName"];
             bool apiMangDuty = Convert.ToBoolean(Request.Form["getMangDuty"]);
             bool apiMangUser = Convert.ToBoolean(Request.Form["getMangUser"]);
@@ -425,12 +414,6 @@ namespace ShoppingBG.ajax
             bool apiMangOrder = Convert.ToBoolean(Request.Form["getMangOrder"]);
             bool apiMangRecord = Convert.ToBoolean(Request.Form["getMangRecord"]);
 
-
-            //if (string.IsNullOrEmpty(apiGetDutyName) ||
-            //    ((!apiMangDuty) && (apiMangUser == false) &&
-            //    (apiMangProType == false) && (apiMangProduct == false) &&
-            //    (apiMangOrder == false) && (apiMangRecord == false)))
-            //{
             //空字串驗証
             if (string.IsNullOrEmpty(apiGetDutyName))
             {

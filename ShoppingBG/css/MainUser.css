@@ -1,75 +1,60 @@
-﻿.contentBox {
-    position: absolute;
-    top: 90px;
-    left: 320px;
-}
-
-/*職責新增*/
-.addDutyBlock {  
-    width:800px;
-    font-size: 35px;
+﻿.addUserBlock {
+    width: 800px;
     text-align: left;
     font-size: 40px;
     color: grey;
 }
 
-.dutyBlockTitle {
+.userBlockTitle {
     font-size: 45px;
     color: #96C0CE;
 }
 
-.addDutyName {    
+.userInfo {
     font-size: 30px;
     color: #CEAB93;
     width: 435px;
     height: 50px;
     outline: solid 1px grey;
+    margin-left: 80px;
+    margin-top:20px;
 }
 
-.inputBlock {
+.addUserInputblock {
     display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
     align-items: center;
-}
-
-.chkAddDuty {
-    width: 39px;
-    height: 39px;
-    vertical-align: middle;
-}
-
-.chkAddDutyBlock {
-    display: inline-flex;
-    margin-top: 40px;
-    align-content: center;
-    flex-direction: row;
+    align-content: stretch;
     flex-wrap: nowrap;
-    align-items: center;
+    flex-direction: row;
+    justify-content: flex-start;
 }
 
-.btnAddDuty {
+.dutyTypeMenu {
+    border: solid 2px grey;
+    display: inline-block;
+    font-size: 30px;
+    width: 445px;
+    color: #CEAB93;
+    padding: 10px;
+    margin-top: 20px;    
+}
+
+.btnAddUser {
     margin-top: 40px;
     font-size: 40px;
     color: gray;
     width: 200px;
-    height: 60px;    
+    height: 60px;
 }
 
-.message {
-    margin-top: 20px;
-    color: red;
-    text-align:left;
-}
-/*職責查詢*/
-.searchDutyBlock {
+.searchUserBlock {
     width: 1000px;
     text-align: left;
     font-size: 40px;
-    color: #466CA6;   
+    color: #466CA6;
 }
 
-.inputSearchDutyBlock {
+.DutyTypeInputblock {
     display: flex;
     margin-top: 40px;
     font-size: 20px;
@@ -77,7 +62,16 @@
     justify-content: flex-start;
 }
 
-.btnSearchDuty {
+.searchDutyTypeMenu {
+    font-size: 20px;
+    color: #CEAB93;
+    width: 200px;
+    height: 30px;
+    outline: solid 1px #466CA6;
+    margin-left: 10px;
+}
+
+.btnSearchUser {
     font-size: 20px;
     color: #466CA6;
     width: 80px;
@@ -88,7 +82,7 @@
     background-color: #E3F2FD;
 }
 
-.dutyTable {
+.userTable {
     border: 1px solid #000;
     font-size: 20px;
     border-collapse: collapse;
@@ -97,7 +91,7 @@
 th {
     background-color: #009FCC;
     padding: 10px;
-    text-align:center;
+    text-align: center;
     border: 1px solid #000;
     color: #fff;
 }
@@ -107,17 +101,18 @@ td {
     padding: 5px;
     text-align: center;
 }
-.dutyTable tr:nth-child(even) {
+
+.userTable tr:nth-child(even) {
     background: #FFF;
 }
 
-.dutyTable tr:nth-child(odd) {
+.userTable tr:nth-child(odd) {
     background: #E1F5FE;
 }
 
 /*游標所在的列會變色*/
-.dutyTable tr:hover {
-    background-color: #ECEFF1;    
+.userTable tr:hover {
+    background-color: #ECEFF1;
 }
 
 .modifyDutyBlock {
@@ -136,7 +131,7 @@ td {
     background-color: white;
     box-shadow: 5px 5px 10px grey;
     align-items: stretch;
-    z-index:2;
+    z-index: 2;
 }
 
 .modifyDuty {
@@ -151,7 +146,7 @@ td {
     border: none;
     outline: solid 1px #00BCD4;
     color: #03A9F4;
-    font-size:20px;
+    font-size: 20px;
 }
 
 .chkModifyDutyBox {
@@ -161,7 +156,7 @@ td {
 .chkModifyDuty {
     width: 20px;
     height: 20px;
-    vertical-align: middle;    
+    vertical-align: middle;
 }
 
 .chkModifyDutyBlock {
@@ -171,11 +166,10 @@ td {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-
 }
 
 .modifyDuty {
-    text-align:center;
+    text-align: center;
 }
 
 .modifyDutyInputBlock {
@@ -184,7 +178,7 @@ td {
     justify-content: flex-start;
     align-content: flex-end;
     flex-wrap: nowrap;
-    margin-left:20px;
+    margin-left: 20px;
 }
 
 .btnModifyDuty {
@@ -202,7 +196,4 @@ td {
     align-items: center;
     justify-content: space-evenly;
 }
-
-
-
 
