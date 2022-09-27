@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Configuration;
 using ShoppingBG.models;
+using Newtonsoft.Json;
 
 namespace ShoppingBG.ajax
 {
@@ -38,57 +39,138 @@ namespace ShoppingBG.ajax
            LoginVerify();
         }
 
-        ///登入帳密驗証
+        ///登入帳密驗証 
         private void LoginVerify()
-        {            
+        {
             MsgType msgValue = MsgType.WrongLogin;
             string apiGetId = Request.Form["getId"];
             string apiGetPwd = Request.Form["getPwd"];
-            //string apiGetId = "0123456789012334568787878787878787";
-            //string apiGetPwd = "1212121212121";
 
             //後端空字串驗証
-            if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty (apiGetPwd)) {
+            if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd))
+            {
                 msgValue = MsgType.NullEmptyInput;
                 Response.Write((int)msgValue);
 
-            //字串長度是否有超過限制驗証
-            } else if (apiGetId.Length > 20 || apiGetPwd.Length > 20) {
+                //字串長度是否有超過限制驗証
+            }
+            else if (apiGetId.Length > 20 || apiGetPwd.Length > 20)
+            {
                 msgValue = MsgType.ToolongString;
                 Response.Write((int)msgValue);
-            } else {
+            }
+            else
+            {
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
                 SqlCommand cmd = new SqlCommand("pro_shoppingBG_getLogin", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 conn.Open();
 
-                try {
+                try
+                {
                     //將登入頁輸入的帳號與密碼傳至beginningSP
-                    cmd.Parameters.Add(new SqlParameter("@id", apiGetId));
+                    cmd.Parameters.Add(new SqlParameter("@userAccount", apiGetId));
                     cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
                     SqlDataReader reader = cmd.ExecuteReader();
                     UserInfo userInfo = new UserInfo();
-
-                    if (reader.HasRows) {  
-                        while (reader.Read()) {
+                    if(reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            userInfo.UserId = Convert.ToInt16(reader["f_userId"]);
                             userInfo.Account = reader["f_account"].ToString();
-                            userInfo.TypeId= Convert.ToInt16(reader["f_typeId"]);
+                            userInfo.Nickname = reader["f_nickname"].ToString();
+                            userInfo.Pwd = reader["f_pwd"].ToString();
+                            userInfo.TypeId = Convert.ToInt16(reader["f_typeId"]);
+                            userInfo.DutyId = Convert.ToInt16(reader["f_dutyId"]);
+                            userInfo.DutyName = reader["f_name"].ToString();
+                            userInfo.MangDuty = Convert.ToInt16(reader["f_manageDuty"]);
+                            userInfo.MangUser = Convert.ToInt16(reader["f_manageUser"]);
+                            userInfo.MangProType = Convert.ToInt16(reader["f_manageProductType"]);
+                            userInfo.MangProduct = Convert.ToInt16(reader["f_manageProduct"]);
+                            userInfo.MangOrder = Convert.ToInt16(reader["f_manageOrder"]);
+                            userInfo.MangRecord = Convert.ToInt16(reader["f_manageRecord"]);
                         }
-                        Session["userInfo"] = userInfo;                        
+                        Session["userInfo"] = userInfo;
                         msgValue = MsgType.CorrectLogin;
-                        Response.Write((int)msgValue);
-                    }
-
+                    }                  
                     Response.Write((int)msgValue);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     Console.WriteLine(ex);
                     throw ex.GetBaseException();
-                } finally {
+                }
+                finally
+                {
                     conn.Close();
-                    conn.Dispose();                    
+                    conn.Dispose();
                 }
             }
         }
+
+
+        //private void LoginVerify()
+        //{
+        //    MsgType msgValue = MsgType.WrongLogin;
+        //    string apiGetId = Request.Form["getId"];
+        //    string apiGetPwd = Request.Form["getPwd"];
+
+        //    //後端空字串驗証
+        //    if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd))
+        //    {
+        //        msgValue = MsgType.NullEmptyInput;
+        //        Response.Write((int)msgValue);
+
+        //        //字串長度是否有超過限制驗証
+        //    }
+        //    else if (apiGetId.Length > 20 || apiGetPwd.Length > 20)
+        //    {
+        //        msgValue = MsgType.ToolongString;
+        //        Response.Write((int)msgValue);
+        //    }
+        //    else
+        //    {
+        //        string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+        //        SqlConnection conn = new SqlConnection(strConnString);
+        //        SqlCommand cmd = new SqlCommand("pro_shoppingBG_getLogin", conn);
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        conn.Open();
+
+        //        try
+        //        {
+        //            //將登入頁輸入的帳號與密碼傳至beginningSP
+        //            cmd.Parameters.Add(new SqlParameter("@id", apiGetId));
+        //            cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
+        //            SqlDataReader reader = cmd.ExecuteReader();
+        //            UserInfo userInfo = new UserInfo();
+
+        //            if (reader.HasRows)
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    userInfo.Account = reader["f_account"].ToString();
+        //                    userInfo.TypeId = Convert.ToInt16(reader["f_typeId"]);
+        //                }
+        //                Session["userInfo"] = userInfo;
+        //                msgValue = MsgType.CorrectLogin;
+        //                Response.Write((int)msgValue);
+        //            }
+
+        //            Response.Write((int)msgValue);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine(ex);
+        //            throw ex.GetBaseException();
+        //        }
+        //        finally
+        //        {
+        //            conn.Close();
+        //            conn.Dispose();
+        //        }
+        //    }
+        //}
     }
 }

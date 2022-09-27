@@ -26,32 +26,32 @@
        </div>
        <div class="menuBox">
             <ul class="drop-down-menu">
-                <li><a href="#">職責</a>
+                <li><a href="#" id="duty">職責</a>
                     <ul >
                         <li class="menuItem"><a  href="#" id="itemAddDuty">職責新增</a></li>
                         <li class="menuItem"><a  href="#" id="itemSearchDuty">職責查詢</a></li>
                     </ul>
                 </li>
-                <li><a href="#">人員</a>
+                <li><a href="#" id="user">人員</a>
                     <ul>
                         <li class="menuItem"><a href="#" id="itemAddUser">人員新增</a></li>
                         <li class="menuItem"><a href="#" id="itemSearchUser">人員查詢</a></li>
                     </ul>
                 </li>
-                <li><a href="#">產品類別</a>
+                <li><a href="#" id="productType">產品類別</a>
                     <ul>
                         <li class="menuItem"><a href="#">產品類別新增</a></li>
                         <li class="menuItem"><a href="#">產品類別查詢</a></li>
                     </ul>
                 </li>
-                <li><a href="#">產品</a>
+                <li><a href="#" id="product">產品</a>
                     <ul>
                         <li class="menuItem"><a href="#">產品新增</a></li>
                         <li class="menuItem"><a href="#">產品查詢</a></li>
                     </ul>
                 </li>
                 <li class="menuItem"><a href="#" id="searchOrder">訂單查詢</a></li>
-                <li class="menuItem"><a href="#">操作紀錄查詢</a></li>
+                <li class="menuItem"><a href="#" id="operationRecord">操作紀錄查詢</a></li>
             </ul>
 
 
@@ -115,21 +115,24 @@
                     </div>
                     <div class="addUserInputblock">
                         <label for="addNickName" class="labelUserInfo">密碼： </label>
-                        <input type="password" class="userInfo" id="userPwd" value="" autocomplete="off" /><br/>
+                        <input type="text" class="userInfo" id="userPwd" value="" autocomplete="off" /><br/>
                     </div>                
                     <div class="addUserInputblock">
                         <label for="dutyType" class="labelDutyType">職責名稱： </label>
-                        <select name="dutyType" class="dutyTypeMenu" id="dutyTypeMenu" value=""></select><br/>
+                        <select name="dutyType" class="dutyTypeMenu" id="dutyTypeMenu"></select><br/>
                     </div>
                     <button class="btnAddUser" id="btnUserConfirm" onclick="AddUser()">確定</button>                
            </div>
            <div class="searchUserBlock" id="searchUserBlock">
                 <p class="dutyBlockTitle">人員查詢</p>
                 <div class="DutyTypeInputblock">
-                        <label for="dutyType" class="labelDutyType">職責名稱： </label>
-                        <select name="dutyType" class="searchDutyTypeMenu" id="allDutyMenu" value=""></select>
+                        <label for="searchDutyName">請輸入帳號名稱:</label>
+                        <input type="text" class="searchUserAccount" id="searchUserAccount" autocomplete="off" oninput="NoSpaceKey('searchUserAccount')" value=""/>
+                        <label for="dutyType" class="labUserSearchDutyType">職責名稱： </label>
+                        <select name="dutyType" class="searchDutyTypeMenu" id="allDutyMenu"></select>
                         <button class="btnSearchUser" onclick="GetSearchUser()">確定</button>
-                </div>           
+                        <button class="btnSearchDuty" onclick="ClearSearchUser()">清除</button>
+                </div>
                 <br/><table class="userTable" id="allUserList"></table>
            </div>
        </div>
@@ -169,8 +172,33 @@
                 <div class="btnModifyBlock">
                     <button class="btnModifyDuty" id="ModifyDutyConfirm" onclick="ModifyDuty()">確定</button>
                     <button class="btnModifyDuty" id="ModifyDutyCancel" onclick="CancelDutyModifyBlock()">取消</button>
+                </div>            
+       </div>
+
+       <div class="modifyUserBlock" id="modifyUserBlock">
+            <p class="modifyUser">人員修改</p>
+            <div class="modifyUserInputBlock">
+                 <label for="modifyUserAccount" class="labelUserInfo"">帳號： </label>
+                    <span class="modifyUserAccount" id="modifyUserAccount"></span><br/>
+            </div>
+            <div class="modifyUserInputBox">
+                <div class="modifyUserInputBlock">
+                    <label for="addNickname" class="labelUserInfo">暱稱： </label>
+                    <input type="text" class="modifyNickname" id="modifyNickname" autocomplete="off" oninput="NoSpaceKey('modifyNickname')" value=""/><br/>
                 </div>
-            
-       </div>    
+                <div class="modifyUserInputBlock">
+                    <label for="modifyUserPwd" class="labelUserInfo">密碼： </label>
+                    <input type="text" class="modifyUserPwd" id="modifyUserPwd" autocomplete="off" oninput="PasswordVarify()" value=""/><br/>
+                </div>                
+                <div class="modifyUserInputBlock">
+                    <label for="modifyDutyMenu" class="labelUserInfo">職責名稱： </label>
+                    <select name="dutyType" class="modifyDutyMenu" id="modifyDutyMenu"></select><br/>
+                </div>
+            </div>
+                <div class="btnModifyBlock">
+                    <button class="btnModifyUser" id="ModifyUserConfirm" onclick="ModifyUser()">確定</button>
+                    <button class="btnModifyUser" id="ModifyUserCancel" onclick="CancelUserModifyBlock()">取消</button>
+                </div>            
+      </div>    
 </body>
 </html>

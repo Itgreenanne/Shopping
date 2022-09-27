@@ -37,7 +37,9 @@ function AddDuty() {
             },
             success: function (data) {                
 
-                if (data == 0) {
+                if (RepeatedStuff(data)) {
+                    return;
+                } else if (data == 0) {
                     alert("新增職責成功");
                     ResetAll();
                     $("#addDutyBlock").hide();
@@ -64,8 +66,8 @@ function GetAllDuty() {
         url: '/ajax/AjaxDuty.aspx?fn=GetAllDuty',
         type: 'POST',
         success: function (data) {            
-            if (!data) {
-                alert('資料錯誤');
+            if (RepeatedStuff(data)) {
+                return;
             } else {
                 var jsonResult = JSON.parse(data);                
                 PrintDutyTable(jsonResult);
@@ -110,8 +112,8 @@ function GetSearchDutyByName() {
             },
             success: function (data) {
 
-                if (!data) {
-                    alert('資料錯誤');
+                if (RepeatedStuff(data)) {
+                    return;
                 } else {
                     var jsonResult = JSON.parse(data);
                     //將區域變數值傳給全域變數當緩存
@@ -132,7 +134,7 @@ function GetSearchDutyByName() {
 function DeleteDuty(dutyId) {
     var deleteOrNot = confirm('確定要刪除此筆職責嗎?');
     
-    if (deleteOrNot) { 
+    if (deleteOrNot) {
         $.ajax({
             url: '/ajax/AjaxDuty.aspx?fn=DeleteDuty',
             type: 'POST',
@@ -140,13 +142,15 @@ function DeleteDuty(dutyId) {
                 getDutyId: dutyId
             },
             success: function (data) {
+                var jsonResult = (JSON.parse(data));
 
-                if (!data) {
-                   alert('資料錯誤');
+                if (RepeatedStuff(jsonResult)) {
+                    return;
+                } else if (jsonResult.Result == 6) {
+                    alert('職責已有人員使用，無法刪除');
                 } else {
                     $('#allDutyList').html('');
-                    var jsonResult = JSON.parse(data);                   
-                    PrintDutyTable(jsonResult);
+                    PrintDutyTable(jsonResult.DutyArray);
                 }
             },
             error: function (err) {
@@ -203,7 +207,9 @@ function ModifyDutyReadBack(dutyId) {
         },
         success: function (data) {
 
-            if (!data ||data == 4) {
+            if(RepeatedStuff(data)) {
+                return;
+            } else if (data == 4) {
                 alert('資料錯誤');
             } else {
                 var jsonResult = JSON.parse(data);
@@ -279,8 +285,10 @@ function ModifyDuty() {
             },
             success: function (data) {
 
-                if (data == 5) {
-                    alert("修改職責成功");                    
+                if (RepeatedStuff(data)) {
+                    return;
+                } else if (data == 5) {
+                    alert("職責修改成功");                    
                     $('#modifyDutyBlock').hide();
                     $('#overlay').hide();
                 } else if (data == 1) {

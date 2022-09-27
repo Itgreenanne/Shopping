@@ -14,9 +14,9 @@ function LoginVerify() {
             type: 'POST',
             data: { getId: loginIdInput, getPwd: loginPwdInput },
             success: function (data) {
-                console.log(data);
-
-                if (data == 0) {
+                if (!data) {
+                    alert('資料錯誤');
+                } else if (data == 0) {
                     window.location.href = "/view/main.aspx";
                 } else if (data == 1) {
                     $('#message').text('請輸入帳號密碼');

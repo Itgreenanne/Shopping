@@ -5,13 +5,19 @@ $(document).ready(function () {
         url: '/ajax/AjaxMain.aspx',
         type: 'POST',
         success: function (data) {
-
-            if (JSON.parse(data)['SessionIsNull'] === null) {
-                alert('即將被登出');
-                window.location.href = "/view/LoginPage.aspx";
+            console.log('login=', data);
+            if (!data) {
+                alert('資料錯誤');
             } else {
-                $('#loginAccount').text(JSON.parse(data)['Account']);
-                console.log(JSON.parse(data)['Account']);
+                var jsonResult = JSON.parse(data);
+                if(jsonResult['sessionIsNull'] === null) {
+                    alert('即將被登出');
+                    window.location.href = "/view/LoginPage.aspx";
+                } else {
+                    var userInfo = JSON.parse(data);
+                    $('#loginAccount').text(userInfo['account']);
+                    DutyAuthorization(userInfo);
+                }
             }
         },
         error: function (err) {
@@ -39,6 +45,7 @@ $(document).ready(function () {
     $('.menuItem > a').click(function (event) {
         event.preventDefault();
         BlockClear();
+
         var selectedId = $(event.target).attr('id');
         switch (selectedId) {
             case 'itemAddDuty':
@@ -49,18 +56,42 @@ $(document).ready(function () {
                 GetAllDuty();
                 break;
             case 'itemAddUser':
-                DutyTypeMenu('dutyTypeMenu');
+                DutyMenuForAddUser();
                 $('#addUserBlock').show();
                 break;
             case 'itemSearchUser':
-                DutyTypeMenu('allDutyMenu');
                 GetAllUser();
                 $('#searchUserBlock').show();
                 break;
-
         }
-    });
+    });       
+       
 
+    
+    ////選取主頁上的內容
+    //$('.menuItem > a').click(function (event) {
+    //    event.preventDefault();
+    //    BlockClear();
+    //    var selectedId = $(event.target).attr('id');
+    //    switch (selectedId) {
+    //        case 'itemAddDuty':
+    //            $('#addDutyBlock').show();
+    //            break;
+    //        case 'itemSearchDuty':
+    //            $('#searchDutyBlock').show();
+    //            GetAllDuty();
+    //            break;
+    //        case 'itemAddUser':
+    //            DutyMenuForAddUser();
+    //            $('#addUserBlock').show();
+    //            break;
+    //        case 'itemSearchUser':
+    //            GetAllUser();
+    //            $('#searchUserBlock').show();
+    //            break;
+
+    //    }
+    //});
     //登出
     $('#logout').click(function (event) {
         window.location.href = '/view/LoginPage.aspx';
@@ -76,8 +107,38 @@ $(document).ready(function () {
         $('#addUserBlock').hide();
         $('#searchUserBlock').hide();
         $('#allUserList').hide();
+        $('#modifyUserBlock').hide();
     }
 })
+
+//讀取職責權限來隱藏或顯示工作內容
+function DutyAuthorization(userInfo) {
+    $('#duty').hide();
+    $('#user').hide();
+    $('#productType').hide();
+    $('#product').hide();
+    $('#searchOrder').hide();
+    $('#operationRecord').hide();
+
+    if (userInfo.mangDuty == 1) {
+        $('#duty').show();
+    }
+    if (userInfo.mangUser == 1) {
+        $('#user').show();
+    }
+    if (userInfo.mangProType == 1) {
+        $('#productType').show();
+    }
+    if (userInfo.mangProduct == 1) {
+        $('#product').show();
+    }
+    if (userInfo.mangOrder == 1) {
+        $('#searchOrder').show();
+    }
+    if (userInfo.mangRecord == 1) {
+        $('#operationRecord').show();
+    }
+}
 
 
 //不能輸入空白鍵

@@ -9,15 +9,19 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 using ShoppingBG.models;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using ShoppingBG.app_code;
+
 
 namespace ShoppingBG.ajax
 {
-    public partial class AjaxUser : System.Web.UI.Page
+    public partial class AjaxUser : DutyAuthority
     {
-        /// <summary>
+         /// <summary>
         /// 新增人員各函式回傳訊息
         /// </summary>
-        public enum MsgType {
+        public enum MsgType
+        {
             /// <summary>
             /// 新增人員成功
             /// </summary>
@@ -31,9 +35,17 @@ namespace ShoppingBG.ajax
             /// </summary>
             NullEmptyInput,
             /// <summary>
-            /// 字串長度超過限制
+            /// 帳號字串長度超過限制
             /// </summary>
-            ToolongString,
+            AccountToolongString,
+            /// <summary>
+            /// 暱稱字串長度超過限制 
+            /// </summary>
+            NicknameToolongString,
+            /// <summary>
+            /// 密碼字串長度超過限制 
+            /// </summary>
+            PwdToolongString,
             /// <summary>
             /// 人員不存在
             /// </summary>
@@ -41,7 +53,15 @@ namespace ShoppingBG.ajax
             /// <summary>
             /// 人員修改成功
             /// </summary>
-            UserModified
+            UserModified,
+            /// <summary>
+            /// 網路錯誤
+            /// </summary>
+            WrongConnection,
+            /// <summary>
+            /// Id無法被轉換成int
+            /// </summary>
+            IdIsNotConvToInt
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -64,13 +84,27 @@ namespace ShoppingBG.ajax
                 case "GetSearchUser":
                     GetSearchUser();
                     break;
-            }
 
+                case "DeleteUser":
+                    DeleteUser();
+                    break;
+
+                case "GetSearchUserById":
+                    GetSearchUserById();
+                    break;
+
+                case "ModifyUser":
+                    ModifyUser();
+                    break;
+            }
         }
+
+        
         /// <summary>
         /// 從DB讀取全部職責名稱到下拉選單
         /// </summary>
-        private void DutyTypeMenu() {
+        private void DutyTypeMenu()
+        {
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
             SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllDuty ", conn);
@@ -88,8 +122,8 @@ namespace ShoppingBG.ajax
                     while (reader.Read())
                     {
                         JObject dutyinfo = new JObject();
-                        dutyinfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
-                        dutyinfo.Add("dutyName", reader["f_name"].ToString());
+                        dutyinfo.Add("DutyId", Convert.ToInt16(reader["f_id"]));
+                        dutyinfo.Add("DutyName", reader["f_name"].ToString());
                         resultArray.Add(dutyinfo);
                     }
                 }
@@ -109,24 +143,40 @@ namespace ShoppingBG.ajax
         /// <summary>
         /// 新增人員
         /// </summary>
-        private void AddUserVerify() {
-            MsgType msgValue = MsgType.WellAdded;
+        private void AddUserVerify()
+        {
+            MsgType msgValue = MsgType.WrongConnection;
             string apiUserAccount = Request.Form["getUserAccount"];
-            string apiNickName = Request.Form["getNickName"];
+            string apiNickname = Request.Form["getNickname"];
             string apiUserPwd = Request.Form["getUserPwd"];
-            int apiUserDutyType = Convert.ToInt16(Request.Form["getUserDutyType"]);
-
+            int apiUserDutyId = 0;
+            bool idIsConvToInt = int.TryParse(Request.Form["getUserDutyId"], out apiUserDutyId);
             //空字串驗証
-            if (string.IsNullOrEmpty(apiUserAccount) || string.IsNullOrEmpty(apiNickName)
+            if (string.IsNullOrEmpty(apiUserAccount) || string.IsNullOrEmpty(apiNickname)
                 || string.IsNullOrEmpty(apiUserPwd))
             {
                 msgValue = MsgType.NullEmptyInput;
                 Response.Write((int)msgValue);
                 //字串長度驗証
             }
-            else if (apiUserAccount.Length > 20 || apiNickName.Length > 20 || apiUserPwd.Length > 20)
+            else if (apiUserAccount.Length > 20)
             {
-                msgValue = MsgType.ToolongString;
+                msgValue = MsgType.AccountToolongString;
+                Response.Write((int)msgValue);
+            }
+            else if (apiNickname.Length > 20)
+            {
+                msgValue = MsgType.NicknameToolongString;
+                Response.Write((int)msgValue);
+            }
+            else if (apiUserPwd.Length > 20)
+            {
+                msgValue = MsgType.PwdToolongString;
+                Response.Write((int)msgValue);
+            }
+            else if (!idIsConvToInt)
+            {
+                msgValue = MsgType.IdIsNotConvToInt;
                 Response.Write((int)msgValue);
             }
             else
@@ -140,12 +190,12 @@ namespace ShoppingBG.ajax
                 try
                 {
                     cmd.Parameters.Add(new SqlParameter("@userAccount", apiUserAccount));
-                    cmd.Parameters.Add(new SqlParameter("@nickName", apiNickName));
+                    cmd.Parameters.Add(new SqlParameter("@nickname", apiNickname));
                     cmd.Parameters.Add(new SqlParameter("@userPwd", apiUserPwd));
-                    cmd.Parameters.Add(new SqlParameter("@dutyTypeId", apiUserDutyType));                    
+                    cmd.Parameters.Add(new SqlParameter("@dutyTypeId", apiUserDutyId));
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    //判斷是否有此職責存在
+                    //判斷是否有此人員帳號存在
                     if (reader.HasRows)
                     {
                         while (reader.Read())
@@ -169,7 +219,7 @@ namespace ShoppingBG.ajax
                 {
                     Console.WriteLine(ex);
                     //99
-                    //throw ex.GetBaseException();
+                    throw ex.GetBaseException();
                 }
                 finally
                 {
@@ -179,6 +229,7 @@ namespace ShoppingBG.ajax
             }
 
         }
+
         /// <summary>
         /// 從資料庫讀取全部人員資料
         /// </summary>
@@ -186,29 +237,53 @@ namespace ShoppingBG.ajax
         {
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
-            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllUser ", conn);
+            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllUser", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             conn.Open();
-
             try
             {
-                SqlDataReader reader = cmd.ExecuteReader();
-                JArray resultArray = new JArray();
-
-                //判斷是否有此職責存在
-                if (reader.HasRows)
+                //從Command取得資料存入dataAdapter
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                //創一個dataset的記憶體資料集
+                DataSet ds = new DataSet();
+                //將dataAdapter資料存入dataset
+                adapter.Fill(ds);
+                DataTable dt = new DataTable();
+                ///讀取職責表格
+                dt = ds.Tables[0];
+                UserDutyCombo userDutyCombo = new UserDutyCombo();
+                List<DutyInfoForMenu> dutyArray = new List<DutyInfoForMenu>();
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    while (reader.Read())
+                    DataRow row = dt.Rows[i];
+                    DutyInfoForMenu dutyInfoForMenu = new DutyInfoForMenu()
                     {
-                        JObject dutyinfo = new JObject();                        
-                        dutyinfo.Add("userAccount", reader["f_account"].ToString());
-                        dutyinfo.Add("userNickname", reader["f_nickname"].ToString());
-                        dutyinfo.Add("userPwd", reader["f_pwd"].ToString());
-                        dutyinfo.Add("dutyTypeId", reader["f_name"].ToString());
-                        resultArray.Add(dutyinfo);
-                    }
+                        DutyId = Convert.ToInt16(row.ItemArray[0]),
+                        DutyName = row.ItemArray[1].ToString()
+                    };
+                    dutyArray.Add(dutyInfoForMenu);
                 }
-                Response.Write(resultArray);
+                ///讀取人員表格
+                dt = ds.Tables[1];
+                List<UserDataArray> userArray = new List<UserDataArray>();
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DataRow row = dt.Rows[i];
+                    UserDataArray userdata = new UserDataArray()
+                    {
+                        UserId = Convert.ToInt16(row.ItemArray[0]),
+                        UserAccount = row.ItemArray[1].ToString(),
+                        UserNickname = row.ItemArray[2].ToString(),
+                        UserPwd = row.ItemArray[3].ToString(),
+                        DutyTypeId = Convert.ToInt16(row.ItemArray[4]),
+                        DutyName = row.ItemArray[5].ToString()
+                    };
+                    userArray.Add(userdata);
+                }
+                userDutyCombo.DutyInfoArray = dutyArray;
+                userDutyCombo.UserDataArray = userArray;
+                Response.Write(JsonConvert.SerializeObject(userDutyCombo));
             }
             catch (Exception ex)
             {
@@ -222,59 +297,300 @@ namespace ShoppingBG.ajax
             }
         }
 
+        /// <summary>
+        /// 人員查詢
+        /// </summary>
         private void GetSearchUser()
         {
+            MsgType msgValue = MsgType.WrongConnection;
+            string apiUserAccount = Request.Form["getUserAccount"];
+            int apiDutyId = 0;
+            bool idIsConvToInt = int.TryParse(Request.Form["getDutyId"], out apiDutyId);
+
+            if (string.IsNullOrEmpty(apiUserAccount) && apiDutyId == 0)
+            {
+                msgValue = MsgType.NullEmptyInput;
+                Response.Write((int)msgValue);
+            }
+            //字串長度驗証
+            else if (apiUserAccount.Length > 20)
+            {
+                msgValue = MsgType.AccountToolongString;
+                Response.Write((int)msgValue);
+            }
+            else if (!idIsConvToInt)
+            {
+                msgValue = MsgType.IdIsNotConvToInt;
+                Response.Write((int)msgValue);
+            }
+            else
+            {
+                //如果帳號無輸入，但職責id有輸入
+                //if (apiUserAccount == "") apiUserAccount = "noEntry";
+                string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+                SqlConnection conn = new SqlConnection(strConnString);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_getSearchUser", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+
+                try
+                {
+                    //if(!string.IsNullOrEmpty(apiUserAccount) && apiDutyId != 0)
+                    cmd.Parameters.Add(new SqlParameter("@userAccount", apiUserAccount));
+                    cmd.Parameters.Add(new SqlParameter("@dutyId", apiDutyId));
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    JArray resultArray = new JArray();
+
+                    //判斷是否有此職責存在
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            JObject userInfo = new JObject();
+                            userInfo.Add("UserId", Convert.ToInt16(reader["f_id"]));
+                            userInfo.Add("UserAccount", reader["f_account"].ToString());
+                            userInfo.Add("UserNickname", reader["f_nickname"].ToString());
+                            userInfo.Add("DutyId", Convert.ToInt16(reader["f_typeId"]));
+                            userInfo.Add("DutyName", reader["f_name"].ToString());
+                            resultArray.Add(userInfo);
+                        }
+                        Response.Write(resultArray);
+                    }
+                    else
+                    {
+                        msgValue = MsgType.UserNotExisted;
+                        Response.Write((int)msgValue);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw ex.GetBaseException();
+                }
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 刪除人員
+        /// </summary>
+        private void DeleteUser()
+        {
             MsgType msgValue = MsgType.WellAdded;
-            int apiDutyType = Convert.ToInt16(Request.Form["getDutyType"]);
-
-
+            int apiUserId = 0;
+            bool idIsConvToInt = int.TryParse(Request.Form["getUserId"], out apiUserId);
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
-            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getSearchDutyByName ", conn);
+            SqlCommand cmd = new SqlCommand("pro_shoppingBG_delUser ", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             conn.Open();
 
-            try
+            if (idIsConvToInt)
             {
-                cmd.Parameters.Add(new SqlParameter("@dutyId", apiDutyType));
-                SqlDataReader reader = cmd.ExecuteReader();
-                JArray resultArray = new JArray();
-
-                //判斷是否有此職責存在
-                if (reader.HasRows)
+                try
                 {
-                    while (reader.Read())
+                    cmd.Parameters.Add(new SqlParameter("@userId", apiUserId));
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    JArray resultArray = new JArray();
+
+                    //判斷是否有此職責存在
+                    if (reader.HasRows)
                     {
-                        JObject dutyinfo = new JObject();
-                        dutyinfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
-                        dutyinfo.Add("dutyName", reader["f_name"].ToString());
-                        dutyinfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
-                        dutyinfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
-                        dutyinfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
-                        dutyinfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
-                        dutyinfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
-                        dutyinfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
-                        resultArray.Add(dutyinfo);
+                        while (reader.Read())
+                        {
+                            JObject userInfo = new JObject();
+                            userInfo.Add("UserId", Convert.ToInt16(reader["f_id"]));
+                            userInfo.Add("UserAccount", reader["f_account"].ToString());
+                            userInfo.Add("UserNickname", reader["f_nickname"].ToString());
+                            userInfo.Add("UserPwd", reader["f_pwd"].ToString());
+                            userInfo.Add("DutyName", reader["f_name"].ToString());
+                            resultArray.Add(userInfo);
+                        }
                     }
                     Response.Write(resultArray);
                 }
-                else
+                catch (Exception ex)
                 {
-                    msgValue = MsgType.UserNotExisted;
-                    Response.Write((int)msgValue);
+                    Console.WriteLine(ex);
+                    throw ex.GetBaseException();
+                }
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex);
-                throw ex.GetBaseException();
+                msgValue = MsgType.IdIsNotConvToInt;
+                Response.Write((int)msgValue);
             }
-            finally
+        }
+
+        /// <summary>
+        /// 人員修改視窗中用來搜尋選中人員的資料
+        /// </summary>
+        private void GetSearchUserById()
+        {
+            MsgType msgValue = MsgType.WrongConnection;
+            int apiUserId = 0;
+            bool idIsConvToInt = int.TryParse(Request.Form["getUserId"], out apiUserId);
+
+            if (!idIsConvToInt)
             {
-                conn.Close();
-                conn.Dispose();
+                msgValue = MsgType.IdIsNotConvToInt;
+                Response.Write((int)msgValue);
+            }
+            else
+            {
+                string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+                SqlConnection conn = new SqlConnection(strConnString);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_getSearchUserById", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+
+                try
+                {
+                    cmd.Parameters.Add(new SqlParameter("@userId", apiUserId));
+                    //從Command取得資料存入dataAdapter
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    //創一個dataset的記憶體資料集
+                    DataSet ds = new DataSet();
+                    //將dataAdapter資料存入dataset
+                    adapter.Fill(ds);
+                    DataTable dt = new DataTable();
+                    ///讀取職責表格
+                    dt = ds.Tables[0];
+                    UserDutyCombo userDutyCombo = new UserDutyCombo();
+                    List<DutyInfoForMenu> dutyArray = new List<DutyInfoForMenu>();
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        DataRow row = dt.Rows[i];
+                        DutyInfoForMenu dutyInfoForMenu = new DutyInfoForMenu()
+                        {
+                            DutyId = Convert.ToInt16(row.ItemArray[0]),
+                            DutyName = row.ItemArray[1].ToString()
+                        };
+                        dutyArray.Add(dutyInfoForMenu);
+                    }
+                    ///讀取人員表格
+                    dt = ds.Tables[1];
+                    List<UserDataArray> userArray = new List<UserDataArray>();
+
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        DataRow row = dt.Rows[i];
+                        UserDataArray userdata = new UserDataArray()
+                        {
+                            UserId = Convert.ToInt16(row.ItemArray[0]),
+                            UserAccount = row.ItemArray[1].ToString(),
+                            UserNickname = row.ItemArray[2].ToString(),
+                            UserPwd = row.ItemArray[3].ToString(),
+                            DutyTypeId = Convert.ToInt16(row.ItemArray[4]),
+                            DutyName = row.ItemArray[5].ToString()
+                        }; userArray.Add(userdata);
+                    }
+                    userDutyCombo.UserDataArray = userArray;
+                    userDutyCombo.DutyInfoArray = dutyArray;
+                    Response.Write(JsonConvert.SerializeObject(userDutyCombo));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw ex.GetBaseException();
+                }
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 將人員修改資料存入DB
+        /// </summary>
+        private void ModifyUser()
+        {
+            MsgType msgValue = MsgType.WrongConnection;
+            int apiUserId = 0;
+            bool userIdIsConvToInt = int.TryParse(Request.Form["getUserId"], out apiUserId);
+            string apiNickname = Request.Form["getNickname"];
+            string apiUserPwd = Request.Form["getUserPwd"];
+            int apiUserDutyId = 0;
+            bool idIsConvToInt = int.TryParse(Request.Form["getUserDutyId"], out apiUserDutyId);
+            //空字串驗証
+            if (string.IsNullOrEmpty(apiNickname) || string.IsNullOrEmpty(apiUserPwd))
+            {
+                msgValue = MsgType.NullEmptyInput;
+                Response.Write((int)msgValue);
+                //字串長度驗証
+            }
+            else if (apiNickname.Length > 20)
+            {
+                msgValue = MsgType.NicknameToolongString;
+                Response.Write((int)msgValue);
+            }
+            else if (apiUserPwd.Length > 20)
+            {
+                msgValue = MsgType.PwdToolongString;
+                Response.Write((int)msgValue);
+            }
+            else if (!idIsConvToInt)
+            {
+                msgValue = MsgType.IdIsNotConvToInt;
+                Response.Write((int)msgValue);
+            }
+            else if (!userIdIsConvToInt)
+            {
+                msgValue = MsgType.IdIsNotConvToInt;
+                Response.Write((int)msgValue);
+            }
+            else
+            {
+                string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+                SqlConnection conn = new SqlConnection(strConnString);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_modifyUser", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+
+                try
+                {
+                    cmd.Parameters.Add(new SqlParameter("@userId", apiUserId));
+                    cmd.Parameters.Add(new SqlParameter("@userNickname", apiNickname));
+                    cmd.Parameters.Add(new SqlParameter("@userPwd", apiUserPwd));
+                    cmd.Parameters.Add(new SqlParameter("@dutyTypeId", apiUserDutyId));
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    //判斷是否有此人員帳號存在
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            msgValue = MsgType.UserModified;
+                        }
+                    }
+
+                    Response.Write((int)msgValue);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    //99
+                    throw ex.GetBaseException();
+                }
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
+                }
             }
 
         }
     }
+
 }

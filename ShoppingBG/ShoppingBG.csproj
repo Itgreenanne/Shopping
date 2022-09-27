@@ -118,6 +118,15 @@
     <Compile Include="ajax\AjaxUser.aspx.designer.cs">
       <DependentUpon>AjaxUser.aspx</DependentUpon>
     </Compile>
+    <Compile Include="app_code\DutyAuthority.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="models\UserInfoCompare.cs" />
+    <Compile Include="models\DutyAuthorization.cs" />
+    <Compile Include="models\DutyInfoForMenu.cs" />
+    <Compile Include="models\UserDutyCombo.cs" />
+    <Compile Include="models\UserDataArray.cs" />
+    <Compile Include="models\DeleteDutyResult.cs" />
     <Compile Include="models\DutyInfo.cs" />
     <Compile Include="models\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

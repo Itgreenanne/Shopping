@@ -50,7 +50,6 @@
 .searchUserBlock {
     width: 1000px;
     text-align: left;
-    font-size: 40px;
     color: #466CA6;
 }
 
@@ -60,6 +59,10 @@
     font-size: 20px;
     align-items: center;
     justify-content: flex-start;
+}
+
+.labUserSearchDutyType {
+    margin-left:50px;
 }
 
 .searchDutyTypeMenu {
@@ -115,7 +118,7 @@ td {
     background-color: #ECEFF1;
 }
 
-.modifyDutyBlock {
+.modifyUserBlock {
     display: flex;
     position: absolute;
     top: 50%;
@@ -132,15 +135,25 @@ td {
     box-shadow: 5px 5px 10px grey;
     align-items: stretch;
     z-index: 2;
+    justify-content: flex-start;
 }
 
-.modifyDuty {
+.modifyUser {
     font-size: 35px;
     color: #00ACC1;
 }
 
-.modifyDutyNameInput {
-    width: 300px;
+.modifyUserAccount {
+    width: 400px;
+    height: 30px;
+    margin-left: 10px;
+    border: none;
+    color: #03A9F4;
+    font-size: 20px;
+}
+
+.modifyNickname {
+    width: 400px;
     height: 30px;
     margin-left: 10px;
     border: none;
@@ -149,30 +162,29 @@ td {
     font-size: 20px;
 }
 
-.chkModifyDutyBox {
-    margin-left: 20px;
+.modifyUserPwd {
+    width: 400px;
+    height: 30px;
+    margin-left: 10px;
+    border: none;
+    outline: solid 1px #00BCD4;
+    color: #03A9F4;
+    font-size: 20px;
 }
 
-.chkModifyDuty {
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
-}
-
-.chkModifyDutyBlock {
-    display: inline-flex;
-    margin-top: 40px;
-    align-content: center;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
-}
-
-.modifyDuty {
+.modifyUser {
     text-align: center;
 }
 
-.modifyDutyInputBlock {
+.modifyUserInputBox {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.modifyUserInputBlock {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -181,7 +193,7 @@ td {
     margin-left: 20px;
 }
 
-.btnModifyDuty {
+.btnModifyUser {
     width: 100px;
     height: 40px;
     border: solid 1px #26C6DA;
@@ -195,5 +207,14 @@ td {
     margin-top: 20px;
     align-items: center;
     justify-content: space-evenly;
+}
+
+.modifyDutyMenu {
+    font-size: 20px;
+    color: #CEAB93;
+    width: 200px;
+    height: 30px;
+    outline: solid 1px #466CA6;
+    margin-left: 10px;
 }
 

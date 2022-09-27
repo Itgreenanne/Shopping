@@ -10,11 +10,14 @@ using System.Web.Configuration;
 using ShoppingBG.models;
 using Newtonsoft.Json.Linq;
 using System.Collections;
-
+using Newtonsoft.Json;
+using ShoppingBG.app_code;
 
 namespace ShoppingBG.ajax
 {
-    public partial class AjaxDuty : System.Web.UI.Page
+    //public partial class AjaxDuty : System.Web.UI.Page
+     public partial class AjaxDuty : DutyAuthority
+
     {
         /// <summary>
         /// 新增職責訊息
@@ -44,7 +47,11 @@ namespace ShoppingBG.ajax
             /// <summary>
             /// 職責修改成功
             /// </summary>
-            DutyModified
+            DutyModified,
+            /// <summary>
+            /// 職責已有人員使用中
+            /// </summary>
+            DutyUsed
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -111,7 +118,7 @@ namespace ShoppingBG.ajax
             {
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
-                SqlCommand cmd = new SqlCommand("pro_shoppingBG_AddDuty", conn);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_addDuty", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 conn.Open();
 
@@ -222,7 +229,6 @@ namespace ShoppingBG.ajax
             }
             else
             {
-
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
                 SqlCommand cmd = new SqlCommand("pro_shoppingBG_getSearchDutyByName ", conn);
@@ -353,7 +359,7 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void DeleteDuty()
         {
-            //MsgType msgValue = MsgType.WellAdded;
+            MsgType msgValue = MsgType.WellAdded;
             int apiGetId = Int32.Parse((Request.Form["getDutyId"]));
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
@@ -365,26 +371,53 @@ namespace ShoppingBG.ajax
             {
                 cmd.Parameters.Add(new SqlParameter("@dutyId", apiGetId));
                 SqlDataReader reader = cmd.ExecuteReader();
-                JArray resultArray = new JArray();
+                //JArray resultArray = new JArray();
+                DeleteDutyResult deleteDutyResult = new DeleteDutyResult();
+                List<DutyInfo> dutyInfoResult = new List<DutyInfo>();
 
                 //判斷是否有此職責存在
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        JObject dutyinfo = new JObject();
-                        dutyinfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
-                        dutyinfo.Add("dutyName", reader["f_name"].ToString());
-                        dutyinfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
-                        dutyinfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
-                        dutyinfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
-                        dutyinfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
-                        dutyinfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
-                        dutyinfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
-                        resultArray.Add(dutyinfo);
+                        int result = Convert.ToInt16(reader["result"]);
+
+                        if (result == 0)
+                        {
+                            //JObject dutyinfo = new JObject();
+                            //dutyinfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
+                            //dutyinfo.Add("dutyName", reader["f_name"].ToString());
+                            //dutyinfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
+                            //dutyinfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
+                            //dutyinfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
+                            //dutyinfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
+                            //dutyinfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
+                            //dutyinfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
+                            //resultArray.Add(dutyinfo);
+                            DutyInfo dutyInfo = new DutyInfo()
+                            {
+                                dutyName = reader["f_name"].ToString(),
+                                mangDuty = Convert.ToInt16(reader["f_manageDuty"]),
+                                mangOrder = Convert.ToInt16(reader["f_manageOrder"]),
+                                mangProduct = Convert.ToInt16(reader["f_manageProduct"]),
+                                mangProType = Convert.ToInt16(reader["f_manageProductType"]),
+                                mangRecord = Convert.ToInt16(reader["f_manageRecord"]),
+                                mangUser = Convert.ToInt16(reader["f_manageUser"]),
+                                dutyId= Convert.ToInt16(reader["f_id"])
+                            };
+                            dutyInfoResult.Add(dutyInfo);
+                        }
+                        else if (result == 1)
+                        {
+                            msgValue = MsgType.DutyUsed;
+                            deleteDutyResult.Result = (int)msgValue;
+                            break;
+                        }
                     }
+                    deleteDutyResult.DutyArray = dutyInfoResult;
+                    Response.Write(JsonConvert.SerializeObject(deleteDutyResult));
                 }
-                Response.Write(resultArray);
+
             }
             catch (Exception ex)
             {
@@ -396,7 +429,6 @@ namespace ShoppingBG.ajax
                 conn.Close();
                 conn.Dispose();
             }
-
         }
 
         /// <summary>
@@ -430,7 +462,7 @@ namespace ShoppingBG.ajax
             {
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
-                SqlCommand cmd = new SqlCommand("pro_shoppingBG_ModifyDuty", conn);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_modifyDuty", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 conn.Open();
 

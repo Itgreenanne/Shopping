@@ -11,32 +11,36 @@ namespace ShoppingBG.models
     public class DutyInfo
     {
         /// <summary>
+        /// 職責id
+        /// </summary>
+        public int dutyId { get; set; }
+        /// <summary>
         /// 職責名稱
         /// </summary>
-        public string DutyName { get; set; }
+        public string dutyName { get; set; }
         /// <summary>
         /// 職責管理
         /// </summary>
-        public int MangDuty { get; set; }
+        public int mangDuty { get; set; }
         /// <summary>
         /// 人員管理
         /// </summary>
-        public int MangUser { get; set; }
+        public int mangUser { get; set; }
         /// <summary>
         /// 產品類別管理
         /// </summary>
-        public int MangProType { get; set; }
+        public int mangProType { get; set; }
         /// <summary>
         /// 產品管理
         /// </summary>
-        public int MangProduct { get; set; }
+        public int mangProduct { get; set; }
         /// <summary>
         /// 訂單管理
         /// </summary>
-        public int MangOrder { get; set; }
+        public int mangOrder { get; set; }
         /// <summary>
         /// 操作紀錄管理
         /// </summary>
-        public int MangRecord { get; set; }
+        public int mangRecord { get; set; }
     }
 }

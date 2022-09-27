@@ -8,7 +8,7 @@ namespace ShoppingBG.models
     /// <summary>
     /// 登入的使用者資訊
     /// </summary>
-    public class UserInfo
+    public class UserInfoCompare
     {
         /// <summary>
         /// 使用者id
@@ -26,7 +26,7 @@ namespace ShoppingBG.models
         /// 使用者密碼
         /// </summary>
         public string Pwd { get; set; }
-         /// <summary>
+        /// <summary>
         /// 職責類別id
         /// </summary>
         public int TypeId { get; set; }
