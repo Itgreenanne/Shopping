@@ -10,11 +10,11 @@ using System.Web.Configuration;
 using ShoppingBG.models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-//using ShoppingBG.app_code;
+using ShoppingBG.app_code;
 
 namespace ShoppingBG.ajax
 {
-    public partial class AjaxMain : System.Web.UI.Page
+    public partial class AjaxMain : DutyAuthority
     {
         protected void Page_Load(object sender, EventArgs e)
         {

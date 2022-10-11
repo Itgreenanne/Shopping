@@ -5,19 +5,22 @@ $(document).ready(function () {
         url: '/ajax/AjaxMain.aspx',
         type: 'POST',
         success: function (data) {
-            console.log('login=', data);
-            if (!data) {
-                alert('資料錯誤');
-            } else {
+            if (data) {
                 var jsonResult = JSON.parse(data);
-                if(jsonResult['sessionIsNull'] === null) {
-                    alert('即將被登出');
-                    window.location.href = "/view/LoginPage.aspx";
+
+                if (RepeatedStuff(jsonResult)) {
+                    return;
                 } else {
-                    var userInfo = JSON.parse(data);
-                    $('#loginAccount').text(userInfo['account']);
-                    DutyAuthorization(userInfo);
+                    if (jsonResult['sessionIsNull'] === null) {
+                        alert('即將被登出');
+                        window.location.href = "/view/LoginPage.aspx";
+                    } else {
+                        $('#loginAccount').text(jsonResult['account']);
+                        DutyAuthorization(jsonResult);
+                    }
                 }
+            } else {
+                alert('資料錯誤');
             }
         },
         error: function (err) {
@@ -27,6 +30,26 @@ $(document).ready(function () {
             alert(str);
         }
     });
+
+    //if (!data) {
+    //    var jsonResult = JSON.parse(data);
+    //    console.log('dataafterjson', data);
+    //    if (RepeatedStuff(jsonResult)) {
+    //        return;
+    //    } else {
+    //        if (jsonResult['sessionIsNull'] === null) {
+    //            alert('即將被登出');
+    //            window.location.href = "/view/LoginPage.aspx";
+    //        } else {
+    //            $('#loginAccount').text(jsonResult['account']);
+    //            DutyAuthorization(jsonResult);
+    //        }
+    //    }
+    //} else {
+    //    alert('資料錯誤');
+    //}
+
+    
 
     //選單滑動
     $('.drop-down-menu > li > a').click(function (event) {
@@ -49,13 +72,16 @@ $(document).ready(function () {
         var selectedId = $(event.target).attr('id');
         switch (selectedId) {
             case 'itemAddDuty':
+                ResetAll();
                 $('#addDutyBlock').show();
                 break;
             case 'itemSearchDuty':
-                $('#searchDutyBlock').show();
+                ResetAll();
                 GetAllDuty();
+                $('#searchDutyBlock').show();                
                 break;
             case 'itemAddUser':
+                ResetAll();
                 DutyMenuForAddUser();
                 $('#addUserBlock').show();
                 break;
@@ -63,35 +89,25 @@ $(document).ready(function () {
                 GetAllUser();
                 $('#searchUserBlock').show();
                 break;
+            case 'itemAddProduct':
+                ResetAll();
+                ProductTypeMenu();
+                $('#addProductBlock').show();
+                break;
+            case 'itemSearchProduct':
+                ResetAll();
+                GetAllProduct();
+                $('#searchProductBlock').show();
+                break;
+
+            case 'searchMember':
+                ResetAll();
+                GetAllMember();
+                $('#searchMemberBlock').show();
+                break;
         }
-    });       
-       
+    });
 
-    
-    ////選取主頁上的內容
-    //$('.menuItem > a').click(function (event) {
-    //    event.preventDefault();
-    //    BlockClear();
-    //    var selectedId = $(event.target).attr('id');
-    //    switch (selectedId) {
-    //        case 'itemAddDuty':
-    //            $('#addDutyBlock').show();
-    //            break;
-    //        case 'itemSearchDuty':
-    //            $('#searchDutyBlock').show();
-    //            GetAllDuty();
-    //            break;
-    //        case 'itemAddUser':
-    //            DutyMenuForAddUser();
-    //            $('#addUserBlock').show();
-    //            break;
-    //        case 'itemSearchUser':
-    //            GetAllUser();
-    //            $('#searchUserBlock').show();
-    //            break;
-
-    //    }
-    //});
     //登出
     $('#logout').click(function (event) {
         window.location.href = '/view/LoginPage.aspx';
@@ -108,6 +124,12 @@ $(document).ready(function () {
         $('#searchUserBlock').hide();
         $('#allUserList').hide();
         $('#modifyUserBlock').hide();
+        $('#addProductBlock').hide();
+        $('#searchProductBlock').hide();
+        $('#modifyProductBlock').hide();
+        $('#searchOrderBlock').hide();
+        $('#searchMemberBlock').hide();
+        $('#modifyMemberBlock').hide();
     }
 })
 
@@ -147,4 +169,21 @@ function NoSpaceKey(inputName) {
     var inputText = $(id).val();
     inputText = inputText.replace(/\s/g, '');
     $(id).val(inputText);
+}
+
+//重覆的東西
+function RepeatedStuff(data) {
+    if (data && data['result'] == 0) {
+        alert('即將被登出');
+        window.location.href = "/view/LoginPage.aspx";
+        return true;
+    }
+    return false;    
+}
+
+function ResetAll() {
+    $("input[type='text']").val('');
+    $("input[type='password']").val('');
+    $('input[type=checkbox]').prop('checked', 0);
+    $('textarea').val('');
 }

@@ -10,7 +10,6 @@ using System.Web.Configuration;
 using ShoppingBG.models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Threading;
 
 namespace ShoppingBG.app_code
 {

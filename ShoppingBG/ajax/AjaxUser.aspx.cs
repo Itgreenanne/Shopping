@@ -380,7 +380,6 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void DeleteUser()
         {
-            MsgType msgValue = MsgType.WellAdded;
             int apiUserId = 0;
             bool idIsConvToInt = int.TryParse(Request.Form["getUserId"], out apiUserId);
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
@@ -423,12 +422,8 @@ namespace ShoppingBG.ajax
                     conn.Close();
                     conn.Dispose();
                 }
-            }
-            else
-            {
-                msgValue = MsgType.IdIsNotConvToInt;
-                Response.Write((int)msgValue);
-            }
+            }         
+          
         }
 
         /// <summary>

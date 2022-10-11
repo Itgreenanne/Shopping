@@ -6,13 +6,19 @@ function DutyMenuForAddUser() {
     $.ajax({
         url: '/ajax/AjaxUser.aspx?fn=DutyTypeMenu',
         type: "POST",
-        success: function (data) {           
-            if (RepeatedStuff(data)) {
-                return;
+        success: function (data) {
+
+            if (data) {
+                var jsonResult = JSON.parse(data);
+
+                if (RepeatedStuff(jsonResult)) {
+                    return;
+                } else {
+                    DutyMenu('dutyTypeMenu', jsonResult);
+                }
             } else {
-                var jsonDutyType = JSON.parse(data);
-                DutyMenu('dutyTypeMenu', jsonDutyType);
-            }         
+                alert('資料錯誤');
+            }
         },
         error: function (err) {
             str = JSON.stringify(err, null, 2);
@@ -21,38 +27,6 @@ function DutyMenuForAddUser() {
             alert(str);
         }
     });
-//    $.ajax({
-//    url: '/ajax/AjaxUser.aspx?fn=DutyTypeMenu',
-//    type: "POST",
-//    success: function (data) {
-//        console.log('data=', data);
-//        if (!data) {
-//            alert('資料錯誤');
-//        } else if (JSON.parse(data)['userInfoIsChanged'] == 0) {
-//            window.location.href = "/view/LoginPage.aspx";
-//        } else if (data) {
-//            var jsonDutyType = JSON.parse(data);
-//            DutyMenu('dutyTypeMenu', jsonDutyType);
-//        }
-//    },
-//    error: function (err) {
-//        str = JSON.stringify(err, null, 2);
-//        console.log('err:');
-//        console.log(err);
-//        alert(str);
-//    }
-//});
-    
-}
-
-//重覆的東西
-function RepeatedStuff(data) {
-    if (!data) {
-        alert('資料錯誤');
-    } else if (JSON.parse(data)['result'] == 0) {
-        alert('即將被登出');
-        window.location.href = "/view/LoginPage.aspx";
-    }
 }
 
 //職責下拉選單列印
@@ -95,24 +69,36 @@ function AddUser() {
                 getUserDutyId: dutyId
             },
             success: function (data) {
-                if (RepeatedStuff(data)) {
-                    return;
-                } else if (data == 0) {
-                    alert("新增人員成功");
-                    ResetAll();
-                    $("#addUserBlock").hide();
-                    $("#searchUserBlock").show();
-                    GetAllUser();
-                } else if (data == 1) {
-                    alert('已有此人員帳號');
-                } else if (data == 3) {
-                    alert('帳號輸入超過20字元');
-                } else if (data == 4) {
-                    alert('暱稱輸入超過20字元');
-                } else if (data == 5) {
-                    alert('密碼輸入超過20字元');
-                } else if (data == 9) {
-                    alert('id型別錯誤');             
+                if (data) {
+                    if (RepeatedStuff(data)) {
+                        return;
+                    }
+                    switch (data) {
+                        case '0':
+                            alert("新增人員成功");
+                            ResetAll();
+                            $("#addUserBlock").hide();
+                            $("#searchUserBlock").show();
+                            GetAllUser();
+                            break;
+                        case '1':
+                            alert('已有此人員帳號');
+                            break;
+                        case '3':
+                            alert('帳號輸入超過20字元');
+                            break;
+                        case '4':
+                            alert('暱稱輸入超過20字元');
+                            break;
+                        case '5':
+                            alert('密碼輸入超過20字元');
+                            break;
+                        case '9':
+                            alert('id型別錯誤');
+                            break;
+                    }
+                } else {
+                    alert('資料錯誤');
                 }
             },
             error: function (err) {
@@ -132,12 +118,17 @@ function GetAllUser() {
         url: '/ajax/AjaxUser.aspx?fn=GetAllUser',
         type: 'POST',
         success: function (data) {
-            if (RepeatedStuff(data)) {
-                return;
-            } else {
+            if (data) {
                 var jsonResult = JSON.parse(data);
-                DutyMenu('allDutyMenu', jsonResult.DutyInfoArray);
-                PrintUserTable(jsonResult.UserDataArray);
+
+                if (RepeatedStuff(jsonResult)) {
+                    return;
+                } else {
+                    DutyMenu('allDutyMenu', jsonResult.DutyInfoArray);
+                    PrintUserTable(jsonResult.UserDataArray);
+                }
+            } else {
+                alert('資料錯誤');
             }
         },
         error: function (err) {
@@ -175,18 +166,21 @@ function GetSearchUser() {
                 getDutyId: dutyId
             },
             success: function (data) {
-
-                if (RepeatedStuff(data)) {
-                    return;
-                } else if (data == 2) {
-                    alert('空字串');
-                } else if (data == 3) {
-                    alert('帳號輸入超過20字元');
-                } else if (data == 9) {
-                    alert('id型別錯誤');
-                } else {
+                if (data) {
                     var jsonResult = JSON.parse(data);
-                    PrintUserTable(jsonResult);
+                    if (RepeatedStuff(jsonResult)) {
+                        return;
+                    } else if (jsonResult == 2) {
+                        alert('空字串');
+                    } else if (jsonResult == 3) {
+                        alert('帳號輸入超過20字元');
+                    } else if (jsonResult == 9) {
+                        alert('id型別錯誤');
+                    } else {
+                        PrintUserTable(jsonResult);
+                    }
+                } else {
+                    alert('資料錯誤');
                 }
             },
             error: function (err) {
@@ -211,15 +205,18 @@ function DeleteUser(userId) {
                 getUserId: userId
             },
             success: function (data) {
-
-                if (RepeatedStuff(data)) {
-                    return;
-                } else if (data == 9) {
-                    alert('id型別錯誤');
-                } else {
-                    $('#allUserList').html('');
+                if (data) {
                     var jsonResult = JSON.parse(data);
-                    PrintUserTable(jsonResult);
+
+                    if (RepeatedStuff(jsonResult)) {
+                        return;
+                    } else if (jsonResult == 9) {
+                        alert('id型別錯誤');
+                    } else {
+                        PrintUserTable(jsonResult);
+                    }
+                } else {
+                    alert('資料錯誤');
                 }
             },
             error: function (err) {
@@ -235,6 +232,7 @@ function DeleteUser(userId) {
 //彈跳人員修改視窗的內容
 function ModifyUserBlock(userId) {
     $('#modifyUserPwd').val('');
+    $('#modifyNickname').val('');
     $('#overlay').show();
     $('#modifyUserBlock').show();
     $.ajax({
@@ -244,20 +242,24 @@ function ModifyUserBlock(userId) {
             getUserId: userId
         },
         success: function (data) {
-            if (RepeatedStuff(data)) {
-                return;
-            } else {
+            if (data) {
                 var jsonResult = JSON.parse(data);
 
-                //顯示跟選擇列資料一樣的資料                
-                $('#modifyUserAccount').text(jsonResult.UserDataArray[0].UserAccount);
-                $('#modifyNickname').val(jsonResult.UserDataArray[0].UserNickname);                
-                $('#modifyUserPwd').val('************************************');
-                DutyMenu('modifyDutyMenu', jsonResult.DutyInfoArray);
-                $('#modifyDutyMenu').val(jsonResult.UserDataArray[0].DutyTypeId);
-                globalUserData = jsonResult.UserDataArray[0];
-                oldUserPwd = jsonResult.UserDataArray[0].UserPwd;
-                $('#modifyUserBlock').show();
+                if (RepeatedStuff(jsonResult)) {
+                    return;
+                } else {
+                    //顯示跟選擇列資料一樣的資料                
+                    $('#modifyUserAccount').text(jsonResult.UserDataArray[0].UserAccount);
+                    $('#modifyNickname').val(jsonResult.UserDataArray[0].UserNickname);
+                    $('#modifyUserPwd').val('************************************');
+                    DutyMenu('modifyDutyMenu', jsonResult.DutyInfoArray);
+                    $('#modifyDutyMenu').val(jsonResult.UserDataArray[0].DutyTypeId);
+                    globalUserData = jsonResult.UserDataArray[0];
+                    oldUserPwd = jsonResult.UserDataArray[0].UserPwd;
+                    $('#modifyUserBlock').show();
+                }
+            } else {
+                alert('資料錯誤');
             }
         },
         error: function (err) {
@@ -300,14 +302,18 @@ function ModifyUser() {
                 getUserDutyId: dutyId
             },
             success: function (data) {
-                if (RepeatedStuff(data)) {
-                    return;
-                } else if (data == 7) {
-                    alert("人員修改成功");
-                    $('#modifyUserBlock').hide();
-                    $('#overlay').hide();
-                } else if (data == 1) {
-                    alert('已有此人員帳號');
+                if (data) {
+                    if (RepeatedStuff(data)) {
+                        return;
+                    } else if (data == 7) {
+                        alert("人員修改成功");
+                        $('#modifyUserBlock').hide();
+                        $('#overlay').hide();
+                    } else if (data == 1) {
+                        alert('已有此人員帳號');
+                    }
+                } else {
+                    alert('資料錯誤');
                 }
             },
             error: function (err) {
@@ -319,7 +325,6 @@ function ModifyUser() {
         });
         GetAllUser();
     }
-
 }
 
 //人員修改彈跳視窗取消

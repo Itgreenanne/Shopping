@@ -69,15 +69,22 @@
     <Content Include="ajax\AjaxLogout.aspx" />
     <Content Include="ajax\AjaxMain.aspx" />
     <Content Include="ajax\AjaxUser.aspx" />
+    <Content Include="ajax\AjaxProduct.aspx" />
+    <Content Include="ajax\AjaxMember.aspx" />
     <Content Include="css\BackendLogin.css" />
     <Content Include="css\Main.css" />
     <Content Include="css\MainDuty.css" />
+    <Content Include="css\MainOrder.css" />
+    <Content Include="css\MainProduct.css" />
     <Content Include="css\MainUser.css" />
+    <Content Include="css\MainMember.css" />
     <Content Include="js\BackendLogin.js" />
     <Content Include="js\jquery-2.1.4.js" />
     <Content Include="js\Main.js" />
     <Content Include="js\MainDuty.js" />
+    <Content Include="js\MainProduct.js" />
     <Content Include="js\MainUser.js" />
+    <Content Include="js\MainMember.js" />
     <Content Include="view\LoginPage.aspx" />
     <Content Include="view\Main.aspx" />
     <Content Include="Web.config" />
@@ -118,9 +125,26 @@
     <Compile Include="ajax\AjaxUser.aspx.designer.cs">
       <DependentUpon>AjaxUser.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ajax\AjaxProduct.aspx.cs">
+      <DependentUpon>AjaxProduct.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ajax\AjaxProduct.aspx.designer.cs">
+      <DependentUpon>AjaxProduct.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ajax\AjaxMember.aspx.cs">
+      <DependentUpon>AjaxMember.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ajax\AjaxMember.aspx.designer.cs">
+      <DependentUpon>AjaxMember.aspx</DependentUpon>
+    </Compile>
     <Compile Include="app_code\DutyAuthority.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="models\ProductTypeInfo.cs" />
+    <Compile Include="models\ProductInfo.cs" />
+    <Compile Include="models\ProductTypeCombo.cs" />
     <Compile Include="models\UserInfoCompare.cs" />
     <Compile Include="models\DutyAuthorization.cs" />
     <Compile Include="models\DutyInfoForMenu.cs" />
@@ -154,7 +178,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="image\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

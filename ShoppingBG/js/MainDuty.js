@@ -1,12 +1,6 @@
 ﻿var dutyInfoGlobal=[];
 var dataId;
 
-function ResetAll() {    
-    $("input[type='text']").val('');
-    $("input[type='password']").val('');
-    $('input[type=checkbox]').prop('checked', 0);
-}
-
 //新增職責傳資料至後端
 function AddDuty() {
     var inputDutyName = $('#inputDutyName').val();
@@ -36,17 +30,20 @@ function AddDuty() {
                 getMangRecord: manageRecord
             },
             success: function (data) {                
-
-                if (RepeatedStuff(data)) {
-                    return;
-                } else if (data == 0) {
-                    alert("新增職責成功");
-                    ResetAll();
-                    $("#addDutyBlock").hide();
-                    $("#searchDutyBlock").show();
-                    GetAllDuty();
-                } else if (data == 1) {
-                    $('#megAddDuty').text('已有此職責');
+                if (data) {
+                    if (RepeatedStuff(data)) {
+                        return;
+                    } else if (data == 0) {
+                        alert("新增職責成功");
+                        ResetAll();
+                        $("#addDutyBlock").hide();
+                        $("#searchDutyBlock").show();
+                        GetAllDuty();
+                    } else if (data == 1) {
+                        $('#megAddDuty').text('已有此職責');
+                    }
+                } else {
+                    alert('資料錯誤');
                 }
             },
             error: function (err) {
@@ -65,12 +62,17 @@ function GetAllDuty() {
     $.ajax({
         url: '/ajax/AjaxDuty.aspx?fn=GetAllDuty',
         type: 'POST',
-        success: function (data) {            
-            if (RepeatedStuff(data)) {
-                return;
+        success: function (data) {
+            if (data) {
+                var jsonResult = JSON.parse(data);
+
+                if (RepeatedStuff(jsonResult)) {
+                    return;
+                } else {
+                    PrintDutyTable(jsonResult);
+                }
             } else {
-                var jsonResult = JSON.parse(data);                
-                PrintDutyTable(jsonResult);
+                alert('資料錯誤');
             }
         },
         error: function (err) {
@@ -111,13 +113,17 @@ function GetSearchDutyByName() {
                 getDutyName: inputDutyName
             },
             success: function (data) {
-
-                if (RepeatedStuff(data)) {
-                    return;
-                } else {
+                if (data) {
                     var jsonResult = JSON.parse(data);
-                    //將區域變數值傳給全域變數當緩存
-                    PrintDutyTable(jsonResult);
+
+                    if (RepeatedStuff(jsonResult)) {
+                        return;
+                    } else {
+                        //將區域變數值傳給全域變數當緩存
+                        PrintDutyTable(jsonResult);
+                    }
+                } else {
+                    alert('資料錯誤');
                 }
             },
             error: function (err) {
@@ -142,15 +148,18 @@ function DeleteDuty(dutyId) {
                 getDutyId: dutyId
             },
             success: function (data) {
-                var jsonResult = (JSON.parse(data));
+                if (data) {
+                    var jsonResult = (JSON.parse(data));
 
-                if (RepeatedStuff(jsonResult)) {
-                    return;
-                } else if (jsonResult.Result == 6) {
-                    alert('職責已有人員使用，無法刪除');
+                    if (RepeatedStuff(jsonResult)) {
+                        return;
+                    } else if (jsonResult.Result == 6) {
+                        alert('職責已有人員使用，無法刪除');
+                    } else {
+                        PrintDutyTable(jsonResult.DutyArray);
+                    }
                 } else {
-                    $('#allDutyList').html('');
-                    PrintDutyTable(jsonResult.DutyArray);
+                    alert('資料錯誤');
                 }
             },
             error: function (err) {
@@ -206,39 +215,43 @@ function ModifyDutyReadBack(dutyId) {
             getDutyId: dutyId
         },
         success: function (data) {
+            if (data) {
+                var jsonResult = (JSON.parse(data));
 
-            if(RepeatedStuff(data)) {
-                return;
-            } else if (data == 4) {
-                alert('資料錯誤');
+                if (RepeatedStuff(data)) {
+                    return;
+                } else if (data == 4) {
+                    alert('資料錯誤');
+                } else {
+                    //for ModifyDuty()裡的變數dutyInfo
+                    dataId = dutyId;
+                    //重置所有checkbox
+                    $('.chkModifyDuty').prop('checked', false);
+                    //顯示跟選擇列資料一樣的資料                
+                    $('#modifyDutyName').val(jsonResult[0].dutyName);
+
+                    if (jsonResult[0].mangDuty == 1) {
+                        $('#manageDutyMod').prop('checked', true);
+                    }
+                    if (jsonResult[0].mangUser == 1) {
+                        $('#manageUserMod').prop('checked', true);
+                    }
+                    if (jsonResult[0].mangProType == 1) {
+                        $('#manageProductTypeMod').prop('checked', true);
+                    }
+                    if (jsonResult[0].mangProduct == 1) {
+                        $('#manageProductMod').prop('checked', true);
+                    }
+                    if (jsonResult[0].mangOrder == 1) {
+                        $('#manageOrderMod').prop('checked', true);
+                    }
+                    if (jsonResult[0].mangRecord == 1) {
+                        $('#manageRecordMod').prop('checked', true);
+                    }
+                    $('#modifyDutyBlock').show();
+                }
             } else {
-                var jsonResult = JSON.parse(data);
-                //for ModifyDuty()裡的變數dutyInfo
-                dataId = dutyId;
-                //重置所有checkbox
-                $('.chkModifyDuty').prop('checked', false);
-                //顯示跟選擇列資料一樣的資料                
-                $('#modifyDutyName').val(jsonResult[0].dutyName);
-
-                if (jsonResult[0].mangDuty == 1) {
-                    $('#manageDutyMod').prop('checked', true);
-                }
-                if (jsonResult[0].mangUser == 1) {
-                    $('#manageUserMod').prop('checked', true);
-                }
-                if (jsonResult[0].mangProType == 1) {
-                    $('#manageProductTypeMod').prop('checked', true);
-                }
-                if (jsonResult[0].mangProduct == 1) {
-                    $('#manageProductMod').prop('checked', true);
-                }
-                if (jsonResult[0].mangOrder == 1) {
-                    $('#manageOrderMod').prop('checked', true);
-                }
-                if (jsonResult[0].mangRecord == 1) {
-                    $('#manageRecordMod').prop('checked', true);
-                }
-                $('#modifyDutyBlock').show();               
+                alert('資料錯誤');
             }
         },
         error: function (err) {
@@ -284,15 +297,16 @@ function ModifyDuty() {
                 getMangRecord: manageRecord
             },
             success: function (data) {
-
-                if (RepeatedStuff(data)) {
-                    return;
-                } else if (data == 5) {
-                    alert("職責修改成功");                    
-                    $('#modifyDutyBlock').hide();
-                    $('#overlay').hide();
-                } else if (data == 1) {
-                    alert('已有此職責名稱');                    
+                if (data) {
+                    if (RepeatedStuff(data)) {
+                        return;
+                    } else if (data == 5) {
+                        alert("職責修改成功");
+                        $('#modifyDutyBlock').hide();
+                        $('#overlay').hide();
+                    } else if (data == 1) {
+                        alert('已有此職責名稱');
+                    }
                 }
             },
             error: function (err) {

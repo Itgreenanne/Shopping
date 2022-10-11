@@ -15,9 +15,7 @@ using ShoppingBG.app_code;
 
 namespace ShoppingBG.ajax
 {
-    //public partial class AjaxDuty : System.Web.UI.Page
      public partial class AjaxDuty : DutyAuthority
-
     {
         /// <summary>
         /// 新增職責訊息

@@ -1,26 +1,58 @@
-﻿.addUserBlock {
+﻿.addProductBlock {
     width: 800px;
     text-align: left;
     font-size: 40px;
+    margin-left: 10px;
     color: grey;
 }
 
-.userBlockTitle {
+.productBlockTitle {
     font-size: 45px;
     color: #96C0CE;
 }
 
-.userInfo {
+.productPic {
+    font-size: 30px;
+    color: #CEAB93;
+    width: 435px;
+    height: 50px;
+    outline: solid 1px grey;
+    margin-top: 20px;
+}
+
+.productInfo {
     font-size: 30px;
     color: #CEAB93;
     width: 435px;
     height: 50px;
     outline: solid 1px grey;
     margin-left: 80px;
-    margin-top:20px;
+    margin-top: 20px;
 }
 
-.addUserInputblock {
+.ntd {
+    margin-left:10px;
+}
+
+.detailInfo {
+    font-size: 30px;
+    color: #CEAB93;
+    width: 435px;
+    height: 300px;
+    outline: solid 1px grey;
+    margin-top: 20px;
+}
+
+.inventoryQtn {
+    font-size: 30px;
+    color: #CEAB93;
+    width: 435px;
+    height: 50px;
+    outline: solid 1px grey;
+    margin-top: 20px;    
+}
+
+.addProductInputblock {
     display: flex;
     align-items: flex-end;
     align-content: stretch;
@@ -29,17 +61,27 @@
     justify-content: flex-start;
 }
 
-.dutyTypeMenu {
+.detainInputblock {
+    display: flex;
+    align-items: center;
+    align-content: stretch;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+
+.productTypeMenu {
     border: solid 2px grey;
     display: inline-block;
     font-size: 30px;
     width: 445px;
     color: #CEAB93;
     padding: 10px;
-    margin-top: 20px;    
+    margin-top: 20px;
 }
 
-.btnAddUser {
+.btnAddProduct {
     margin-top: 40px;
     font-size: 40px;
     color: gray;
@@ -47,13 +89,13 @@
     height: 60px;
 }
 
-.searchUserBlock {
+.searchProductBlock {
     width: 1000px;
     text-align: left;
     color: #466CA6;
 }
 
-.DutyTypeInputblock {
+.productTypeInputblock {
     display: flex;
     margin-top: 40px;
     font-size: 20px;
@@ -61,11 +103,11 @@
     justify-content: flex-start;
 }
 
-.labUserSearchDutyType {
-    margin-left:50px;
+.labSearchProductType {
+    margin-left: 50px;
 }
 
-.searchDutyTypeMenu {
+.searchProductTypeMenu {
     font-size: 20px;
     color: #CEAB93;
     width: 200px;
@@ -75,7 +117,7 @@
     margin-left: 10px;
 }
 
-.btnSearchUser {
+.btnSearchProduct {
     font-size: 20px;
     color: #466CA6;
     width: 80px;
@@ -86,10 +128,11 @@
     background-color: #E3F2FD;
 }
 
-.userTable {
+.productTable {
     border: 1px solid #000;
     font-size: 20px;
     border-collapse: collapse;
+    white-space: pre;
 }
 
 th {
@@ -100,26 +143,26 @@ th {
     color: #fff;
 }
 
-td {
+.productTable td {
     border: 1px solid #000;
-    padding: 5px;
-    text-align: center;
+    padding: 5px;    
+    white-space: pre-wrap;
 }
 
-.userTable tr:nth-child(even) {
+.productTable tr:nth-child(even) {
     background: #FFF;
 }
 
-.userTable tr:nth-child(odd) {
+.productTable tr:nth-child(odd) {
     background: #E1F5FE;
 }
 
 /*游標所在的列會變色*/
-.userTable tr:hover {
+.productTable tr:hover {
     background-color: #ECEFF1;
 }
 
-.modifyUserBlock {
+.modifyProductBlock {
     display: flex;
     position: absolute;
     top: 50%;
@@ -130,8 +173,8 @@ td {
     font-size: 30px;
     color: #26C6DA;
     flex-direction: column;
-    width: 600px;
-    height: 400px;
+    width: 700px;
+    height: 700px;
     background-color: white;
     box-shadow: 5px 5px 10px grey;
     align-items: stretch;
@@ -139,42 +182,45 @@ td {
     justify-content: flex-start;
 }
 
-.modifyUser {
+.modifyProduct {
     font-size: 35px;
     color: #00ACC1;
+}
+
+.modifyProductTitle {
+    width: 435px;
+    height: 30px;
+    margin-left: 60px;
+    border: none;
+    outline: solid 1px #00BCD4;
+    color: #03A9F4;
+    font-size: 20px;
+}
+
+.modifyUnitPrice {
+    width: 435px;
+    height: 30px;
+    margin-left: 60px;
+    border: none;
+    outline: solid 1px #00BCD4;
+    color: #03A9F4;
+    font-size: 20px;
+}
+
+.modifyQtn {
+    width: 435px;
+    height: 30px;
+    border: none;
+    outline: solid 1px #00BCD4;
+    color: #03A9F4;
+    font-size: 20px;
+}
+
+.modifyProduct {
     text-align: center;
 }
 
-.modifyUserAccount {
-    width: 400px;
-    height: 30px;
-    margin-left: 10px;
-    border: none;
-    color: #03A9F4;
-    font-size: 20px;
-}
-
-.modifyNickname {
-    width: 400px;
-    height: 30px;
-    margin-left: 10px;
-    border: none;
-    outline: solid 1px #00BCD4;
-    color: #03A9F4;
-    font-size: 20px;
-}
-
-.modifyUserPwd {
-    width: 400px;
-    height: 30px;
-    margin-left: 10px;
-    border: none;
-    outline: solid 1px #00BCD4;
-    color: #03A9F4;
-    font-size: 20px;
-}
-
-.modifyUserInputBox {
+.modifyProductInputBox {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -182,7 +228,7 @@ td {
     align-items: flex-start;
 }
 
-.modifyUserInputBlock {
+.modifyProductInputBlock {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -191,7 +237,7 @@ td {
     margin-left: 20px;
 }
 
-.btnModifyUser {
+.btnModifyProduct {
     width: 100px;
     height: 40px;
     border: solid 1px #26C6DA;
@@ -207,13 +253,21 @@ td {
     justify-content: space-evenly;
 }
 
-.modifyDutyMenu {
+.modifyProductType {
     font-size: 20px;
     color: #CEAB93;
     width: 200px;
     height: 30px;
     border: none;
-    outline: solid 1px #00BCD4;
-    margin-left: 10px;
+    outline: solid 1px #466CA6;
 }
 
+.modifyDetailInfo {
+    font-size: 30px;
+    color: #CEAB93;
+    width: 435px;
+    height: 300px;
+    border:none;
+    outline: solid 1px #00BCD4;    
+    margin-top: 5px;
+}
