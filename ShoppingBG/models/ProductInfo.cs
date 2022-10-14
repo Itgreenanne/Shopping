@@ -14,10 +14,13 @@ namespace ShoppingBG.models
         /// 產品id
         /// </summary>
         public int ProductId { get; set; }
+       /// <summary>
+       /// 產品圖路徑
+       /// </summary>
+        public string ProductPic { get; set; }
         /// <summary>
         /// 產品標題
         /// </summary>
-        public string ProductPic { get; set; }
         public string ProductTitle { get; set; }
         /// <summary>
         /// 產品單價

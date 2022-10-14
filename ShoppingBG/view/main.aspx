@@ -310,72 +310,67 @@
       </div>--%>
 
       <div class="modifyMemberBlock" id="modifyMemberBlock">
-            <div class="modifyMember">會員修改</div>
-            <div class="inputBlock">
-                 <div class="modifyMemberInputBox">
-                    <label for="idNumber" class="labIdNo">身份証字號： </label>
-                    <span class="idNoShown" id="idNoShown"></span>
+            <span class="modifyMember">會員修改</span>
+             <div class="inputBlock">
+                <div class="modifyMemberIdNo">
+                    <label for="idNoShown">身份証字號： </label>
+                    <span class="idNoShown" id="idNoShown" ></span>
                 </div>
-                <div class="modifyMemberInputBox">
-                     <div class="labelLastName">姓：</div>
+                <div class="modifyMemberBox">
+                     <label for="lastNameInput">姓：</label>
                      <input type="text" class="lastNameInput" id="lastNameInput" autocomplete="off" oninput="NoSpaceKey('lastNameInput')" value="" />
-             <%--   </div>
-                <div class="modifyMemberInputBox">--%>
-                    <div class="labelFirstName">名：</div>
+                </div >
+                <div class="modifyMemberBox">
+                    <label for="lastNameInput">名：</label>
                     <input type="text" class="firstNameInput" id="firstNameInput" autocomplete="off" oninput="NoSpaceKey('firstNameInput')" value=""/>                  
                 </div>
-                <div class="modifyGender">
-                    <span class="modifyGenderTitle">性別：<//span>
-                    <label for="modifyFemale">女</label>
-                    <input name="radModifyGender"type="radio" class="radModifyFemale" id="radModifyFemale" value="2"/>
-                    <label for="modifyMale">男</label>
-                    <input name="radModifyGender"type="radio" class="radModifyMale" id="radModifyMale" value="1"/>
-                    <label for="modifyOther">其他</label>
-                    <input name="radModifyGender"type="radio" class="radModifyOther" id="radModifyOther" value="3"/>
+                <div class="modifyGender">                
+                    <label class="modifyGenderTitle">性別：</label>
+                    <div class="genderSelect">
+                        <label for="modifyFemale">女</label>
+                        <input name="radModifyGender"type="radio" class="radModifyFemale" id="radModifyFemale" value="2"/>
+                        <label for="modifyMale">男</label>
+                        <input name="radModifyGender"type="radio" class="radModifyMale" id="radModifyMale" value="1"/>
+                        <label for="modifyOther">其他</label>
+                        <input name="radModifyGender"type="radio" class="radModifyOther" id="radModifyOther" value="3"/>
+                    </div>
                 </div>
-               <%-- <div class="modifyBirth">
-                    <span class="modifyBirthTitle">生日：<//span>
-                    <label for="modifyYear">西元年</label>
-                    <input name="modifyYear"type="text" class="inputBirthYear" id="inputBirthYear" oninput="OnlyNumber('inputBirthYear')" value=""/>
-                    <label for="modifyMonth">月</label>
-                    <input name="modifyMonth"type="text" class="inputBirthMonth" id="inputBirthMonth" oninput="OnlyNumber('inputBirthMonth')" value=""/>
-                    <label for="modifyDay">日</label>
-                    <input name="modifyDay"type="text" class="inputBirthDay" id="inputBirthDay" oninput="OnlyNumber('inputBirthDay')" value=""/>
-                </div>--%>
-                 <div class="modifyBirth">
-                    <span class="modifyBirthTitle">生日：<//span>                   
+             
+                <div class="modifyMemberBox">
+                    <label for="lastNameInput">生日：</label>                   
                     <input name="modifyYear"type="date" class="inputBirth" id="inputBirth" value=""/>                   
                 </div>
-                <div class="modifyPwd">
-                    <div class="labelModifyPwd">密碼：</div>
-                    <input type="text" class="modifyPwd" id="modifyPwd" autocomplete="off" oninput="NoSpaceKey('modifyPwd')" value=""/>                  
+                <div class="modifyMemberBox">
+                    <label for="modifyPwd">密碼：</label>                   
+                    <input type="text" class="modifyPwd" id="modifyPwd" autocomplete="off" oninput="NoSpaceKey('modifyPwd')" value=""/>
                 </div>
-                <div class="modifyMail">
-                    <div class="labelModifyMail">Email：</div>
+                <div class="modifyMemberBox">
+                    <label for="modifyMail">Email：</label>                   
                     <input type="text" class="modifyMail" id="modifyMail" autocomplete="off" oninput="NoSpaceKey('modifyMail')" value=""/>                  
                 </div>
-                <div class="modifyPhone">
-                    <div class="labelModifyPhone">電話：</div>
+                <div class="modifyMemberBox">
+                    <label for="modifyPhone">電話：</label>                   
                     <input type="text" class="modifyPhone" id="modifyPhone" autocomplete="off" oninput="NoSpaceKey('modifyPhone')" value=""/>
                 </div>
-                <div class="modifyAddress">
-                    <div class="labelModifyAddress">住址：</div>
+                <div class="modifyMemberBox">
+                    <label for="modifyAddress">住址：</label>                   
                     <input type="text" class="modifyAddress" id="modifyAddress" autocomplete="off" oninput="NoSpaceKey('modifyAddress')" value=""/>
                 </div>
-                <div class="modifyPoints">
-                    <div class="labelModifyPoints">點數：</div>
+                <div class="modifyMemberBox">
+                    <label for="modifyPoints">點數：</label>
                     <input type="text" class="modifyPoints" id="modifyPoints" autocomplete="off" oninput="NoSpaceKey('modifyPoints')" value=""/>
                 </div>
-                <div class="modifyLevel">
-                    <div class="labelModifyLevel">等級：</div>
+                <div class="modifyMemberBox">
+                    <label for="modifyLevel">等級：</label>
                     <input type="text" class="modifyLevel" id="modifyLevel" autocomplete="off" oninput="NoSpaceKey('modifyLevel')" value=""/>
                 </div>
             </div>
             <div class="btnModifyBlock">
                     <button class="btnModifyUser" id="ModifyMemberConfirm" onclick="ModifyMember()">確定</button>
                     <button class="btnModifyUser" id="ModifyMemberCancel" onclick="CancelMemberModifyBlock()">取消</button>
-            </div>                   
-      </div> 
+            </div>
+      </div>
+    </div>
 
     
 </body>

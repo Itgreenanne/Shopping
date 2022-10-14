@@ -163,6 +163,8 @@ function ModifyMemberBlock(memberId) {
     })
 }
 
+var dataId;
+
 //會員修改彈跳視窗取消
 function CancelMemberModifyBlock() {
     $('#modifyMemberBlock').hide();
@@ -185,19 +187,12 @@ function ModifyMember() {
     $("input[type=radio]:checked").each(function () {
         gender = $(this).val();
     });
-    var level = $('#modifyLevel').text();
-    var points = $('#modifyPoints').text();
+    var level = $('#modifyLevel').val();
+    var points = $('#modifyPoints').val();
 
     if (!tel || !pwd || !lastname || !firstname || !mail ||
-        !address || !birthYear || !birthMonth || !birthDay
-        || !gender || !level || !points) {
-        alert('有輸入框未填');
-    } else if (birthYear < 1922 && birthYear > 2022) {
-        alert('出生年份輸入錯誤');
-    } else if (birthMonth < 1 && birthYear > 12) {
-        alert('出生月份輸入錯誤');
-    } else if (birthDay < 1 && birthYear > 2022) {
-        alert('出生年份輸入錯誤');
+        !birth || !gender || !level || !points) {
+        alert('有輸入框未填');  
     } else if (tel.length != 10) {
         alert('電話號碼輸入長度錯誤');
     } else if (lastname.length > 20) {
@@ -213,7 +208,7 @@ function ModifyMember() {
             url: '/ajax/AjaxMember.aspx?fn=ModifyMember',
             type: 'POST',
             data: {
-                getId: memberInfo.MemberId,
+                getId: dataId,
                 getTel: tel,
                 getPwd: pwd,
                 getGender: gender,
@@ -229,11 +224,11 @@ function ModifyMember() {
                 console.log(data);
                 if (data) {
                     switch (data) {
-                        case '0':
+                        case '14':
                             alert("修改會員資料成功");
-                            $('#settingBlock').hide();
-                            $('#functionContent').hide();
-                            $('#memberCenterlogo').hide();
+                            $('#modifyMemberBlock').hide();                        
+                            $('#overlay').hide();
+                            GetAllMember();
                             break;
                         case '1':
                             alert('已有此人員帳號');

@@ -76,7 +76,7 @@ td {
     color: #26C6DA;
     flex-direction: column;
     width: 600px;
-    height: 510px;
+    height: 620px;
     background-color: white;
     box-shadow: 5px 5px 10px grey;
     align-items: stretch;
@@ -99,15 +99,6 @@ td {
     display: flex;
 }
 
-/*.inputBlock {
-    display: flex;
-    margin-left: 20px;
-    justify-content: flex-start;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap; 
-}*/
-
 .inputBlock {
     display: flex;
     margin-left: 20px;
@@ -117,7 +108,46 @@ td {
     flex-wrap: wrap;
 }
 
-.modifyMemberInputBox input[type=text], .modifyBirth input[type=text] {
+.modifyMemberBox label {
+    width: 180px;
+    float: left;
+    text-align: right;
+}
+
+.modifyMemberBox input {
+    width: 300px;
+    height: 30px;
+    border: none;
+    outline: solid 1px #00BCD4;
+    color: #03A9F4;
+    font-size: 20px;
+}
+
+.modifyMemberBox {
+    align-items: center;
+}
+
+.modifyMemberIdNo {
+    display: flex;
+}
+
+.idNoShown {
+    width: 300px;
+    height: 30px;
+}
+
+.genderSelect {
+    width: 300px;
+}
+
+.modifyGenderTitle {
+    width: 180px;
+    float: left;
+    text-align: right;
+}
+
+
+/*.modifyMemberInputBox input[type=text], .modifyBirth input[type=text] {
     width: 80px;
     height: 20px;
     border: none;
@@ -168,7 +198,7 @@ td {
     height: 20px;
     border: none;
     outline: solid 1px #00BCD4;
-}
+}*/
 
 .btnModifyMember {
     width: 100px;

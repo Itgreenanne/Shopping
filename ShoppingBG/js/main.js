@@ -99,7 +99,6 @@ $(document).ready(function () {
                 GetAllProduct();
                 $('#searchProductBlock').show();
                 break;
-
             case 'searchMember':
                 ResetAll();
                 GetAllMember();
