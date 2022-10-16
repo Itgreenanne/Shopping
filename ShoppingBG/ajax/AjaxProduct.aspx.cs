@@ -529,6 +529,7 @@ namespace ShoppingBG.ajax
             string productId = Request.Form["getProductId"];
             int apiProductId = 0;
             bool productIdIsConvToInt = int.TryParse(Request.Form["getProductId"], out apiProductId);
+            string apiProductPicPath = Request.Form["getProductPicPath"];
             string apiProductTitle = Request.Form["getProductTitle"];
             string unitPrice = Request.Form["getUnitPrice"];
             int apiUnitPrice = 0;
@@ -591,6 +592,7 @@ namespace ShoppingBG.ajax
                 try
                 {
                     cmd.Parameters.Add(new SqlParameter("@productId", apiProductId));
+                    cmd.Parameters.Add(new SqlParameter("@productPicPath", apiProductPicPath));
                     cmd.Parameters.Add(new SqlParameter("@productTitle", apiProductTitle));
                     cmd.Parameters.Add(new SqlParameter("@unitPrice", apiUnitPrice));
                     cmd.Parameters.Add(new SqlParameter("@qtn", apiInventoryQtn));

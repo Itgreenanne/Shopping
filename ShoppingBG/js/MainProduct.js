@@ -242,6 +242,7 @@ function DeleteProduct(ProductId) {
 
 //彈跳人員修改視窗的內容
 function ModifyProductBlock(productId) {
+    $('#modifyProductPicPath').val('');
     $('#modifyProductTitle').val('');
     $('#modifyUnitPrice').val('');
     $('#modifyQtn').val('');
@@ -264,7 +265,7 @@ function ModifyProductBlock(productId) {
                     return;
                 } else {
                     //顯示跟選擇列資料一樣的資料
-                    $('#productPicUrl').val(productArray.ProductPic);
+                    $('#modifyProductPicPath').val(productArray.ProductPic);
                     $('#modifyProductTitle').val(productArray.ProductTitle);
                     $('#modifyUnitPrice').val(productArray.ProductUnitPrice);
                     $('#modifyQtn').val(productArray.ProductQtn);
@@ -288,6 +289,7 @@ function ModifyProductBlock(productId) {
 }
 
 function ModifyProduct() {
+    var inputProductPicPath = $('#modifyProductPicPath').val();
     var inputProductTitle = $('#modifyProductTitle').val();
     var inputUnitPrice = $('#modifyUnitPrice').val();
     var inventoryQtn = $('#modifyQtn').val();
@@ -300,7 +302,7 @@ function ModifyProduct() {
     console.log(productTypeId);
     console.log(productDetail);
 
-    if (inputProductTitle == productData.ProductTitle && inputUnitPrice == productData.ProductUnitPrice
+    if (inputProductPicPath == productData.ProductPic && inputProductTitle == productData.ProductTitle && inputUnitPrice == productData.ProductUnitPrice
         && inventoryQtn == productData.ProductQtn && productTypeId == productData.ProductTypeId && productDetail == productData.ProductDetail) {
         alert('資料完全沒有修改');
     } else if (!inputProductTitle || !inputUnitPrice || !inventoryQtn || productTypeId == 0 || !productDetail) {
@@ -319,6 +321,7 @@ function ModifyProduct() {
             type: 'POST',
             data: {
                 getProductId: productData.ProductId,
+                getProductPicPath: inputProductPicPath,
                 getProductTitle: inputProductTitle,
                 getUnitPrice: inputUnitPrice,
                 getInventoryQtn: inventoryQtn,

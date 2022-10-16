@@ -1,6 +1,6 @@
 USE ShoppingBG
 GO
-CREATE PROCEDURE pro_shoppingBG_getSearchUserInfo @userId INT
+create PROCEDURE pro_shoppingBG_getSearchUserInfo @userId INT
 AS
 BEGIN
 

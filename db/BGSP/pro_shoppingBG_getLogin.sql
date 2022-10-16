@@ -1,6 +1,6 @@
 USE ShoppingBG
 GO
-CREATE PROCEDURE pro_shoppingBG_getLogin @userAccount NVARCHAR(20), @pwd NVARCHAR(20)
+create PROCEDURE pro_shoppingBG_getLogin @userAccount NVARCHAR(20), @pwd NVARCHAR(20)
 AS
 BEGIN
 

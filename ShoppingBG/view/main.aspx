@@ -278,10 +278,13 @@
                 </div>            
       </div>
 
-     <%-- <div class="modifyProductBlock" id="modifyProductBlock">
+      <div class="modifyProductBlock" id="modifyProductBlock">
             <p class="modifyProduct">產品修改</p>
             <div class="modifyProductInputBlock">
-                 <span id="productPicUrl"></span>
+                 <label for="modifyProductPicPath" class="labelProduct">圖片： </label>
+                 <input type="text" class="modifyProductPicPath" id="modifyProductPicPath" autocomplete="off" value="" /><br/>
+            </div>
+            <div class="modifyProductInputBlock">
                  <label for="modifyProductTitle" class="labelProduct">標題： </label>
                  <input type="text" class="modifyProductTitle" id="modifyProductTitle" autocomplete="off" value="" /><br/>
             </div>
@@ -307,7 +310,7 @@
                     <button class="btnModifyProduct" id="ModifyProductConfirm" onclick="ModifyProduct()">確定</button>
                     <button class="btnModifyProduct" id="ModifyProductCancel" onclick="CancelProductModifyBlock()">取消</button>
                 </div>            
-      </div>--%>
+      </div>
 
       <div class="modifyMemberBlock" id="modifyMemberBlock">
             <span class="modifyMember">會員修改</span>

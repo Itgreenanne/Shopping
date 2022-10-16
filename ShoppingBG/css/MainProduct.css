@@ -187,6 +187,17 @@ th {
     color: #00ACC1;
 }
 
+
+.modifyProductPicPath {
+    width: 435px;
+    height: 30px;
+    margin-left: 60px;
+    border: none;
+    outline: solid 1px #00BCD4;
+    color: #03A9F4;
+    font-size: 20px;
+}
+
 .modifyProductTitle {
     width: 435px;
     height: 30px;
