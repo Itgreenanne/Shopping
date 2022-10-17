@@ -21,12 +21,24 @@ namespace ShoppingBG.app_code
             /// <summary>
             /// 使用者資料沒有被改變
             /// </summary>
-            UserInfoIsChanged
+            UserInfoIsChanged,
+            /// <summary>
+            /// 太久沒使用網頁Session使用者資料過期變null
+            /// </summary>
+            SessionIsNull
         }
 
         protected void Page_Init(object sender, EventArgs e)
         {
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
+            if (Session["userInfo"] == null)
+            {
+                JObject msgReturn = new JObject();
+                msgReturn.Add("result", Convert.ToInt16(DutyAuthorityMsg.SessionIsNull));
+                Response.Write(msgReturn);
+                Response.End();
+            }
+
             UserInfoCompare userInfoCompare = new UserInfoCompare();
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);

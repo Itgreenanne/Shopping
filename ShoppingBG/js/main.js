@@ -172,7 +172,7 @@ function NoSpaceKey(inputName) {
 
 //重覆的東西
 function RepeatedStuff(data) {
-    if (data && data['result'] == 0) {
+    if (data && data['result'] == 0 || data && data['result'] == 1 ) {
         alert('即將被登出');
         window.location.href = "/view/LoginPage.aspx";
         return true;
