@@ -96,6 +96,8 @@ function AddUser() {
                         case '9':
                             alert('id型別錯誤');
                             break;
+                        default:
+                            alert('資料錯誤');
                     }
                 } else {
                     alert('資料錯誤');

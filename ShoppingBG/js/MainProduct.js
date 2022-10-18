@@ -97,10 +97,12 @@ function AddProduct() {
                             case '8':
                                 alert("新增產品成功");
                                 ResetAll();
-                                $("#addProductBlock").hide();
-                                $("#searchProductBlock").show();
+                                $('#addProductBlock').hide();
+                                $('#searchProductBlock').show();
                                 GetAllProduct();
                                 break;
+                            default:
+                                alert('資料錯誤');
                         }
                     }
                 } else {

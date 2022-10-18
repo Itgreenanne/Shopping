@@ -116,18 +116,13 @@ function ModifyMemberBlock(memberId) {
         },
         success: function (data) {
             if (data) {
-                var jsonResult = (JSON.parse(data));
-
-                if (RepeatedStuff(data)) {
-                    return;
-                } else if (data == 1) {
-                    alert('資料錯誤');
+                var jsonResult = JSON.parse(data);
+                console.log(jsonResult);
+                if (RepeatedStuff(jsonResult)) {
+                    return;               
                 } else {
-                    //for ModifyDuty()裡的變數dutyInfo
-                    dataId = memberId;
-                    //重置所有checkbox
-                    var jsonResult = JSON.parse(data);
-                    console.log(jsonResult);
+                    //for ModifyMember()裡的變數MemberInfo
+                    dataId = memberId;                  
                     //顯示跟選擇列資料一樣的資料
                     $('#idNoShown').text(jsonResult.idNumber.toUpperCase());
                     $('#lastNameInput').val(jsonResult.lastname);
@@ -229,27 +224,27 @@ function ModifyMember() {
                             $('#modifyMemberBlock').hide();                        
                             $('#overlay').hide();
                             GetAllMember();
-                            break;
-                        case '1':
-                            alert('已有此人員帳號');
-                            break;
+                            break;                    
                         case '3':
-                            alert('身份証字號輸入長度錯誤');
-                            break;
-                        case '4':
-                            alert('電話號碼輸入長度錯誤');
+                            alert('資料輸入錯誤');
                             break;
                         case '5':
+                            alert('電話號碼輸入長度錯誤');
+                            break;
+                        case '6':
                             alert('密碼長度不對');
                             break;
-                        case '9':
+                        case '10':
                             alert('姓太長');
                             break;
-                        case '10':
+                        case '11':
                             alert('名太長');
                             break;
-                        case '11':
+                        case '12':
                             alert('email長度太長');
+                            break;
+                        default:
+                            alert('資料錯誤');
                     }
                 } else {
                     alert('資料錯誤');

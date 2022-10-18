@@ -91,10 +91,7 @@ namespace ShoppingBG.ajax
                     break;
                 case "GetSearchMemberById":
                     GetSearchMemberById();
-                    break;
-                case "GetSearchDutyByIdNo":
-                    GetSearchDutyByIdNo();
-                    break;
+                    break;                    
                 case "ModifyMember":
                     ModifyMember();
                     break;
@@ -132,7 +129,7 @@ namespace ShoppingBG.ajax
                         memberInfo.Add("mail", reader["f_mail"].ToString());
                         memberInfo.Add("phone", reader["f_phone"].ToString());
                         memberInfo.Add("address", reader["f_address"].ToString());
-                        memberInfo.Add("points", Convert.ToInt16(reader["f_points"]));
+                        memberInfo.Add("points", Convert.ToInt32(reader["f_points"]));
                         memberInfo.Add("level", Convert.ToInt16(reader["f_level"]));
                         resultArray.Add(memberInfo);
                     }
@@ -170,8 +167,7 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@memberId", apiMemberId));
                     SqlDataReader reader = cmd.ExecuteReader();
                     JArray resultArray = new JArray();
-
-                    //判斷是否有此職責存在
+                    
                     if (reader.HasRows)
                     {
                         while (reader.Read())
@@ -187,7 +183,7 @@ namespace ShoppingBG.ajax
                             memberInfo.Add("mail", reader["f_mail"].ToString());
                             memberInfo.Add("phone", reader["f_phone"].ToString());
                             memberInfo.Add("address", reader["f_address"].ToString());
-                            memberInfo.Add("points", Convert.ToInt16(reader["f_points"]));
+                            memberInfo.Add("points", Convert.ToInt32(reader["f_points"]));
                             memberInfo.Add("level", Convert.ToInt16(reader["f_level"]));
                             resultArray.Add(memberInfo);
                         }
@@ -242,7 +238,7 @@ namespace ShoppingBG.ajax
                         memberInfo.Add("mail", reader["f_mail"].ToString());
                         memberInfo.Add("phone", reader["f_phone"].ToString());
                         memberInfo.Add("address", reader["f_address"].ToString());
-                        memberInfo.Add("points", Convert.ToInt16(reader["f_points"]));
+                        memberInfo.Add("points", Convert.ToInt32(reader["f_points"]));
                         memberInfo.Add("level", Convert.ToInt16(reader["f_level"]));
                         //resultArray.Add(memberInfo);
                     }
@@ -264,67 +260,11 @@ namespace ShoppingBG.ajax
                 conn.Close();
                 conn.Dispose();
             }
-        }
+        }  
 
         /// <summary>
-        /// 用身份証字號搜尋會員
+        /// 修改會員資料
         /// </summary>
-        private void GetSearchDutyByIdNo() {
-            MsgType msgValue = MsgType.WrongConnect;
-            string apiGetIdNo = Request.Form["getIdNo"];
-            string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
-            SqlConnection conn = new SqlConnection(strConnString);
-            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getSearchMemberByIdNo", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-            conn.Open();
-
-            try
-            {
-                cmd.Parameters.Add(new SqlParameter("@idNo", apiGetIdNo));
-                SqlDataReader reader = cmd.ExecuteReader();
-                JObject memberInfo = new JObject();
-                JArray resultArray = new JArray();
-                //判斷是否有此職責存在
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        memberInfo.Add("memberId", Convert.ToInt16(reader["f_id"]));
-                        memberInfo.Add("idNumber", reader["f_idNumber"].ToString());
-                        memberInfo.Add("lastname", reader["f_lastname"].ToString());
-                        memberInfo.Add("firstname", reader["f_firstname"].ToString());
-                        memberInfo.Add("gender", Convert.ToInt16(reader["f_gender"]));
-                        memberInfo.Add("birth", reader["f_birthday"].ToString());
-                        memberInfo.Add("pwd", reader["f_pwd"].ToString());
-                        memberInfo.Add("mail", reader["f_mail"].ToString());
-                        memberInfo.Add("phone", reader["f_phone"].ToString());
-                        memberInfo.Add("address", reader["f_address"].ToString());
-                        memberInfo.Add("points", Convert.ToInt16(reader["f_points"]));
-                        memberInfo.Add("level", Convert.ToInt16(reader["f_level"]));
-                        resultArray.Add(memberInfo);
-                    }
-                    Response.Write(resultArray);
-                }
-                else
-                {
-                    msgValue = MsgType.MemberNotExisted;
-                    Response.Write((int)msgValue);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                throw ex.GetBaseException();
-            }
-            finally
-            {
-                conn.Close();
-                conn.Dispose();
-            }
-
-        }
-
-
         private void ModifyMember()
         {
             MsgType msgValue = MsgType.WrongConnection;
@@ -406,15 +346,8 @@ namespace ShoppingBG.ajax
                         while (reader.Read())
                         {
                             int result = Convert.ToInt16(reader["result"]);
-                            if (result == 0)
-                            {
-                                msgValue = MsgType.MemberExisted;
-                                break;
-                            }
-                            else
-                            {
-                                msgValue = MsgType.MemberModified;
-                            }
+                            msgValue = MsgType.MemberModified;
+                           
                         }
                     }
 
