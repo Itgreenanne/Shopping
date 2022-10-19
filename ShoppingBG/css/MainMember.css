@@ -31,9 +31,11 @@
 }
 
 .memberTable {
+    width: 100%;
     border: 1px solid #000;
     font-size: 20px;
     border-collapse: collapse;
+    word-break: break-all;    
 }
 
 th {
@@ -48,6 +50,25 @@ td {
     border: 1px solid #000;
     padding: 5px;
     text-align: center;
+}
+
+.idColumn {
+    width: 105px;
+}
+
+.birthColumn {
+    width: 95px;
+}
+
+.phoneColumn {
+    width: 100px;
+}
+
+.pointsColumn {
+    width: 100px;
+}
+.mailColumn {
+    width: 80px;
 }
 
 .memberTable tr:nth-child(even) {
@@ -106,6 +127,12 @@ td {
     flex-direction: column;
     align-items: center;
     flex-wrap: wrap;
+}
+
+.modifyMemberIdNo label {
+    width: 180px;
+    float: left;
+    text-align: right;
 }
 
 .modifyMemberBox label {

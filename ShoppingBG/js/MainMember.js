@@ -284,16 +284,16 @@ function PrintMemberTable(jsonResult) {
     for (var i = 0; i < jsonResult.length; i++) {
         tableRow +=
             '<tr>' +
-            '<td>' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
+            '<td class="idColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
             '<td>' + jsonResult[i].lastname + '</td>' +
             '<td>' + jsonResult[i].firstname + '</td>' +
             '<td>' + GetGender(jsonResult[i].gender) + '</td>' +
-            '<td>' + jsonResult[i].birth + '</td>' +
+            '<td class="birthColumn">' + jsonResult[i].birth + '</td>' +
             '<td>' + jsonResult[i].pwd + '</td>' +
-            '<td>' + jsonResult[i].mail + '</td>' +
-            '<td>' + jsonResult[i].phone + '</td>' +
+            '<td class="mailColumn">' + jsonResult[i].mail + '</td>' +
+            '<td class="phoneColumn">' + jsonResult[i].phone + '</td>' +
             '<td>' + jsonResult[i].address + '</td>' +
-            '<td>' + jsonResult[i].points + '</td>' +
+            '<td class="pointsColumn"> ' + jsonResult[i].points + '</td > ' +
             '<td>' + jsonResult[i].level + '</td>' +
             '<td> <button onclick="DeleteMember(\'' + jsonResult[i].memberId + '\')">' +
             '刪除' + '</button>' + ' ' +

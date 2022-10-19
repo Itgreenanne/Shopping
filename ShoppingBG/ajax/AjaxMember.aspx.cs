@@ -221,9 +221,7 @@ namespace ShoppingBG.ajax
                 cmd.Parameters.Add(new SqlParameter("@memberId", apiGetId));
                 SqlDataReader reader = cmd.ExecuteReader();
                 JObject memberInfo = new JObject();
-                //JArray resultArray = new JArray();
 
-                //判斷是否有此職責存在
                 if (reader.HasRows)
                 {
                     while (reader.Read())
@@ -240,7 +238,6 @@ namespace ShoppingBG.ajax
                         memberInfo.Add("address", reader["f_address"].ToString());
                         memberInfo.Add("points", Convert.ToInt32(reader["f_points"]));
                         memberInfo.Add("level", Convert.ToInt16(reader["f_level"]));
-                        //resultArray.Add(memberInfo);
                     }
                     Response.Write(memberInfo);
                 }

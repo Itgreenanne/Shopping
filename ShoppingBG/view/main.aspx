@@ -316,8 +316,16 @@
             <span class="modifyMember">會員修改</span>
              <div class="inputBlock">
                 <div class="modifyMemberIdNo">
-                    <label for="idNoShown">身份証字號： </label>
+                    <label for="idNoShown">ID： </label>
                     <span class="idNoShown" id="idNoShown" ></span>
+                </div>
+                <div class="modifyMemberBox">
+                    <label for="modifyPhone">聯絡電話：</label>                   
+                    <input type="text" class="modifyPhone" id="modifyPhone" autocomplete="off" oninput="NoSpaceKey('modifyPhone')" value=""/>
+                </div>
+                <div class="modifyMemberBox">
+                    <label for="modifyPwd">密碼：</label>                   
+                    <input type="text" class="modifyPwd" id="modifyPwd" autocomplete="off" oninput="NoSpaceKey('modifyPwd')" value=""/>
                 </div>
                 <div class="modifyMemberBox">
                      <label for="lastNameInput">姓：</label>
@@ -337,24 +345,15 @@
                         <label for="modifyOther">其他</label>
                         <input name="radModifyGender"type="radio" class="radModifyOther" id="radModifyOther" value="3"/>
                     </div>
-                </div>
-             
+                </div>             
                 <div class="modifyMemberBox">
                     <label for="lastNameInput">生日：</label>                   
                     <input name="modifyYear"type="date" class="inputBirth" id="inputBirth" value=""/>                   
-                </div>
+                </div>               
                 <div class="modifyMemberBox">
-                    <label for="modifyPwd">密碼：</label>                   
-                    <input type="text" class="modifyPwd" id="modifyPwd" autocomplete="off" oninput="NoSpaceKey('modifyPwd')" value=""/>
-                </div>
-                <div class="modifyMemberBox">
-                    <label for="modifyMail">Email：</label>                   
+                    <label for="modifyMail">E-mail：</label>                   
                     <input type="text" class="modifyMail" id="modifyMail" autocomplete="off" oninput="NoSpaceKey('modifyMail')" value=""/>                  
-                </div>
-                <div class="modifyMemberBox">
-                    <label for="modifyPhone">電話：</label>                   
-                    <input type="text" class="modifyPhone" id="modifyPhone" autocomplete="off" oninput="NoSpaceKey('modifyPhone')" value=""/>
-                </div>
+                </div>                
                 <div class="modifyMemberBox">
                     <label for="modifyAddress">住址：</label>                   
                     <input type="text" class="modifyAddress" id="modifyAddress" autocomplete="off" oninput="NoSpaceKey('modifyAddress')" value=""/>
