@@ -129,10 +129,11 @@
 }
 
 .productTable {
+    width: 100%;
     border: 1px solid #000;
     font-size: 20px;
     border-collapse: collapse;
-    white-space: pre;
+    word-break: break-all;
 }
 
 th {
@@ -147,6 +148,14 @@ th {
     border: 1px solid #000;
     padding: 5px;    
     white-space: pre-wrap;
+}
+
+.productTitle {
+    width: 200px;
+}
+
+.productType {
+    width: 100px;
 }
 
 .productTable tr:nth-child(even) {

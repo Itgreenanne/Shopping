@@ -182,7 +182,7 @@ function GetSearchProduct() {
                     } else if (jsonResult == 0) {
                         alert('空字串');
                     } else if (jsonResult == 2) {
-                        alert('帳號輸入超過100字元');
+                        alert('標題輸入超過100字元');
                     } else if (jsonResult == 6) {
                         alert('id型別錯誤');
                     } else {
@@ -374,10 +374,10 @@ function PrintProductTable(jsonResult) {
         tableRow +=
             '<tr>' +
             '<td><img src="/image/'+ jsonResult[i].ProductPic + '" width="20%"></td>'+
-            '<td>' + jsonResult[i].ProductTitle + '</td>' +
+            '<td class="productTitle">' + jsonResult[i].ProductTitle + '</td>' +
             '<td>' + jsonResult[i].ProductUnitPrice + '</td>' +
             '<td>' + jsonResult[i].ProductQtn + '</td>' +
-            '<td>' + jsonResult[i].ProductTypeName + '</td>' +
+            '<td class="productType">' + jsonResult[i].ProductTypeName + '</td>' +
             '<td style="text-align: left;">' + jsonResult[i].ProductDetail + '</td>' +
             '<td> <button onclick="DeleteProduct(\'' + jsonResult[i].ProductId + '\')">' +
             '刪除' + '</button>' + ' ' +
