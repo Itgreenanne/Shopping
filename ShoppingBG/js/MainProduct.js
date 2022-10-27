@@ -373,7 +373,7 @@ function PrintProductTable(jsonResult) {
     for (var i = 0; i < jsonResult.length; i++) {
         tableRow +=
             '<tr>' +
-            '<td><img src="/image/'+ jsonResult[i].ProductPic + '" width="20%"></td>'+
+            '<td><img src="/image/' + jsonResult[i].ProductPic + '" width="20%"></td>'+
             '<td class="productTitle">' + jsonResult[i].ProductTitle + '</td>' +
             '<td>' + jsonResult[i].ProductUnitPrice + '</td>' +
             '<td>' + jsonResult[i].ProductQtn + '</td>' +

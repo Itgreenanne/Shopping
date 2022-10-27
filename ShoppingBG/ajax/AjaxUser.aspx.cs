@@ -248,8 +248,7 @@ namespace ShoppingBG.ajax
                 DataSet ds = new DataSet();
                 //將dataAdapter資料存入dataset
                 adapter.Fill(ds);
-                DataTable dt = new DataTable();
-                ///讀取職責表格
+                DataTable dt = new DataTable();                
                 dt = ds.Tables[0];
                 UserDutyCombo userDutyCombo = new UserDutyCombo();
                 List<DutyInfoForMenu> dutyArray = new List<DutyInfoForMenu>();
