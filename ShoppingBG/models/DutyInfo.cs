@@ -6,7 +6,7 @@ using System.Web;
 namespace ShoppingBG.models
 {
     /// <summary>
-    /// 
+    /// 職責資訊
     /// </summary>
     public class DutyInfo
     {

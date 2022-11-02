@@ -279,7 +279,7 @@ namespace ShoppingBG.ajax
                         ProductId = Convert.ToInt16(row.ItemArray[0]),
                         ProductPic = row.ItemArray[1].ToString(),
                         ProductTitle = row.ItemArray[2].ToString(),
-                        ProductUnitPrice = Convert.ToInt16(row.ItemArray[3]),
+                        ProductUnitPrice = Convert.ToInt32(row.ItemArray[3]),
                         ProductQtn = Convert.ToInt16(row.ItemArray[4]),
                         ProductTypeId = Convert.ToInt16(row.ItemArray[5]),
                         ProductDetail = row.ItemArray[6].ToString(),
@@ -351,7 +351,7 @@ namespace ShoppingBG.ajax
                             productInfo.Add("ProductId", Convert.ToInt16(reader["f_id"]));
                             productInfo.Add("ProductPic", reader["f_picturePath"].ToString());
                             productInfo.Add("ProductTitle", reader["f_title"].ToString());
-                            productInfo.Add("ProductUnitPrice", Convert.ToInt16(reader["f_unitprice"]));
+                            productInfo.Add("ProductUnitPrice", Convert.ToInt32(reader["f_unitprice"]));
                             productInfo.Add("ProductQtn", Convert.ToInt16(reader["f_quantity"]));
                             productInfo.Add("ProductTypeId", Convert.ToInt16(reader["f_typeId"]));
                             productInfo.Add("ProductDetail", reader["f_detail"].ToString());
@@ -410,7 +410,7 @@ namespace ShoppingBG.ajax
                             productInfo.Add("ProductId", Convert.ToInt16(reader["f_id"]));
                             productInfo.Add("ProductPic", reader["f_picturePath"].ToString());
                             productInfo.Add("ProductTitle", reader["f_title"].ToString());
-                            productInfo.Add("ProductUnitPrice", Convert.ToInt16(reader["f_unitprice"]));
+                            productInfo.Add("ProductUnitPrice", Convert.ToInt32(reader["f_unitprice"]));
                             productInfo.Add("ProductQtn", Convert.ToInt16(reader["f_quantity"]));
                             productInfo.Add("ProductTypeId", Convert.ToInt16(reader["f_typeId"]));
                             productInfo.Add("ProductDetail", reader["f_detail"].ToString());
@@ -495,7 +495,7 @@ namespace ShoppingBG.ajax
                             ProductId = Convert.ToInt16(row.ItemArray[0]),
                             ProductPic = row.ItemArray[1].ToString(),
                             ProductTitle = row.ItemArray[2].ToString(),
-                            ProductUnitPrice = Convert.ToInt16(row.ItemArray[3]),
+                            ProductUnitPrice = Convert.ToInt32(row.ItemArray[3]),
                             ProductQtn = Convert.ToInt16(row.ItemArray[4]),
                             ProductTypeId = Convert.ToInt16(row.ItemArray[5]),
                             ProductDetail = row.ItemArray[6].ToString(),
