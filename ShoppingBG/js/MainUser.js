@@ -339,11 +339,11 @@ function CancelUserModifyBlock() {
 function PrintUserTable(jsonResult) {
 
     $('#allUserList').html('');
-    
+
     var tableRow = '';
     tableRow = '<tr>' +
         '<th>帳號</th>' +
-        '<th>暱稱</th>' +       
+        '<th>暱稱</th>' +
         '<th>職責名稱</th>' +
         '<th>設定</th>' +
         '</tr>';
@@ -352,7 +352,7 @@ function PrintUserTable(jsonResult) {
         tableRow +=
             '<tr>' +
             '<td>' + jsonResult[i].UserAccount + '</td>' +
-            '<td>' + jsonResult[i].UserNickname + '</td>' +            
+            '<td>' + jsonResult[i].UserNickname + '</td>' +
             '<td>' + jsonResult[i].DutyName + '</td>' +
             '<td> <button onclick="DeleteUser(\'' + jsonResult[i].UserId + '\')">' +
             '刪除' + '</button>' + ' ' +

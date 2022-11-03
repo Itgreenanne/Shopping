@@ -158,6 +158,14 @@ th {
     width: 100px;
 }
 
+.unitPrice {
+    width: 150px;
+}
+
+.productQtn {
+    width: 100px;
+}
+
 .productTable tr:nth-child(even) {
     background: #FFF;
 }

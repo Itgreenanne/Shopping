@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="/css/MainUser.css" />
     <link rel="stylesheet" href="/css/MainProduct.css" />
     <link rel="stylesheet" href="/css/MainMember.css" />
+    <link rel="stylesheet" href="/css/MainOrder.css" />
+
 
 
 
@@ -23,6 +25,8 @@
 <script type="text/javascript" src="/js/MainUser.js"> </script>
 <script type="text/javascript" src="/js/MainProduct.js"> </script>
 <script type="text/javascript" src="/js/MainMember.js"> </script>
+<script type="text/javascript" src="/js/MainOrder.js"> </script>
+
 
 
 
@@ -60,11 +64,19 @@
                     </ul>
                 </li>
                 <li class="menuItem"><a href="#" id="searchMember">會員查詢</a></li>
-                <li class="menuItem"><a href="#" id="searchOrder">訂單查詢</a></li>
+                <%--<li class="menuItem"><a href="#" id="searchOrder">訂單查詢</a></li>--%>
+                   <li><a href="#" id="order">訂單</a>
+                    <ul>
+                        <li class="menuItem"><a href="#" id="itemOrderReport">報表</a></li>
+                        <li class="menuItem"><a href="#" id="itemSearchOrder">訂單查詢</a></li>
+                    </ul>
+                </li>
                 <li class="menuItem"><a href="#" id="operationRecord">操作紀錄查詢</a></li>
             </ul>           
-       </div> 
-       <div class="contentBox"> 
+       </div>
+    
+       <div class="contentBox">
+           
             <div class="addDutyBlock" id="addDutyBlock">
                 <p class="dutyBlockTitle">職責新增</p>
                 <div class="inputBlock">
@@ -99,6 +111,7 @@
                      <div class="message" id="megAddDuty"></div>
                               
             </div>
+
             <div class="searchDutyBlock" id="searchDutyBlock">
                 <p class="dutyBlockTitle">職責查詢</p>
                 <div class="inputSearchDutyBlock">
@@ -110,7 +123,7 @@
                 <br/><table class="dutyTable" id="allDutyList"></table>
             </div>
 
-           <div class="addUserBlock" id="addUserBlock">
+            <div class="addUserBlock" id="addUserBlock">
                 <p class="userBlockTitle">人員新增</p>
                     <div class="addUserInputblock">
                         <label for="addUserAccount" class="labelAddUserName">帳號： </label>
@@ -130,7 +143,8 @@
                     </div>
                     <button class="btnAddUser" id="btnUserConfirm" onclick="AddUser()">確定</button>                
            </div>
-           <div class="searchUserBlock" id="searchUserBlock">
+
+            <div class="searchUserBlock" id="searchUserBlock">
                 <p class="dutyBlockTitle">人員查詢</p>
                 <div class="DutyTypeInputblock">
                         <label for="searchDutyName">請輸入帳號名稱:</label>
@@ -143,7 +157,7 @@
                 <br/><table class="userTable" id="allUserList"></table>
            </div>       
 
-           <div class="addProductBlock" id="addProductBlock">
+            <div class="addProductBlock" id="addProductBlock">
                 <p class="productBlockTitle">產品新增</p>
                      <div class="addProductInputblock">
                         <label for="addProductTitle" class="labelAddProductTitle">圖片路徑： </label>
@@ -172,7 +186,7 @@
                     <button class="btnAddProduct" id="btnProductConfirm" onclick="AddProduct()">確定</button>                
            </div>
 
-       <div class="searchUserBlock" id="searchProductBlock">
+            <div class="searchUserBlock" id="searchProductBlock">
                     <p class="productBlockTitle">產品查詢</p>
                     <div class="productTypeInputblock">
                         <label for="searchProductTitle">請輸入標題關鍵字：</label>
@@ -185,7 +199,7 @@
                     <br/><table class="productTable" id="allProductList"></table>
        </div>
        
-       <div class="searchMemberBlock" id="searchMemberBlock">
+            <div class="searchMemberBlock" id="searchMemberBlock">
                     <p class="memberBlockTitle">會員查詢</p>
                     <div class="memberInputblock">
                         <label for="searchMemberTitle">請輸入會員身份証字號：</label>
@@ -194,27 +208,23 @@
                         <button class="btnSearchMember" onclick="ClearSearchMember()">清除</button>
                     </div>
                     <br/><table class="memberTable" id="allMemberList"></table>
-       </div>
+            </div>
 
-
-       <div class="searchOrderBlock" id="searchOrderBlock">
+            <div class="searchOrderBlock" id="searchOrderBlock">
                 <p class="orderBlockTitle">訂單查詢</p>
                 <div class="orderInputblock">
-                        <label for="searchOrderByNum">訂單編號：</label>
-                        <input type="text" class="searchOrderByNum" id="searchOrderByNum" autocomplete="off" oninput="NoSpaceKey('searchOrderByNum')" value=""/>
-                        <label for="orderType" class="labSearchOrderTime">訂單下單時間： </label>
-                        <select name="orderType" class="searchOrderTimeMenu" id="searchOrderTimeMenu"></select>
+                        <label for="searchOrderByNum">輸入訂單編號或會員身份証字號：</label>
+                        <input type="text" class="searchOrderByNum" id="searchOrderByNum" autocomplete="off" oninput="NoSpaceKey('searchOrderByNum')" value=""/>                        
                         <button class="btnSearchOrder" onclick="GetSearchpOrder()">確定</button>
                         <button class="btnSearchOrder" onclick="ClearSearchOrder()">清除</button>
                 </div>
                 <br/><table class="orderTable" id="allOrderList"></table>
-       </div>
+            </div>
            
 
-    </div>
+        </div>
 
-<%--         修改部份            --%>
-       <div class="modifyDutyBlock" id="modifyDutyBlock">
+            <div class="modifyDutyBlock" id="modifyDutyBlock">
             <p class="modifyDuty">職責修改</p>
                 <div class="modifyDutyInputBlock">
                     <label for="modifyDutyName" class="labelModifyDutyName"">職責名稱: </label>
@@ -250,9 +260,9 @@
                     <button class="btnModifyDuty" id="ModifyDutyConfirm" onclick="ModifyDuty()">確定</button>
                     <button class="btnModifyDuty" id="ModifyDutyCancel" onclick="CancelDutyModifyBlock()">取消</button>
                 </div>            
-       </div>
+            </div>
 
-       <div class="modifyUserBlock" id="modifyUserBlock">
+            <div class="modifyUserBlock" id="modifyUserBlock">
             <p class="modifyUser">人員修改</p>
             <div class="modifyUserInputBlock">
                  <label for="modifyUserAccount" class="labelUserInfo"">帳號： </label>
@@ -278,7 +288,7 @@
                 </div>            
       </div>
 
-      <div class="modifyProductBlock" id="modifyProductBlock">
+            <div class="modifyProductBlock" id="modifyProductBlock">
             <p class="modifyProduct">產品修改</p>
             <div class="modifyProductInputBlock">
                  <label for="modifyProductPicPath" class="labelProduct">圖片： </label>
@@ -312,7 +322,7 @@
                 </div>            
       </div>
 
-      <div class="modifyMemberBlock" id="modifyMemberBlock">
+            <div class="modifyMemberBlock" id="modifyMemberBlock">
             <span class="modifyMember">會員修改</span>
              <div class="inputBlock">
                 <div class="modifyMemberIdNo">
@@ -372,7 +382,20 @@
                     <button class="btnModifyUser" id="ModifyMemberCancel" onclick="CancelMemberModifyBlock()">取消</button>
             </div>
       </div>
-    </div>
+
+            <div class="orderItemBlock" id="orderItemBlock">
+                <span class="orderItemTitle">訂單細項</span>
+                <div class="tableBlock">
+                    <table class="orderItemTable" id="orderItemTable"></table>
+                </div>
+                <div class="balanceBlock">                        
+                    <div class="labelInPreviewOrder">總額：</div>
+                    <div class="resultInPreviewOrder" id="totalInOrderItem"></div><br/>                        
+               </div>
+                <button class="btnOrderItemLeave" id="backToOrderSearch" onclick ="CloseOrderItem()">確定</button>
+            </div>
+
+   
 
     
 </body>

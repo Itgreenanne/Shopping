@@ -52,16 +52,24 @@ td {
     text-align: center;
 }
 
-.idColumn {
-    width: 105px;
+.idNoColumn {
+    width: 125px;
+}
+
+.genderColumn {
+    width: 50px;
 }
 
 .birthColumn {
-    width: 95px;
+    width: 125px;
+}
+
+.pwdColumn {
+    width: 100px;
 }
 
 .phoneColumn {
-    width: 100px;
+    width: 125px;
 }
 
 .pointsColumn {
@@ -69,6 +77,10 @@ td {
 }
 .mailColumn {
     width: 80px;
+}
+
+.operationColumn {
+    width: 100px;
 }
 
 .memberTable tr:nth-child(even) {

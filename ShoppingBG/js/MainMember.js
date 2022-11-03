@@ -54,7 +54,6 @@ function GetSearchMember() {
                     if (RepeatedStuff(jsonResult)) {
                         return;
                     } else {
-                        //將區域變數值傳給全域變數當緩存
                         PrintMemberTable(jsonResult);
                     }
                 } else {
@@ -284,18 +283,18 @@ function PrintMemberTable(jsonResult) {
     for (var i = 0; i < jsonResult.length; i++) {
         tableRow +=
             '<tr>' +
-            '<td class="idColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
+            '<td class="idNoColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
             '<td>' + jsonResult[i].lastname + '</td>' +
             '<td>' + jsonResult[i].firstname + '</td>' +
-            '<td>' + GetGender(jsonResult[i].gender) + '</td>' +
+            '<td class="genderColumn">' + GetGender(jsonResult[i].gender) + '</td>' +
             '<td class="birthColumn">' + jsonResult[i].birth + '</td>' +
-            '<td>' + jsonResult[i].pwd + '</td>' +
+            '<td class="pwdColumn">' + jsonResult[i].pwd + '</td>' +
             '<td class="mailColumn">' + jsonResult[i].mail + '</td>' +
             '<td class="phoneColumn">' + jsonResult[i].phone + '</td>' +
             '<td>' + jsonResult[i].address + '</td>' +
             '<td class="pointsColumn"> ' + jsonResult[i].points + '</td > ' +
             '<td>' + jsonResult[i].level + '</td>' +
-            '<td> <button onclick="DeleteMember(\'' + jsonResult[i].memberId + '\')">' +
+            '<td class="operationColumn"> <button onclick="DeleteMember(\'' + jsonResult[i].memberId + '\')">' +
             '刪除' + '</button>' + ' ' +
             '<button onclick="ModifyMemberBlock(\'' + jsonResult[i].memberId + '\')">修改</button></td>' +
             '</tr>';

@@ -104,6 +104,14 @@ $(document).ready(function () {
                 GetAllMember();
                 $('#searchMemberBlock').show();
                 break;
+            case 'itemOrderReport':
+                ResetAll();
+                $('#orderReportBlock').show();
+                break;
+            case 'itemSearchOrder':
+                ResetAll();
+                $('#searchOrderBlock').show();
+                break;
         }
     });
 
@@ -125,10 +133,11 @@ $(document).ready(function () {
         $('#modifyUserBlock').hide();
         $('#addProductBlock').hide();
         $('#searchProductBlock').hide();
-        $('#modifyProductBlock').hide();
-        $('#searchOrderBlock').hide();
+        $('#modifyProductBlock').hide();        
         $('#searchMemberBlock').hide();
         $('#modifyMemberBlock').hide();
+        $('#searchOrderBlock').hide();
+        $('#orderItemBlock').hide();
     }
 })
 

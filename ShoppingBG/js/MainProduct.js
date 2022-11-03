@@ -375,8 +375,8 @@ function PrintProductTable(jsonResult) {
             '<tr>' +
             '<td><img src="/image/' + jsonResult[i].ProductPic + '" width="20%"></td>'+
             '<td class="productTitle">' + jsonResult[i].ProductTitle + '</td>' +
-            '<td>' + jsonResult[i].ProductUnitPrice + '</td>' +
-            '<td>' + jsonResult[i].ProductQtn + '</td>' +
+            '<td class="unitPrice">' + jsonResult[i].ProductUnitPrice + '</td>' +
+            '<td class="productQtn">' + jsonResult[i].ProductQtn + '</td>' +
             '<td class="productType">' + jsonResult[i].ProductTypeName + '</td>' +
             '<td style="text-align: left;">' + jsonResult[i].ProductDetail + '</td>' +
             '<td> <button onclick="DeleteProduct(\'' + jsonResult[i].ProductId + '\')">' +

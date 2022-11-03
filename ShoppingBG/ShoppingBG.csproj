@@ -71,6 +71,7 @@
     <Content Include="ajax\AjaxUser.aspx" />
     <Content Include="ajax\AjaxProduct.aspx" />
     <Content Include="ajax\AjaxMember.aspx" />
+    <Content Include="ajax\AjaxOrder.aspx" />
     <Content Include="css\BackendLogin.css" />
     <Content Include="css\Main.css" />
     <Content Include="css\MainDuty.css" />
@@ -82,6 +83,7 @@
     <Content Include="js\jquery-2.1.4.js" />
     <Content Include="js\Main.js" />
     <Content Include="js\MainDuty.js" />
+    <Content Include="js\MainOrder.js" />
     <Content Include="js\MainProduct.js" />
     <Content Include="js\MainUser.js" />
     <Content Include="js\MainMember.js" />
@@ -138,6 +140,13 @@
     </Compile>
     <Compile Include="ajax\AjaxMember.aspx.designer.cs">
       <DependentUpon>AjaxMember.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ajax\AjaxOrder.aspx.cs">
+      <DependentUpon>AjaxOrder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ajax\AjaxOrder.aspx.designer.cs">
+      <DependentUpon>AjaxOrder.aspx</DependentUpon>
     </Compile>
     <Compile Include="app_code\DutyAuthority.cs">
       <SubType>ASPXCodeBehind</SubType>
