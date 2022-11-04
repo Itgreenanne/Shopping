@@ -20,14 +20,13 @@
 
 </head>
 <script src="/js/jquery-2.1.4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script type="text/javascript" src="/js/Main.js"> </script>
 <script type="text/javascript" src="/js/MainDuty.js"> </script>
 <script type="text/javascript" src="/js/MainUser.js"> </script>
 <script type="text/javascript" src="/js/MainProduct.js"> </script>
 <script type="text/javascript" src="/js/MainMember.js"> </script>
 <script type="text/javascript" src="/js/MainOrder.js"> </script>
-
-
 
 
 <body>          
@@ -75,8 +74,7 @@
             </ul>           
        </div>
     
-       <div class="contentBox">
-           
+       <div class="contentBox">           
             <div class="addDutyBlock" id="addDutyBlock">
                 <p class="dutyBlockTitle">職責新增</p>
                 <div class="inputBlock">
@@ -209,6 +207,63 @@
                     </div>
                     <br/><table class="memberTable" id="allMemberList"></table>
             </div>
+
+                <div class="searchOrderBlock" id="orderReportBlock">
+                    <p class="dutyBlockTitle">報表</p>
+                    <div class="DutyTypeInputblock">
+                        <label for="startDateForOrder">訂單建立時間起日：</label>
+                        <input type="date" class="orderReportDateInput" id="startDateForOrder" min="2022-11-01"/>
+                        <label for="endDateForOrder" class="labUserSearchDutyType">訂單建立時間迄日： </label>
+                        <input type="date" class="orderReportDateInput" id="endDateForOrder" min="2022-11-01"/>
+                        <button class="btnSearchUser" onclick="GetSearchOrderReport()">確定</button>
+                        <button class="btnSearchUser" onclick="ClearOrderReport()">清除</button>
+                    </div>
+                        <div class="rangeOption">
+                            <br/><div class="labelForRange">或選擇訂單加總區間</div>
+                            <select name="reportRange" class="searchDutyTypeMenu" id="rangeSelect">
+                                <option value="0">請選擇</option>
+                                <option value="1">每日</option>
+                                <option value="2">每月</option>
+                                <option value="3">每年</option>
+                            </select><br/>
+                            <button class="btnSearchUser" onclick="GetSearchOrderForSpecificRange()">確定</button>
+                            <button class="btnSearchUser" onclick="ClearOrderReport()">清除</button>
+                        </div>
+                      
+                    <div class="totalBox">
+                        <div class="labelForTotalBox">總額：</div>
+                        <div class="TotalCounted" id="totalCounted"></div><br/>
+                    </div>                   
+                    <table class="orderTable" id="orderReportList"></table>
+                    <div class="chartBox">
+                        <canvas id="chart"></canvas>
+                    </div>
+                </div>
+
+
+           <%--<div class="searchOrderBlock" id="orderReportBlock">
+                    <p class="dutyBlockTitle">報告</p>
+                    <div class="DutyTypeInputblock">
+                        <label for="startDateForOrder">訂單建立時間起日：</label>
+                        <input type="date" class="orderReportDateInput" id="startDateForOrder" min="2022-11-01"/>
+                        <label for="endDateForOrder" class="labUserSearchDutyType">訂單建立時間迄日： </label>
+                        <input type="date" class="orderReportDateInput" id="endDateForOrder" min="2022-11-01"/>                        
+                        <button class="btnSearchUser" onclick="GetSearchOrderReport()">確定</button>
+                        <button class="btnSearchUser" onclick="ClearOrderReport()">清除</button>
+                    </div>
+                    <div class="totalBox">
+                        <div class="labelForTotalBox">總額：</div>
+                        <div class="TotalCounted" id="totalCounted"></div><br/>
+                    </div>                   
+                    <table class="orderTable" id="orderReportList"></table>
+                    <div class="chartBox">
+                        <canvas id="chart"></canvas>
+                    </div>
+                </div>--%>
+
+
+
+
 
             <div class="searchOrderBlock" id="searchOrderBlock">
                 <p class="orderBlockTitle">訂單查詢</p>
@@ -381,7 +436,8 @@
                     <button class="btnModifyUser" id="ModifyMemberConfirm" onclick="ModifyMember()">確定</button>
                     <button class="btnModifyUser" id="ModifyMemberCancel" onclick="CancelMemberModifyBlock()">取消</button>
             </div>
-      </div>
+          </div>           
+
 
             <div class="orderItemBlock" id="orderItemBlock">
                 <span class="orderItemTitle">訂單細項</span>

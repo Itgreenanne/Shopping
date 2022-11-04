@@ -59,6 +59,10 @@ namespace ShoppingBG.ajax
                 case "GetSearchOrderItemByOrderId":
                     GetSearchOrderItemByOrderId();
                     break;
+
+                case "GetSearchOrderByDate":
+                    GetSearchOrderByDate();
+                    break;
             }
         }
 
@@ -196,6 +200,70 @@ namespace ShoppingBG.ajax
                     conn.Dispose();
                 }
             }
+
+        }
+
+        /// <summary>
+        /// 搜尋選擇期間的訂單資料
+        /// </summary>
+        private void GetSearchOrderByDate() {
+            MsgType msgValue = MsgType.WrongConnect;
+            string startDate = Request.Form["getStartDate"];
+            string endDate = Request.Form["getEndDate"];
+            if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
+            {
+                msgValue = MsgType.NullEmptyInput;
+                Response.Write((int)msgValue);
+            }
+            else {
+                string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+                SqlConnection conn = new SqlConnection(strConnString);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_getOrderByDate", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+
+                try
+                {
+                    cmd.Parameters.Add(new SqlParameter("@startDate", startDate));
+                    cmd.Parameters.Add(new SqlParameter("@endDate", endDate));
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    JArray resultArray = new JArray();
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            JObject orderInfo = new JObject();
+                            orderInfo.Add("orderId", Convert.ToInt16(reader["f_id"]));
+                            orderInfo.Add("orderNumber", reader["f_orderNumber"].ToString());
+                            orderInfo.Add("totalPrice", Convert.ToInt32(reader["f_totalPrice"]));
+                            orderInfo.Add("discount", Convert.ToInt32(reader["f_discount"]));
+                            orderInfo.Add("payment", Convert.ToInt32(reader["f_payment"]));                            
+                            DateTime strTime = DateTime.Parse(reader["f_createTime"].ToString());
+                            orderInfo.Add("createTime", String.Format("{0:yyyy/MM/dd HH:mm:ss}", strTime));
+                            resultArray.Add(orderInfo);
+                        }
+                        Response.Write(resultArray);
+                    }
+                    else
+                    {
+                        msgValue = MsgType.OrderNotExisted;
+                        Response.Write((int)msgValue);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw ex.GetBaseException();
+                }
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
+
+
 
         }
     }

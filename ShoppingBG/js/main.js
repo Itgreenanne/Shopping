@@ -106,6 +106,7 @@ $(document).ready(function () {
                 break;
             case 'itemOrderReport':
                 ResetAll();
+                OpenReportBlock();
                 $('#orderReportBlock').show();
                 break;
             case 'itemSearchOrder':
@@ -136,6 +137,7 @@ $(document).ready(function () {
         $('#modifyProductBlock').hide();        
         $('#searchMemberBlock').hide();
         $('#modifyMemberBlock').hide();
+        $('#orderReportBlock').hide();        
         $('#searchOrderBlock').hide();
         $('#orderItemBlock').hide();
     }

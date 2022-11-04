@@ -1,4 +1,43 @@
-﻿.searchOrderBlock {
+﻿
+.orderReportDateInput {
+    padding: 1px;
+    width: 170px;
+    height: 20px;
+    font-size: 18px;
+    border: none;
+    outline: solid 1px #00BCD4;
+    color: #466CA6;    
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator { 
+    filter: invert(0.8);
+}
+
+.labelForRange {
+    font-size: 20px;
+    text-align: left;
+    color: #466CA6;
+}
+
+.rangeOption {
+    display: flex;
+    margin-top: 50px;
+    align-items: center;
+}
+
+.totalBox {
+    display: flex;
+    font-size: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.chartBox {
+    width: 80%;
+    height: 80%;
+}
+
+.searchOrderBlock {
     width: 1500px;
     text-align: left;
     color: #466CA6;
@@ -57,6 +96,10 @@ td {
 }
 
 .totalPriceColumn {
+    width: 150px;
+}
+
+.discountColumn {
     width: 150px;
 }
 
