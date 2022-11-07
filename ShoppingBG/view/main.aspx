@@ -212,28 +212,31 @@
                     <p class="dutyBlockTitle">報表</p>
                     <div class="DutyTypeInputblock">
                         <label for="startDateForOrder">訂單建立時間起日：</label>
-                        <input type="date" class="orderReportDateInput" id="startDateForOrder" min="2022-11-01"/>
+                        <input type="date" class="orderReportDateInput" id="startDateForOrder" />
                         <label for="endDateForOrder" class="labUserSearchDutyType">訂單建立時間迄日： </label>
-                        <input type="date" class="orderReportDateInput" id="endDateForOrder" min="2022-11-01"/>
+                        <input type="date" class="orderReportDateInput" id="endDateForOrder" />
                         <button class="btnSearchUser" onclick="GetSearchOrderReport()">確定</button>
                         <button class="btnSearchUser" onclick="ClearOrderReport()">清除</button>
                     </div>
                         <div class="rangeOption">
-                            <br/><div class="labelForRange">或選擇訂單加總區間</div>
-                            <select name="reportRange" class="searchDutyTypeMenu" id="rangeSelect">
+                            <br/><div class="labelForRange">選擇訂單加總區間</div>
+                            <div class="timeRangeInput">
+                                <span>當日</span>
+                                <input name="chkRange"type="radio" class="chkRange" id="chkDayRange" value="1"/>
+                                <span>當月</span>
+                                <input name="chkRange"type="radio" class="chkRange" id="chkMonthRange" value="2"/>
+                                <span>當年</span>
+                                <input name="chkRange"type="radio" class="chkRange" id="chkYearRange" value="3"/><br/>
+                            </div>
+                           <%-- <select name="reportRange" class="searchDutyTypeMenu" id="rangeSelect">
                                 <option value="0">請選擇</option>
-                                <option value="1">每日</option>
-                                <option value="2">每月</option>
-                                <option value="3">每年</option>
-                            </select><br/>
+                                <option value="1">當日</option>
+                                <option value="2">當月</option>
+                                <option value="3">當年</option>
+                            </select><br/>--%>
                             <button class="btnSearchUser" onclick="GetSearchOrderForSpecificRange()">確定</button>
                             <button class="btnSearchUser" onclick="ClearOrderReport()">清除</button>
-                        </div>
-                      
-                    <div class="totalBox">
-                        <div class="labelForTotalBox">總額：</div>
-                        <div class="TotalCounted" id="totalCounted"></div><br/>
-                    </div>                   
+                        </div>                        
                     <table class="orderTable" id="orderReportList"></table>
                     <div class="chartBox">
                         <canvas id="chart"></canvas>

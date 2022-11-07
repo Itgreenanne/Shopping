@@ -22,8 +22,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .rangeOption {
     display: flex;
     margin-top: 50px;
+    margin-bottom: 15px;
     align-items: center;
 }
+
+.timeRangeInput {
+    margin-left: 15px;
+    font-size: 20px;
+    color: cornflowerblue;
+    align-items: center;
+}
+
+#rowOfTotal {
+    border-top: double;
+    background-color: #A3CEF1;
+}
+
+/*.rowOfTotal {
+    border-top: double;
+    background-color: #A3CEF1;
+}*/
 
 .totalBox {
     display: flex;
@@ -119,7 +137,7 @@ td {
     background: #E1F5FE;
 }
 
-/*游標所在的列會變色*/
+游標所在的列會變色
 .orderTable tr:hover {
     background-color: #ECEFF1;
 }

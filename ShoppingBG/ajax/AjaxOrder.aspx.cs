@@ -63,6 +63,14 @@ namespace ShoppingBG.ajax
                 case "GetSearchOrderByDate":
                     GetSearchOrderByDate();
                     break;
+
+                case "GetSearchOrderForMonth":
+                    GetSearchOrderForMonth();
+                    break;
+
+                case "GetSearchOrderForYear":
+                    GetSearchOrderForYear();
+                    break;
             }
         }
 
@@ -174,11 +182,11 @@ namespace ShoppingBG.ajax
                         {
                             JObject orderItemInfo = new JObject();
                             orderItemInfo.Add("OrderItemId", Convert.ToInt16(reader["f_id"]));
-                            orderItemInfo.Add("OrderId", Convert.ToInt16(reader["f_orderId"]));
+                            orderItemInfo.Add("OrderId", Convert.ToInt32(reader["f_orderId"]));
                             orderItemInfo.Add("ProductId", Convert.ToInt32(reader["f_productId"]));
                             orderItemInfo.Add("ProductTitle",reader["f_productTitle"].ToString());
                             orderItemInfo.Add("QtnForBuy", Convert.ToInt32(reader["f_number"]));
-                            orderItemInfo.Add("ProductUnitPrice", Convert.ToInt16(reader["f_unitPrice"]));                            
+                            orderItemInfo.Add("ProductUnitPrice", Convert.ToInt32(reader["f_unitPrice"]));                            
                             resultArray.Add(orderItemInfo);
                         }
                         Response.Write(resultArray);
@@ -238,7 +246,8 @@ namespace ShoppingBG.ajax
                             orderInfo.Add("orderNumber", reader["f_orderNumber"].ToString());
                             orderInfo.Add("totalPrice", Convert.ToInt32(reader["f_totalPrice"]));
                             orderInfo.Add("discount", Convert.ToInt32(reader["f_discount"]));
-                            orderInfo.Add("payment", Convert.ToInt32(reader["f_payment"]));                            
+                            orderInfo.Add("payment", Convert.ToInt32(reader["f_payment"]));
+                            orderInfo.Add("idNumber", reader["f_idNumber"].ToString());
                             DateTime strTime = DateTime.Parse(reader["f_createTime"].ToString());
                             orderInfo.Add("createTime", String.Format("{0:yyyy/MM/dd HH:mm:ss}", strTime));
                             resultArray.Add(orderInfo);
@@ -262,9 +271,131 @@ namespace ShoppingBG.ajax
                     conn.Dispose();
                 }
             }
+        }
 
+        /// <summary>
+        /// 搜尋當月所有訂單 並以日為單位加總總價、折扣、付款金額
+        ///</summary>
+        private void GetSearchOrderForMonth()
+        {
+            MsgType msgValue = MsgType.WrongConnect;
+            string startDate = Request.Form["getStartDate"];
+            string endDate = Request.Form["getEndDate"];
 
+            if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
+            {
+                msgValue = MsgType.NullEmptyInput;
+                Response.Write((int)msgValue);
+            }
+            else
+            {
+                string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+                SqlConnection conn = new SqlConnection(strConnString);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_getOrderForMonth", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
 
+                try
+                {
+                    cmd.Parameters.Add(new SqlParameter("@startDate", startDate));
+                    cmd.Parameters.Add(new SqlParameter("@endDate", endDate));
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    JArray resultArray = new JArray();
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            JObject orderInfo = new JObject();
+                            orderInfo.Add("sumTotalPrice", Convert.ToInt32(reader["sumTotalPrice"]));
+                            orderInfo.Add("sumDiscount", Convert.ToInt32(reader["sumDiscount"]));
+                            orderInfo.Add("payment", Convert.ToInt32(reader["sumPayment"]));
+                            DateTime strTime = DateTime.Parse(reader["rangeTime"].ToString());
+                            orderInfo.Add("createTime", String.Format("{0:yyyy-MM-dd}", strTime));
+                            orderInfo.Add("orderQtn", Convert.ToInt32(reader["orderQtn"]));
+                            resultArray.Add(orderInfo);
+                        }
+                        Response.Write(resultArray);
+                    }
+                    else
+                    {
+                        msgValue = MsgType.OrderNotExisted;
+                        Response.Write((int)msgValue);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw ex.GetBaseException();
+                }
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 或搜尋當年所有訂單，並月為單位加總總價、折扣、付款金額
+        /// </summary>
+        private void GetSearchOrderForYear() {
+            MsgType msgValue = MsgType.WrongConnect;
+            string startDate = Request.Form["getStartDate"];
+            string endDate = Request.Form["getEndDate"];
+
+            if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
+            {
+                msgValue = MsgType.NullEmptyInput;
+                Response.Write((int)msgValue);
+            }
+            else
+            {
+                string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+                SqlConnection conn = new SqlConnection(strConnString);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_getOrderForYear", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                conn.Open();
+
+                try
+                {
+                    cmd.Parameters.Add(new SqlParameter("@startDate", startDate));
+                    cmd.Parameters.Add(new SqlParameter("@endDate", endDate));
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    JArray resultArray = new JArray();
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            JObject orderInfo = new JObject();
+                            orderInfo.Add("sumTotalPrice", Convert.ToInt32(reader["sumTotalPrice"]));
+                            orderInfo.Add("sumDiscount", Convert.ToInt32(reader["sumDiscount"]));
+                            orderInfo.Add("payment", Convert.ToInt32(reader["sumPayment"]));
+                            DateTime strTime = DateTime.Parse(reader["rangeTime"].ToString());
+                            orderInfo.Add("createTime", String.Format("{0:yyyy-MM}", strTime));
+                            orderInfo.Add("orderQtn", Convert.ToInt32(reader["orderQtn"]));
+                            resultArray.Add(orderInfo);
+                        }
+                        Response.Write(resultArray);
+                    }
+                    else
+                    {
+                        msgValue = MsgType.OrderNotExisted;
+                        Response.Write((int)msgValue);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    throw ex.GetBaseException();
+                }
+                finally
+                {
+                    conn.Close();
+                    conn.Dispose();
+                }
+            }
         }
     }
 }

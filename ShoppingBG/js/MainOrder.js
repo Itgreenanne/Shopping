@@ -1,9 +1,8 @@
-﻿//今日日期
-var today = '';
-
-//設定日期輸入的max date是今天
-function OpenReportBlock() {
-    today = new Date();
+﻿
+//獲取今日日期的字串
+function getTodayString() {
+    var today = new Date();
+    console.log(today);
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
@@ -16,10 +15,20 @@ function OpenReportBlock() {
     }
 
     today = yyyy + '-' + mm + '-' + dd;
-    $('#startDateForOrder').attr('max', today);
-    $('#endDateForOrder').attr('max', today);
-    $('#rangeSelect').val(0);
-    $('#totalCounted').text(0);
+    return today;
+}
+
+//開啟報表畫面
+function OpenReportBlock() {
+    //$('#startDateForOrder').attr('max', today);
+    //$('#endDateForOrder').attr('max', today);
+    if (myChart !== undefined) {
+        myChart.destroy();
+    }
+    $('#orderReportList').html('');
+    $('#startDateForOrder').val('');
+    $('#endDateForOrder').val('')
+    $("input[name=chkRange]").prop('checked', false);
 }
 
 
@@ -92,13 +101,14 @@ function GetSearchOrderReport() {
 
 function PrintOrderTableForReport(jsonResult) {
     $('#orderReportList').html('');
-    var totalForRange = 0;
+
     var tableRow = '';
     tableRow = '<tr>' +
         '<th>訂單代號</th>' +
         '<th>總價</th>' +
         '<th>折扣</th>' +
-        '<th>付款金額</th>' +        
+        '<th>付款金額</th>' +
+        '<th>會員身份証字號</th>' +
         '<th>訂單建立時間</th>' +
         '</tr>';
 
@@ -109,14 +119,13 @@ function PrintOrderTableForReport(jsonResult) {
             '<td class="totalPriceColumn">' + jsonResult[i].totalPrice + '</td>' +
             '<td class="discountColumn">' + jsonResult[i].discount + '</td>' +
             '<td class="paymentColumn">' + jsonResult[i].payment + '</td>' +
+            '<td class="idNoColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
             '<td class="timeColumn">' + jsonResult[i].createTime + '</td>' +
             '</tr>';
-        totalForRange += jsonResult[i].payment;
     }
 
     $('#orderReportList').append(tableRow);
     $('#orderReportList').show();
-    $('#totalCounted').text(totalForRange);
 }
 
 var myChart = undefined;
@@ -129,7 +138,7 @@ function PrintChartForReport(jsonResult)
     for (var i = 0; i < jsonResult.length; i++) {
         var dataObject = jsonResult[i];
         xvalues.push(jsonResult[i].createTime);
-        yvalues.push(dataObject['totalPrice']);
+        yvalues.push(dataObject['payment']);
     }
 
     if (myChart !== undefined) {
@@ -152,53 +161,181 @@ function PrintChartForReport(jsonResult)
     });
 }
 
-//設定訂單建立區間：每日(今日不算往前30天)、每月(當月不算)、每年
+//選擇訂單報告區間：當日、當月、當年
 function GetSearchOrderForSpecificRange() {
-    var timeRange = $('#rangeSelect').val();
+
+    $("input[type=radio]:checked").each(function () {
+        timeRange = $(this).val();
+    });
+
     switch (timeRange) {
-        case 1:
+        case '1':
             DayRange();
             break;
 
+        case '2':
+            MonthRange();
+            break;
+
+        case '3':
+            YearRange();
+            break;
     }
 }
 
+//搜尋當日所有訂單
 function DayRange() {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1
-    var yyyy = today.getFullYear();
 
-    if (dd < 10) {
-        dd = '0' + dd
+    if (myChart !== undefined) {
+        myChart.destroy();
     }
-    if (mm < 10) {
-        mm = '0' + mm
-    }
-    today = yyyy + '-' + mm + '-' + dd;
-    oneMonthAgo = today.setDate(today.getDate() - 30);
-    dd = oneMonthAgo.getDate();
-    mm = oneMonthAgo.getMonth() + 1;
-    yyyy = oneMonthAgo.getFullYear();
 
-    if (dd < 10) {
-        dd = '0' + dd
-    }
-    if (mm < 10) {
-        mm = '0' + mm
-    }
-    oneMonthAgo = yyyy + '-' + mm + '-' + dd;
+    var today = getTodayString();
 
+    if (!today) {
+        alert('輸入期間為空字串');
+    } else {
+        $.ajax({
+            url: '/ajax/AjaxOrder.aspx?fn=GetSearchOrderByDate',
+            type: 'POST',
+            data: {
+                getStartDate: today,
+                getEndDate: today
+            },
+            success: function (data) {
+                if (data) {
+                    var jsonResult = JSON.parse(data);
+                    console.log(jsonResult);
+
+                    if (RepeatedStuff(jsonResult)) {
+                        return;
+                    } else if (jsonResult == 3) {
+                        alert('找不到訂單');
+                    } else {
+                        PrintOrderTableForReport(jsonResult);
+                    }
+
+                } else {
+                    alert('資料錯誤');
+                }
+            },
+            error: function (err) {
+                str = JSON.stringify(err, null, 2);
+                console.log('err:');
+                console.log(err);
+                alert(str);
+            }
+        });
+    }
+}
+
+//搜尋當月所有訂單
+function MonthRange() {
+    var today = getTodayString();  
+    var afterTrimDay = today.slice(0, 8);
+    var beginDate = afterTrimDay + '01';
+
+    if (!today || !beginDate) {
+        alert('輸入期間為空字串');
+    } else {
+        $.ajax({
+            url: '/ajax/AjaxOrder.aspx?fn=GetSearchOrderForMonth',
+            type: 'POST',
+            data: {
+                getendDate: today,
+                getStartDate: beginDate
+            },
+            success: function (data) {
+                if (data) {
+                    var jsonResult = JSON.parse(data);
+
+                    if (RepeatedStuff(jsonResult)) {
+                        return;
+                    } else if (jsonResult == 3) {
+                        alert('找不到訂單');
+                    } else {                       
+                        PrintMonthAndYearOrderTable(jsonResult);
+                        PrintChartForReport(jsonResult);
+                    }
+
+                } else {
+                    alert('資料錯誤');
+                }
+            },
+            error: function (err) {
+                str = JSON.stringify(err, null, 2);
+                console.log('err:');
+                console.log(err);
+                alert(str);
+            }
+        });
+    }
+}
+
+//
+function PrintMonthAndYearOrderTable(jsonResult) {
+    $('#orderReportList').html('');
+
+    var allSumTotalPrice = 0, allSumDiscount = 0, allPayment = 0, allOrderQtn = 0;  
+    var dayOrMonth = '日';
+    var monthOrYear = '月';
+
+    //判斷時間區間的字串createTime是年的話，表格head列印月
+    //如果是月的話，表格head列印日
+    for (var i = 0; i < jsonResult.length; i++) {
+        console.log('jsonResult[i].createTime', jsonResult[i].createTime);
+        if ((jsonResult[i].createTime).length < 8) {
+            dayOrMonth = '月';
+            monthOrYear = '年';
+            break;
+        }
+    }
+
+    var tableRow = '';
+    tableRow = '<tr >' +
+        '<th>訂單日期</th>' +
+        '<th>訂單' + dayOrMonth + '總額</th > ' +
+        '<th>折扣日' + dayOrMonth + '總和</th>' +
+        '<th>付款金額' + dayOrMonth + '總和</th>' +
+        '<th>訂單數量</th>' +
+        '</tr>';
+
+    for (var i = jsonResult.length - 1; i >= 0; i--) {
+        tableRow +=
+            '<tr>' +
+            '<td class="timeColumn">' + jsonResult[i].createTime + '</td>' +
+            '<td class="totalPriceColumn">' + jsonResult[i].sumTotalPrice + '</td>' +
+            '<td class="discountColumn">' + jsonResult[i].sumDiscount + '</td>' +
+            '<td class="paymentColumn">' + jsonResult[i].payment + '</td>' +
+            '<td class="paymentColumn">' + jsonResult[i].orderQtn + '</td>' +          
+            '</tr>';
+        allSumTotalPrice += jsonResult[i].sumTotalPrice;
+        allSumDiscount += jsonResult[i].sumDiscount;
+        allPayment += jsonResult[i].payment;
+        allOrderQtn += jsonResult[i].orderQtn;
+    }
+
+    tableRow += '<tr class="rowOfTotal" id="rowOfTotal">' +
+        '<td>' + monthOrYear + '總和</td > ' +
+        '<td>' + allSumTotalPrice + '</td> ' +
+        '<td>' + allSumDiscount + '</td> ' +
+        '<td>' + allPayment + '</td> ' +
+        '<td>' + allOrderQtn + '</td> ' +
+        '</tr>';
+
+    $('#orderReportList').append(tableRow);
+    $('#orderReportList').show();
 }
 
 
 //清除輸入日期
-function ClearOrderReport(){
+function ClearOrderReport() {
     $('#startDateForOrder').val('');
     $('#endDateForOrder').val('');
+    $("input[name=chkRange]").prop('checked', false);
+    $('#orderReportList').html('');
+    myChart.destroy();
 }
-
-
 
 //輸入訂單編號或會員身份証字號來搜尋訂單
 function GetSearchpOrder() {
@@ -212,7 +349,6 @@ function GetSearchpOrder() {
         alert('輸入字元長度錯誤');
         $('#searchOrderByNum').val(''); 
 
-        //請求資料
     } else {
         $.ajax({
             url: '/ajax/AjaxOrder.aspx?fn=GetSearchOrderByIdNoOrOrderNo',
@@ -232,6 +368,56 @@ function GetSearchpOrder() {
                     } else {
                         PrintOrderTable(jsonResult);
                         $('#searchOrderByNum').val('');
+                    }
+
+                } else {
+                    alert('資料錯誤');
+                }
+            },
+            error: function (err) {
+                str = JSON.stringify(err, null, 2);
+                console.log('err:');
+                console.log(err);
+                alert(str);
+            }
+        });
+    }
+}
+
+//搜尋當年所有訂單
+function YearRange() {
+    var today = getTodayString();
+    var afterTrimDay = today.slice(0, 5);
+    var beginDate = afterTrimDay + '01' + '-' + '01';
+    console.log(beginDate);
+
+    if (!today || !beginDate) {
+        alert('輸入期間為空字串');
+    } else {
+        $.ajax({
+            url: '/ajax/AjaxOrder.aspx?fn=GetSearchOrderForYear',
+            type: 'POST',
+            data: {
+                getendDate: today,
+                getStartDate: beginDate
+            },
+            success: function (data) {
+                if (data) {
+                    var jsonResult = JSON.parse(data);
+
+                    if (RepeatedStuff(jsonResult)) {
+                        return;
+                    } else if (jsonResult == 3) {
+                        alert('找不到訂單');
+                    } else {
+                        console.log('year', jsonResult);
+                        //for (var i = 0; i < jsonResult.length; i++) {
+                        //    jsonResult[i].createTime = jsonResult[i].createTime.slice(0, 7);
+                        //}
+                        PrintMonthAndYearOrderTable(jsonResult);
+                    
+                        console.log('after substring', jsonResult);
+                        PrintChartForReport(jsonResult);
                     }
 
                 } else {
