@@ -33,11 +33,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     align-items: center;
 }
 
-#rowOfTotal {
-    border-top: double;
-    background-color: #A3CEF1;
-}
-
 /*.rowOfTotal {
     border-top: double;
     background-color: #A3CEF1;
@@ -140,6 +135,11 @@ td {
 游標所在的列會變色
 .orderTable tr:hover {
     background-color: #ECEFF1;
+}
+
+#rowOfTotal {
+    border-top: double;
+    background-color: #A3CEF1;
 }
 
 .orderItemBlock {
