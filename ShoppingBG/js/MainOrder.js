@@ -58,10 +58,14 @@ function OpenReportBlock() {
 function GetSearchOrderReport() {
     var startDate = $('#startDateForOrder').val();
     var endDate = $('#endDateForOrder').val();
-    console.log(startDate, endDate);
+    var startTime = TimeFormatForCompare(startDate);
+    var endTime = TimeFormatForCompare(endDate);
 
     if (!startDate || !endDate) {
         alert('請選擇日期');
+    } else if (startTime > endTime) {
+        alert('起日晚於迄日，請重新選擇日期');
+        $('#startDateForOrder').val(endDate);    
     } else {
         $.ajax({
             url: '/ajax/AjaxOrder.aspx?fn=GetSearchOrderByDate',
@@ -96,13 +100,19 @@ function GetSearchOrderReport() {
             }
         });
     }
+}
 
+function TimeFormatForCompare(timsString) {
+    var formatArr = timsString.split("-");
+    var jsTime = new Date(formatArr[0], formatArr[1], formatArr[2]);
+    var timeFormat = jsTime.getTime();
+    return timeFormat;
 }
 
 function PrintOrderTableForReport(jsonResult) {
     $('#orderReportList').html('');
 
-    var tableRow = '';
+    var tableRow = '';    
     tableRow = '<tr>' +
         '<th>訂單代號</th>' +
         '<th>總價</th>' +
@@ -121,7 +131,7 @@ function PrintOrderTableForReport(jsonResult) {
             '<td class="paymentColumn">' + jsonResult[i].payment + '</td>' +
             '<td class="idNoColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
             '<td class="timeColumn">' + jsonResult[i].createTime + '</td>' +
-            '</tr>';
+            '</tr>';   
     }
 
     $('#orderReportList').append(tableRow);
@@ -212,7 +222,7 @@ function DayRange() {
                     } else if (jsonResult == 3) {
                         alert('找不到訂單');
                     } else {
-                        PrintOrderTableForReport(jsonResult);
+                        PrintDayOrderTableForReport(jsonResult);
                     }
 
                 } else {
@@ -272,7 +282,49 @@ function MonthRange() {
     }
 }
 
-//
+function PrintDayOrderTableForReport(jsonResult) {
+    $('#orderReportList').html('');
+
+    var tableRow = '';
+    var allTotalPrice = 0, allDiscount = 0, allPayment = 0;
+    var today = getTodayString();
+    tableRow = '<tr>' +
+        '<th>訂單代號</th>' +
+        '<th>總價</th>' +
+        '<th>折扣</th>' +
+        '<th>付款金額</th>' +
+        '<th>會員身份証字號</th>' +
+        '<th>訂單建立時間</th>' +
+        '</tr>';
+
+    for (var i = jsonResult.length - 1; i >= 0; i--) {
+        tableRow +=
+            '<tr>' +
+            '<td class="orderNoColumn">' + jsonResult[i].orderNumber + '</td>' +
+            '<td class="totalPriceColumn">' + jsonResult[i].totalPrice + '</td>' +
+            '<td class="discountColumn">' + jsonResult[i].discount + '</td>' +
+            '<td class="paymentColumn">' + jsonResult[i].payment + '</td>' +
+            '<td class="idNoColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
+            '<td class="timeColumn">' + jsonResult[i].createTime + '</td>' +
+            '</tr>';
+        allTotalPrice += jsonResult[i].totalPrice;
+        allDiscount += jsonResult[i].discount;
+        allPayment += jsonResult[i].payment;
+    }
+
+    tableRow +=
+        '<tr class="rowOfTotal">' +
+        '<td>總和</td >' +
+        '<td>' + allTotalPrice + '</td>' +
+        '<td>' + allDiscount + '</td>' +
+        '<td>' + allPayment + '</td>' +
+        '<td colspan="2">' + today + '</td>' +
+        '</tr>';
+
+    $('#orderReportList').append(tableRow);
+    $('#orderReportList').show();
+}
+
 function PrintMonthAndYearOrderTable(jsonResult) {
     $('#orderReportList').html('');
 
@@ -315,12 +367,13 @@ function PrintMonthAndYearOrderTable(jsonResult) {
         allOrderQtn += jsonResult[i].orderQtn;
     }
 
-    tableRow += '<tr class="rowOfTotal" id="rowOfTotal">' +
-        '<td>' + monthOrYear + '總和</td > ' +
-        '<td>' + allSumTotalPrice + '</td> ' +
-        '<td>' + allSumDiscount + '</td> ' +
-        '<td>' + allPayment + '</td> ' +
-        '<td>' + allOrderQtn + '</td> ' +
+    tableRow +=
+        '<tr class="rowOfTotal">' +
+        '<td>' + monthOrYear + '總和</td >' +
+        '<td>' + allSumTotalPrice + '</td>' +
+        '<td>' + allSumDiscount + '</td>' +
+        '<td>' + allPayment + '</td>' +
+        '<td>' + allOrderQtn + '</td>' +
         '</tr>';
 
     $('#orderReportList').append(tableRow);

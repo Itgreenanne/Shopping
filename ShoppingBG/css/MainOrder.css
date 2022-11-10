@@ -124,6 +124,11 @@ td {
     width: 240px;
 }
 
+.rowOfTotal {
+    border-top: double;
+    background-color: #A3CEF1 !important;
+}
+
 .orderTable tr:nth-child(even) {
     background: #FFF;
 }
@@ -135,11 +140,6 @@ td {
 游標所在的列會變色
 .orderTable tr:hover {
     background-color: #ECEFF1;
-}
-
-#rowOfTotal {
-    border-top: double;
-    background-color: #A3CEF1;
 }
 
 .orderItemBlock {
