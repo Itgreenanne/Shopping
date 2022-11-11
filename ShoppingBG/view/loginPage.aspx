@@ -19,9 +19,9 @@
             <div class="grayBoxName">登入後台管理系統</div>
             <div class="grayBoxContainer" >
                 <p>帳號</p>
-                <input type="text" class="grayBoxInput" id="txbGetId" oninput="NoSpaceKey()" value=""/>
+                <input type="text" class="grayBoxInput" id="txbGetId" oninput="NoSpaceKey()" value="1"/>
                 <p>密碼</p>
-                <input type="password" class="grayBoxInput" id="txbGetPwd"  value=""/><br/>
+                <input type="password" class="grayBoxInput" id="txbGetPwd"  value="1"/><br/>
                 <div id="message"></div>
             </div>
             <input type="button" class="login" id="btnLogin" runat="server" onclick="LoginVerify()" value="登入"/>
