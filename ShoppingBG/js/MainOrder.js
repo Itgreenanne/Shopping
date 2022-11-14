@@ -2,7 +2,6 @@
 //獲取今日日期的字串
 function getTodayString() {
     var today = new Date();
-    console.log(today);
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
@@ -57,15 +56,10 @@ function OpenReportBlock() {
 //將讀到的起迄日傳送到後端讀取此期間的訂單總價資料
 function GetSearchOrderReport() {
     var startDate = $('#startDateForOrder').val();
-    var endDate = $('#endDateForOrder').val();
-    var startTime = TimeFormatForCompare(startDate);
-    var endTime = TimeFormatForCompare(endDate);
+    var endDate = $('#endDateForOrder').val();   
 
     if (!startDate || !endDate) {
         alert('請選擇日期');
-    } else if (startTime > endTime) {
-        alert('起日晚於迄日，請重新選擇日期');
-        $('#startDateForOrder').val(endDate);    
     } else {
         $.ajax({
             url: '/ajax/AjaxOrder.aspx?fn=GetSearchOrderByDate',
@@ -77,7 +71,6 @@ function GetSearchOrderReport() {
             success: function (data) {
                 if (data) {
                     var jsonResult = JSON.parse(data);
-                    console.log(jsonResult);
 
                     if (RepeatedStuff(jsonResult)) {
                         return;
@@ -102,12 +95,43 @@ function GetSearchOrderReport() {
     }
 }
 
-function TimeFormatForCompare(timsString) {
-    var formatArr = timsString.split("-");
+//將時間字串從yyyy-mm-dd轉為從1900午夜開始計算的累積ms
+function TimeStringToNumber(timeString) {
+    //var startDate = $('#startDateForOrder').val();
+    //var endDate = $('#endDateForOrder').val();
+    var formatArr = timeString.split("-");
     var jsTime = new Date(formatArr[0], formatArr[1], formatArr[2]);
     var timeFormat = jsTime.getTime();
     return timeFormat;
 }
+
+function NoLaterThanEndDate(dateString) {
+    startDate = dateString;
+    startTime = TimeStringToNumber(dateString);
+    endDate = $('#endDateForOrder').val();
+    endTime = TimeStringToNumber(endDate);
+
+    if (startTime > endTime) {
+        startDate = endDate;
+        alert('起日需早於迄日');
+        $('#startDateForOrder').val(endDate);
+    }
+}
+
+function NoEarlierThanStartDate(dateString) {
+    endDate = dateString;
+    endTime = TimeStringToNumber(dateString);
+    startDate = $('#startDateForOrder').val();
+    startTime = TimeStringToNumber(startDate);
+
+    if (endTime < startTime) {
+        endDate = startDate;
+        alert('迄日需晚於起日');
+        $('#endDateForOrder').val(startDate);
+    }
+}
+
+
 
 function PrintOrderTableForReport(jsonResult) {
     $('#orderReportList').html('');
@@ -215,7 +239,6 @@ function DayRange() {
             success: function (data) {
                 if (data) {
                     var jsonResult = JSON.parse(data);
-                    console.log(jsonResult);
 
                     if (RepeatedStuff(jsonResult)) {
                         return;
@@ -293,7 +316,7 @@ function PrintDayOrderTableForReport(jsonResult) {
         '<th>總價</th>' +
         '<th>折扣</th>' +
         '<th>付款金額</th>' +
-        '<th>會員身份証字號</th>' +
+        '<th>會員身份証字號</th>' + 
         '<th>訂單建立時間</th>' +
         '</tr>';
 
@@ -304,7 +327,7 @@ function PrintDayOrderTableForReport(jsonResult) {
             '<td class="totalPriceColumn">' + jsonResult[i].totalPrice + '</td>' +
             '<td class="discountColumn">' + jsonResult[i].discount + '</td>' +
             '<td class="paymentColumn">' + jsonResult[i].payment + '</td>' +
-            '<td class="idNoColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
+            '<td class="idNoColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' + 
             '<td class="timeColumn">' + jsonResult[i].createTime + '</td>' +
             '</tr>';
         allTotalPrice += jsonResult[i].totalPrice;
@@ -318,7 +341,7 @@ function PrintDayOrderTableForReport(jsonResult) {
         '<td>' + allTotalPrice + '</td>' +
         '<td>' + allDiscount + '</td>' +
         '<td>' + allPayment + '</td>' +
-        '<td colspan="2">' + today + '</td>' +
+        '<td colspan="2"></td>' +
         '</tr>';
 
     $('#orderReportList').append(tableRow);

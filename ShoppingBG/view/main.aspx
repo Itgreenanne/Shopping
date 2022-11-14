@@ -212,9 +212,9 @@
                     <p class="dutyBlockTitle">報表</p>
                     <div class="DutyTypeInputblock">
                         <label for="startDateForOrder">訂單建立時間起日：</label>
-                        <input type="date" class="orderReportDateInput" id="startDateForOrder" />
+                        <input type="date" class="orderReportDateInput" id="startDateForOrder" onchange="NoLaterThanEndDate(this.value)" />
                         <label for="endDateForOrder" class="labUserSearchDutyType">訂單建立時間迄日： </label>
-                        <input type="date" class="orderReportDateInput" id="endDateForOrder" />
+                        <input type="date" class="orderReportDateInput" id="endDateForOrder" onchange="NoEarlierThanStartDate(this.value)"/>
                         <button class="btnSearchUser" onclick="GetSearchOrderReport()">確定</button>
                         <button class="btnSearchUser" onclick="ClearOrderReport()">清除</button>
                     </div>
@@ -227,13 +227,7 @@
                                 <input name="chkRange"type="radio" class="chkRange" id="chkMonthRange" value="2"/>
                                 <span>當年</span>
                                 <input name="chkRange"type="radio" class="chkRange" id="chkYearRange" value="3"/><br/>
-                            </div>
-                           <%-- <select name="reportRange" class="searchDutyTypeMenu" id="rangeSelect">
-                                <option value="0">請選擇</option>
-                                <option value="1">當日</option>
-                                <option value="2">當月</option>
-                                <option value="3">當年</option>
-                            </select><br/>--%>
+                            </div>                         
                             <button class="btnSearchUser" onclick="GetSearchOrderForSpecificRange()">確定</button>
                             <button class="btnSearchUser" onclick="ClearOrderReport()">清除</button>
                         </div>                        
