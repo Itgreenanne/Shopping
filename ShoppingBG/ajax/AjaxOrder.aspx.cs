@@ -140,6 +140,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
+                    logger.Error(ex);
                     throw ex.GetBaseException();
                 }
                 finally
@@ -200,6 +201,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
+                    logger.Error(ex);
                     throw ex.GetBaseException();
                 }
                 finally
@@ -263,6 +265,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
+                    logger.Error(ex);
                     throw ex.GetBaseException();
                 }
                 finally
@@ -326,6 +329,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
+                    logger.Error(ex);
                     throw ex.GetBaseException();
                 }
                 finally
@@ -388,6 +392,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
+                    logger.Error(ex);
                     throw ex.GetBaseException();
                 }
                 finally

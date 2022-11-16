@@ -20,28 +20,36 @@ namespace ShoppingBG.ajax
         {
             JObject result = new JObject();
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
-
-            if (userInfo != null)
+            try
             {
-                result.Add("userId", userInfo.UserId);
-                result.Add("account", userInfo.Account);
-                result.Add("nickname", userInfo.Nickname);
-                result.Add("pwd", userInfo.Pwd);
-                result.Add("typeId", userInfo.TypeId);
-                result.Add("dutyId", userInfo.DutyId);
-                result.Add("dutyName", userInfo.DutyName);
-                result.Add("mangDuty", userInfo.MangDuty);
-                result.Add("mangUser", userInfo.MangUser);
-                result.Add("mangProType", userInfo.MangProType);
-                result.Add("mangProduct", userInfo.MangProduct);
-                result.Add("mangOrder", userInfo.MangOrder);
-                result.Add("mangRecord", userInfo.MangRecord);
+                if (userInfo != null)
+                {
+                    result.Add("userId", userInfo.UserId);
+                    result.Add("account", userInfo.Account);
+                    result.Add("nickname", userInfo.Nickname);
+                    result.Add("pwd", userInfo.Pwd);
+                    result.Add("typeId", userInfo.TypeId);
+                    result.Add("dutyId", userInfo.DutyId);
+                    result.Add("dutyName", userInfo.DutyName);
+                    result.Add("mangDuty", userInfo.MangDuty);
+                    result.Add("mangUser", userInfo.MangUser);
+                    result.Add("mangProType", userInfo.MangProType);
+                    result.Add("mangProduct", userInfo.MangProduct);
+                    result.Add("mangOrder", userInfo.MangOrder);
+                    result.Add("mangRecord", userInfo.MangRecord);
+                }
+                else
+                {
+                    result.Add("sessionIsNull", null);
+                }
+                Response.Write(result);
             }
-            else
+            catch (Exception ex)
             {
-                result.Add("sessionIsNull", null);
+                Console.WriteLine(ex);
+                logger.Error(ex);
+                throw ex.GetBaseException();
             }
-            Response.Write(result);
         }
     }
 }

@@ -9,11 +9,14 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 using ShoppingBG.models;
 using Newtonsoft.Json;
+using NLog;
 
 namespace ShoppingBG.ajax
 {
     public partial class AjaxLogin : System.Web.UI.Page
     {
+        public Logger logger = LogManager.GetLogger("myLogger");
+
         public enum MsgType
         {
             ///summary
@@ -100,6 +103,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
+                    logger.Error(ex);
                     throw ex.GetBaseException();
                 }
                 finally

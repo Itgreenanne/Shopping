@@ -131,8 +131,7 @@ function NoEarlierThanStartDate(dateString) {
     }
 }
 
-
-
+//列印起迄日的表格
 function PrintOrderTableForReport(jsonResult) {
     $('#orderReportList').html('');
 
@@ -163,7 +162,7 @@ function PrintOrderTableForReport(jsonResult) {
 }
 
 var myChart = undefined;
-
+//列印圖表
 function PrintChartForReport(jsonResult)
 {
     var xvalues = [];
@@ -305,6 +304,7 @@ function MonthRange() {
     }
 }
 
+//列印當日表格
 function PrintDayOrderTableForReport(jsonResult) {
     $('#orderReportList').html('');
 
@@ -348,6 +348,7 @@ function PrintDayOrderTableForReport(jsonResult) {
     $('#orderReportList').show();
 }
 
+//列印當月或當年的表格
 function PrintMonthAndYearOrderTable(jsonResult) {
     $('#orderReportList').html('');
 
@@ -510,10 +511,12 @@ function YearRange() {
     }
 }
 
+//清除訂單畫面
 function ClearSearchOrder() {
     $('#allOrderList').html('');
 }
 
+//列印訂單表格
 function PrintOrderTable(jsonResult) {
     $('#allOrderList').html('');
 
@@ -561,6 +564,7 @@ function PrintOrderTable(jsonResult) {
     $('#allOrderList').show();
 }
 
+//拿取訂單細項資料
 function OpenOrderItemBlock(orderId) {
     $('#overlay').show();
     $('#orderItemBlock').show();
@@ -598,11 +602,13 @@ function OpenOrderItemBlock(orderId) {
     });
 }
 
+//關閉訂單細項div
 function CloseOrderItem() {
     $('#overlay').hide();
     $('#orderItemBlock').hide();
 }
 
+//列印訂單細項表格
 function PrintOrderItemTable(orderItem) {
     console.log('訂單細項表格', orderItem);
     $('#orderItemTable').html('');
