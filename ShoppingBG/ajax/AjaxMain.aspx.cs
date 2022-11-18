@@ -48,7 +48,6 @@ namespace ShoppingBG.ajax
             {
                 Console.WriteLine(ex);
                 logger.Error(ex);
-                throw ex.GetBaseException();
             }
         }
     }

@@ -86,6 +86,7 @@ namespace ShoppingBG.ajax
         private void AddDutyVerify()
         {
             MsgType msgValue = MsgType.WellAdded;
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             string apiGetDutyName = Request.Form["getDutyName"];
             bool apiMangDuty = Convert.ToBoolean(Request.Form["getMangDuty"]);
             bool apiMangUser = Convert.ToBoolean(Request.Form["getMangUser"]);
@@ -122,6 +123,7 @@ namespace ShoppingBG.ajax
 
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@dutyName", apiGetDutyName));
                     cmd.Parameters.Add(new SqlParameter("@mangDuty", apiMangDuty));
                     cmd.Parameters.Add(new SqlParameter("@mangUser", apiMangUser));
@@ -155,7 +157,6 @@ namespace ShoppingBG.ajax
                 {
                     Console.WriteLine(ex);
                     logger.Error(ex);
-                    throw ex.GetBaseException();
                 }
                 finally
                 {
@@ -164,6 +165,89 @@ namespace ShoppingBG.ajax
                 }
             }
         }
+
+        /////新增職責到資料庫
+        //private void AddDutyVerify()
+        //{
+        //    MsgType msgValue = MsgType.WellAdded;
+        //    string apiGetDutyName = Request.Form["getDutyName"];
+        //    bool apiMangDuty = Convert.ToBoolean(Request.Form["getMangDuty"]);
+        //    bool apiMangUser = Convert.ToBoolean(Request.Form["getMangUser"]);
+        //    bool apiMangProType = Convert.ToBoolean(Request.Form["getMangProType"]);
+        //    bool apiMangProduct = Convert.ToBoolean(Request.Form["getMangProduct"]);
+        //    bool apiMangOrder = Convert.ToBoolean(Request.Form["getMangOrder"]);
+        //    bool apiMangRecord = Convert.ToBoolean(Request.Form["getMangRecord"]);
+
+
+        //    //if (string.IsNullOrEmpty(apiGetDutyName) ||
+        //    //    ((!apiMangDuty) && (apiMangUser == false) &&
+        //    //    (apiMangProType == false) && (apiMangProduct == false) &&
+        //    //    (apiMangOrder == false) && (apiMangRecord == false)))
+        //    //{
+        //    //空字串驗証
+        //    if (string.IsNullOrEmpty(apiGetDutyName))
+        //    {
+        //        msgValue = MsgType.NullEmptyInput;
+        //        Response.Write((int)msgValue);
+        //        //字串長度驗証
+        //    }
+        //    else if (apiGetDutyName.Length > 20)
+        //    {
+        //        msgValue = MsgType.ToolongString;
+        //        Response.Write((int)msgValue);
+        //    }
+        //    else
+        //    {
+        //        string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
+        //        SqlConnection conn = new SqlConnection(strConnString);
+        //        SqlCommand cmd = new SqlCommand("pro_shoppingBG_addDuty", conn);
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        conn.Open();
+
+        //        try
+        //        {
+        //            cmd.Parameters.Add(new SqlParameter("@dutyName", apiGetDutyName));
+        //            cmd.Parameters.Add(new SqlParameter("@mangDuty", apiMangDuty));
+        //            cmd.Parameters.Add(new SqlParameter("@mangUser", apiMangUser));
+        //            cmd.Parameters.Add(new SqlParameter("@mangProType", apiMangProType));
+        //            cmd.Parameters.Add(new SqlParameter("@mangProduct", apiMangProduct));
+        //            cmd.Parameters.Add(new SqlParameter("@mangOrder", apiMangOrder));
+        //            cmd.Parameters.Add(new SqlParameter("@mangRecord", apiMangRecord));
+        //            SqlDataReader reader = cmd.ExecuteReader();
+
+        //            //判斷是否有此職責存在
+        //            if (reader.HasRows)
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    int result = Convert.ToInt16(reader["result"]);
+        //                    if (result == 0)
+        //                    {
+        //                        msgValue = MsgType.DutyExisted;
+        //                        break;
+        //                    }
+        //                    else
+        //                    {
+        //                        msgValue = MsgType.WellAdded;
+        //                    }
+        //                }
+        //            }
+
+        //            Response.Write((int)msgValue);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine(ex);
+        //            logger.Error(ex);
+        //            throw ex.GetBaseException();
+        //        }
+        //        finally
+        //        {
+        //            conn.Close();
+        //            conn.Dispose();
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// 從資料庫讀取全部職責資料
@@ -204,7 +288,6 @@ namespace ShoppingBG.ajax
             {
                 Console.WriteLine(ex);
                 logger.Error(ex);
-                throw ex.GetBaseException();
             }
             finally
             {
@@ -291,7 +374,6 @@ namespace ShoppingBG.ajax
                 {
                     Console.WriteLine(ex);
                     logger.Error(ex);
-                    throw ex.GetBaseException();
                 }
                 finally
                 {
@@ -345,7 +427,6 @@ namespace ShoppingBG.ajax
             {
                 Console.WriteLine(ex);
                 logger.Error(ex);
-                throw ex.GetBaseException();
             }
             finally
             {
@@ -424,7 +505,6 @@ namespace ShoppingBG.ajax
             {
                 Console.WriteLine(ex);
                 logger.Error(ex);
-                throw ex.GetBaseException();
             }
             finally
             {
@@ -504,7 +584,6 @@ namespace ShoppingBG.ajax
                 {
                     Console.WriteLine(ex);
                     logger.Error(ex);
-                    throw ex.GetBaseException();
                 }
                 finally
                 {
