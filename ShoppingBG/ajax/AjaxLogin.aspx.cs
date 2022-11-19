@@ -15,7 +15,7 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxLogin : System.Web.UI.Page
     {
-        public Logger logger = LogManager.GetLogger("myLogger");
+        public Logger logger = LogManager.GetLogger("bGLogger");
 
         public enum MsgType
         {
@@ -48,6 +48,7 @@ namespace ShoppingBG.ajax
             MsgType msgValue = MsgType.WrongLogin;
             string apiGetId = Request.Form["getId"];
             string apiGetPwd = Request.Form["getPwd"];
+            UserInfo userInfo = new UserInfo();
 
             //後端空字串驗証
             if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd))
@@ -76,7 +77,6 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@userAccount", apiGetId));
                     cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
                     SqlDataReader reader = cmd.ExecuteReader();
-                    UserInfo userInfo = new UserInfo();
                     if(reader.HasRows)
                     {
                         while (reader.Read())
@@ -94,6 +94,7 @@ namespace ShoppingBG.ajax
                             userInfo.MangProduct = Convert.ToInt16(reader["f_manageProduct"]);
                             userInfo.MangOrder = Convert.ToInt16(reader["f_manageOrder"]);
                             userInfo.MangRecord = Convert.ToInt16(reader["f_manageRecord"]);
+                            userInfo.UserIp = GetIp();
                         }
                         Session["userInfo"] = userInfo;
                         msgValue = MsgType.CorrectLogin;
@@ -103,7 +104,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
                 }
                 finally
                 {
@@ -113,67 +114,19 @@ namespace ShoppingBG.ajax
             }
         }
 
-
-        //private void LoginVerify()
-        //{
-        //    MsgType msgValue = MsgType.WrongLogin;
-        //    string apiGetId = Request.Form["getId"];
-        //    string apiGetPwd = Request.Form["getPwd"];
-
-        //    //後端空字串驗証
-        //    if (string.IsNullOrEmpty(apiGetId) || string.IsNullOrEmpty(apiGetPwd))
-        //    {
-        //        msgValue = MsgType.NullEmptyInput;
-        //        Response.Write((int)msgValue);
-
-        //        //字串長度是否有超過限制驗証
-        //    }
-        //    else if (apiGetId.Length > 20 || apiGetPwd.Length > 20)
-        //    {
-        //        msgValue = MsgType.ToolongString;
-        //        Response.Write((int)msgValue);
-        //    }
-        //    else
-        //    {
-        //        string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
-        //        SqlConnection conn = new SqlConnection(strConnString);
-        //        SqlCommand cmd = new SqlCommand("pro_shoppingBG_getLogin", conn);
-        //        cmd.CommandType = CommandType.StoredProcedure;
-        //        conn.Open();
-
-        //        try
-        //        {
-        //            //將登入頁輸入的帳號與密碼傳至beginningSP
-        //            cmd.Parameters.Add(new SqlParameter("@id", apiGetId));
-        //            cmd.Parameters.Add(new SqlParameter("@pwd", apiGetPwd));
-        //            SqlDataReader reader = cmd.ExecuteReader();
-        //            UserInfo userInfo = new UserInfo();
-
-        //            if (reader.HasRows)
-        //            {
-        //                while (reader.Read())
-        //                {
-        //                    userInfo.Account = reader["f_account"].ToString();
-        //                    userInfo.TypeId = Convert.ToInt16(reader["f_typeId"]);
-        //                }
-        //                Session["userInfo"] = userInfo;
-        //                msgValue = MsgType.CorrectLogin;
-        //                Response.Write((int)msgValue);
-        //            }
-
-        //            Response.Write((int)msgValue);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Console.WriteLine(ex);
-        //            throw ex.GetBaseException();
-        //        }
-        //        finally
-        //        {
-        //            conn.Close();
-        //            conn.Dispose();
-        //        }
-        //    }
-        //}
+        /// <summary>
+        /// 取得用戶端的ip
+        /// </summary>
+        /// <returns></returns>
+        public string GetIp()
+        {
+            string ip =
+            HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (string.IsNullOrEmpty(ip))
+            {
+                ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+            }
+            return ip;
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace ShoppingBG.ajax
 {
      public partial class AjaxDuty : DutyAuthority
     {
-        /// <summary>
+         /// <summary>
         /// 新增職責訊息
         /// </summary>
         public enum MsgType
@@ -85,8 +85,8 @@ namespace ShoppingBG.ajax
         ///新增職責到資料庫
         private void AddDutyVerify()
         {
-            MsgType msgValue = MsgType.WellAdded;
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
+            MsgType msgValue = MsgType.WellAdded;
             string apiGetDutyName = Request.Form["getDutyName"];
             bool apiMangDuty = Convert.ToBoolean(Request.Form["getMangDuty"]);
             bool apiMangUser = Convert.ToBoolean(Request.Form["getMangUser"]);
@@ -156,7 +156,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
                 }
                 finally
                 {
@@ -254,9 +254,10 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void GetAllDuty()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
-            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllDuty ", conn);
+            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllDuty", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             conn.Open();
 
@@ -287,7 +288,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
             }
             finally
             {
@@ -301,6 +302,7 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void GetSearchDutyByNmae()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WellAdded;
             string apiGetDutyName = Request.Form["getDutyName"];
 
@@ -373,7 +375,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
                 }
                 finally
                 {
@@ -385,6 +387,7 @@ namespace ShoppingBG.ajax
 
         private void GetSearchDutyById()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WellAdded;
             int apiGetId = Int32.Parse((Request.Form["getDutyId"]));
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
@@ -426,7 +429,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
             }
             finally
             {
@@ -441,6 +444,7 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void DeleteDuty()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WellAdded;
             int apiGetId = Int32.Parse((Request.Form["getDutyId"]));
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
@@ -504,7 +508,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
             }
             finally
             {
@@ -518,6 +522,7 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void ModifyDuty()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WellAdded;
             int apiGetId= Int32.Parse((Request.Form["getDutyId"]));
             string apiGetDutyName = Request.Form["getDutyName"];
@@ -583,7 +588,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
                 }
                 finally
                 {

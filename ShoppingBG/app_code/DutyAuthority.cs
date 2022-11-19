@@ -17,7 +17,7 @@ namespace ShoppingBG.app_code
 {
     public class DutyAuthority : System.Web.UI.Page
     {
-        public Logger logger = LogManager.GetLogger("myLogger");
+        public Logger logger = LogManager.GetLogger("bGLogger");
 
         public enum DutyAuthorityMsg
         {
@@ -91,7 +91,7 @@ namespace ShoppingBG.app_code
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
             }
             finally
             {

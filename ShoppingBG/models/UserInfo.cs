@@ -62,5 +62,9 @@ namespace ShoppingBG.models
         /// 操作紀錄管理
         /// </summary>
         public int MangRecord { get; set; }
+        /// <summary>
+        /// 使用者ip
+        /// </summary>
+        public string UserIp { get; set; }
     }
 }
