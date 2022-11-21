@@ -16,6 +16,7 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxMember : DutyAuthority
     {
+        WriteLog writeLog = new WriteLog();
         public enum MsgType {
             /// <summary>
             /// 網路錯誤
@@ -139,7 +140,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                writeLog.Bglogger(ex.Message);
             }
             finally
             {
@@ -193,7 +194,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -250,7 +251,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                writeLog.Bglogger(ex.Message);
             }
             finally
             {
@@ -353,7 +354,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {

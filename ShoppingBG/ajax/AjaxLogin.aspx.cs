@@ -15,8 +15,7 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxLogin : System.Web.UI.Page
     {
-        public Logger logger = LogManager.GetLogger("bGLogger");
-
+        WriteLog writeLog = new WriteLog();
         public enum MsgType
         {
             ///summary
@@ -104,7 +103,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {

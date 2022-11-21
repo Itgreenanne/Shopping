@@ -17,8 +17,6 @@ namespace ShoppingBG.app_code
 {
     public class DutyAuthority : System.Web.UI.Page
     {
-        public Logger logger = LogManager.GetLogger("bGLogger");
-
         public enum DutyAuthorityMsg
         {
             /// <summary>
@@ -33,6 +31,8 @@ namespace ShoppingBG.app_code
 
         protected void Page_Init(object sender, EventArgs e)
         {
+            ajax.WriteLog writeLog = new ajax.WriteLog();
+
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             if (Session["userInfo"] == null)
             {
@@ -91,7 +91,7 @@ namespace ShoppingBG.app_code
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
+                writeLog.Bglogger(ex.Message);
             }
             finally
             {

@@ -17,7 +17,8 @@ namespace ShoppingBG.ajax
 {
      public partial class AjaxDuty : DutyAuthority
     {
-         /// <summary>
+        WriteLog writeLog = new WriteLog();
+        /// <summary>
         /// 新增職責訊息
         /// </summary>
         public enum MsgType
@@ -156,7 +157,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -257,7 +258,7 @@ namespace ShoppingBG.ajax
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
-            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllDuty", conn);
+            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllDuty2", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             conn.Open();
 
@@ -288,7 +289,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
+                writeLog.Bglogger(ex.Message);
             }
             finally
             {
@@ -375,7 +376,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -429,7 +430,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
+                writeLog.Bglogger(ex.Message);
             }
             finally
             {
@@ -508,7 +509,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
+                writeLog.Bglogger(ex.Message);
             }
             finally
             {
@@ -588,7 +589,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, ex.Message);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {

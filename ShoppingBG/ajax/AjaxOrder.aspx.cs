@@ -17,6 +17,7 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxOrder : DutyAuthority
     {
+        WriteLog writeLog = new WriteLog();
         /// <summary>
         /// 各項驗証的訊息以及搜尋DB後要傳到前端的結果訊息
         /// </summary>
@@ -140,7 +141,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -200,7 +201,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -263,7 +264,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -326,7 +327,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -388,7 +389,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {

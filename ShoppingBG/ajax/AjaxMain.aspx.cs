@@ -16,6 +16,7 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxMain : DutyAuthority
     {
+        WriteLog writeLog = new WriteLog();
         protected void Page_Load(object sender, EventArgs e)
         {
             JObject result = new JObject();
@@ -47,7 +48,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                writeLog.Bglogger(ex.Message);
             }
         }
     }

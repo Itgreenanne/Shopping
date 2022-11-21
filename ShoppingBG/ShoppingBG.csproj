@@ -177,6 +177,9 @@
     <Compile Include="ajax\AjaxOrder.aspx.designer.cs">
       <DependentUpon>AjaxOrder.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ajax\WriteLog.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="app_code\DutyAuthority.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

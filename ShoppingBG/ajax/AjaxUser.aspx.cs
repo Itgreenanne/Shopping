@@ -17,6 +17,7 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxUser : DutyAuthority
     {
+        WriteLog writeLog = new WriteLog();
          /// <summary>
         /// 新增人員各函式回傳訊息
         /// </summary>
@@ -132,7 +133,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                writeLog.Bglogger(ex.Message);
             }
             finally
             {
@@ -218,7 +219,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -286,7 +287,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                logger.Error(ex);
+                writeLog.Bglogger(ex.Message);
             }
             finally
             {
@@ -363,7 +364,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -413,7 +414,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -494,7 +495,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -573,7 +574,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    logger.Error(ex);
+                    writeLog.Bglogger(ex.Message);
                 }
                 finally
                 {
