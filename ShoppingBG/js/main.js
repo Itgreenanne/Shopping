@@ -113,7 +113,10 @@ $(document).ready(function () {
                 ResetAll();
                 $('#searchOrderBlock').show();
                 break;
-        }
+            case 'operationRecord':
+                ResetAll();
+                $('#operationRecordtBlock').show();
+                break;        }
     });
 
     //登出
@@ -140,6 +143,7 @@ $(document).ready(function () {
         $('#orderReportBlock').hide();        
         $('#searchOrderBlock').hide();
         $('#orderItemBlock').hide();
+        $('#operationRecordtBlock').hide();
     }
 })
 

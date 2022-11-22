@@ -101,6 +101,7 @@
     <Content Include="ajax\AjaxProduct.aspx" />
     <Content Include="ajax\AjaxMember.aspx" />
     <Content Include="ajax\AjaxOrder.aspx" />
+    <Content Include="ajax\AjaxOperationRecord.aspx" />
     <Content Include="css\BackendLogin.css" />
     <Content Include="css\Main.css" />
     <Content Include="css\MainDuty.css" />
@@ -112,6 +113,7 @@
     <Content Include="js\jquery-2.1.4.js" />
     <Content Include="js\Main.js" />
     <Content Include="js\MainDuty.js" />
+    <Content Include="js\MainOperationRecord.js" />
     <Content Include="js\MainOrder.js" />
     <Content Include="js\MainProduct.js" />
     <Content Include="js\MainUser.js" />
@@ -176,6 +178,13 @@
     </Compile>
     <Compile Include="ajax\AjaxOrder.aspx.designer.cs">
       <DependentUpon>AjaxOrder.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ajax\AjaxOperationRecord.aspx.cs">
+      <DependentUpon>AjaxOperationRecord.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ajax\AjaxOperationRecord.aspx.designer.cs">
+      <DependentUpon>AjaxOperationRecord.aspx</DependentUpon>
     </Compile>
     <Compile Include="ajax\WriteLog.cs">
       <SubType>ASPXCodeBehind</SubType>

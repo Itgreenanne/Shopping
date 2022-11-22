@@ -405,7 +405,7 @@ function PrintMonthAndYearOrderTable(jsonResult) {
 }
 
 
-//清除輸入日期
+//清除輸入日期框及表格
 function ClearOrderReport() {
     $('#startDateForOrder').val('');
     $('#endDateForOrder').val('');

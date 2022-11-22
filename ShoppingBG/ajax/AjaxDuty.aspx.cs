@@ -18,6 +18,9 @@ namespace ShoppingBG.ajax
      public partial class AjaxDuty : DutyAuthority
     {
         WriteLog writeLog = new WriteLog();
+        //JArray oldDutyArray = new JArray();
+        JObject oldDutyInfo = new JObject();
+
         /// <summary>
         /// 新增職責訊息
         /// </summary>
@@ -258,7 +261,7 @@ namespace ShoppingBG.ajax
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
-            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllDuty2", conn);
+            SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllDuty", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             conn.Open();
 
@@ -401,25 +404,24 @@ namespace ShoppingBG.ajax
             {
                 cmd.Parameters.Add(new SqlParameter("@dutyId", apiGetId));
                 SqlDataReader reader = cmd.ExecuteReader();
-                JArray resultArray = new JArray();
+                //JArray resultArray = new JArray();
 
                 //判斷是否有此職責存在
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        JObject dutyinfo = new JObject();
-                        dutyinfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
-                        dutyinfo.Add("dutyName", reader["f_name"].ToString());
-                        dutyinfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
-                        dutyinfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
-                        dutyinfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
-                        dutyinfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
-                        dutyinfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
-                        dutyinfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
-                        resultArray.Add(dutyinfo);
+                        oldDutyInfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
+                        oldDutyInfo.Add("dutyName", reader["f_name"].ToString());
+                        oldDutyInfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
+                        oldDutyInfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
+                        oldDutyInfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
+                        oldDutyInfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
+                        oldDutyInfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
+                        oldDutyInfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
+                        //oldDutyArray.Add(dutyinfo);
                     }
-                    Response.Write(resultArray);
+                    Response.Write(oldDutyInfo);
                 }
                 else
                 {
@@ -532,7 +534,7 @@ namespace ShoppingBG.ajax
             bool apiMangProType = Convert.ToBoolean(Request.Form["getMangProType"]);
             bool apiMangProduct = Convert.ToBoolean(Request.Form["getMangProduct"]);
             bool apiMangOrder = Convert.ToBoolean(Request.Form["getMangOrder"]);
-            bool apiMangRecord = Convert.ToBoolean(Request.Form["getMangRecord"]);
+            bool apiMangRecord = Convert.ToBoolean(Request.Form["getMangRecord"]);          
 
             //空字串驗証
             if (string.IsNullOrEmpty(apiGetDutyName))
@@ -548,6 +550,17 @@ namespace ShoppingBG.ajax
             }
             else
             {
+                JObject newDutyInfo = new JObject();
+                newDutyInfo.Add("dutyId", oldDutyInfo["dutyId"]);
+                newDutyInfo.Add("dutyName", apiGetDutyName);
+                newDutyInfo.Add("mangDuty", apiMangDuty);
+                newDutyInfo.Add("mangUser", apiMangUser);
+                newDutyInfo.Add("mangProType", apiMangProType);
+                newDutyInfo.Add("mangProduct", apiMangProduct);
+                newDutyInfo.Add("mangOrder", apiMangOrder);
+                newDutyInfo.Add("mangRecord", apiMangRecord);
+
+
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
                 SqlCommand cmd = new SqlCommand("pro_shoppingBG_modifyDuty", conn);
@@ -576,6 +589,7 @@ namespace ShoppingBG.ajax
                             {
                                 msgValue = MsgType.DutyExisted;
                                 break;
+                                
                             }
                             else
                             {

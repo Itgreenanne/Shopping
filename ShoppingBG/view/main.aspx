@@ -27,6 +27,7 @@
 <script type="text/javascript" src="/js/MainProduct.js"> </script>
 <script type="text/javascript" src="/js/MainMember.js"> </script>
 <script type="text/javascript" src="/js/MainOrder.js"> </script>
+<script type="text/javascript" src="/js/MainOperationRecord.js"> </script>
 
 
 <body>          
@@ -237,26 +238,20 @@
                     </div>
                 </div>
 
-
-           <%--<div class="searchOrderBlock" id="orderReportBlock">
-                    <p class="dutyBlockTitle">報告</p>
+             <div class="searchOrderBlock" id="operationRecordtBlock">
+                    <p class="dutyBlockTitle">操作紀錄查詢</p>
                     <div class="DutyTypeInputblock">
-                        <label for="startDateForOrder">訂單建立時間起日：</label>
-                        <input type="date" class="orderReportDateInput" id="startDateForOrder" min="2022-11-01"/>
-                        <label for="endDateForOrder" class="labUserSearchDutyType">訂單建立時間迄日： </label>
-                        <input type="date" class="orderReportDateInput" id="endDateForOrder" min="2022-11-01"/>                        
-                        <button class="btnSearchUser" onclick="GetSearchOrderReport()">確定</button>
-                        <button class="btnSearchUser" onclick="ClearOrderReport()">清除</button>
+                        <label for="startDateForOrder">紀錄建立時間起日：</label>
+                        <input type="date" class="orderReportDateInput" id="startDateForRecord" onchange="NoLaterThanEndDate(this.value)" />
+                        <label for="endDateForOrder" class="labUserSearchDutyType">紀錄建立時間迄日： </label>
+                        <input type="date" class="orderReportDateInput" id="endDateForRecord" onchange="NoEarlierThanStartDate(this.value)"/>
+                        <button class="btnSearchUser" onclick="GetSearchAllOperationRecord()">確定</button>
+                        <button class="btnSearchUser" onclick="ClearRecord()">清除</button>
                     </div>
-                    <div class="totalBox">
-                        <div class="labelForTotalBox">總額：</div>
-                        <div class="TotalCounted" id="totalCounted"></div><br/>
-                    </div>                   
-                    <table class="orderTable" id="orderReportList"></table>
-                    <div class="chartBox">
-                        <canvas id="chart"></canvas>
-                    </div>
-                </div>--%>
+                    <table class="orderTable" id="operationRecordList"></table>
+             </div>
+
+
 
 
 

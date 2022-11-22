@@ -228,24 +228,24 @@ function ModifyDutyReadBack(dutyId) {
                     //重置所有checkbox
                     $('.chkModifyDuty').prop('checked', false);
                     //顯示跟選擇列資料一樣的資料                
-                    $('#modifyDutyName').val(jsonResult[0].dutyName);
+                    $('#modifyDutyName').val(jsonResult.dutyName);
 
-                    if (jsonResult[0].mangDuty == 1) {
+                    if (jsonResult.mangDuty == 1) {
                         $('#manageDutyMod').prop('checked', true);
                     }
-                    if (jsonResult[0].mangUser == 1) {
+                    if (jsonResult.mangUser == 1) {
                         $('#manageUserMod').prop('checked', true);
                     }
-                    if (jsonResult[0].mangProType == 1) {
+                    if (jsonResult.mangProType == 1) {
                         $('#manageProductTypeMod').prop('checked', true);
                     }
-                    if (jsonResult[0].mangProduct == 1) {
+                    if (jsonResult.mangProduct == 1) {
                         $('#manageProductMod').prop('checked', true);
                     }
-                    if (jsonResult[0].mangOrder == 1) {
+                    if (jsonResult.mangOrder == 1) {
                         $('#manageOrderMod').prop('checked', true);
                     }
-                    if (jsonResult[0].mangRecord == 1) {
+                    if (jsonResult.mangRecord == 1) {
                         $('#manageRecordMod').prop('checked', true);
                     }
                     $('#modifyDutyBlock').show();
