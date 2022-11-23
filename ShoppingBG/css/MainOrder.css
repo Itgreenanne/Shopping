@@ -83,6 +83,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .orderTable {
+    margin-top: 10px;
     width: 100%;
     border: 1px solid #000;
     font-size: 20px;

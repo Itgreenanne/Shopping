@@ -283,7 +283,9 @@ function ModifyUser() {
     var inputNickname = $('#modifyNickname').val();
     /*var userPwd = userData[0].UserPwd;*/
     var userPwd = globalUserData.UserPwd;
-    var dutyId = $('#modifyDutyMenu').val();   
+    var dutyId = $('#modifyDutyMenu').val();
+    var dutyName = $('#modifyDutyMenu').html('option');
+    console.log(dutyName);
 
     if (inputNickname == globalUserData.UserNickname && userPwd == oldUserPwd && dutyId == globalUserData.DutyTypeId) {
         alert('資料完全沒有修改');

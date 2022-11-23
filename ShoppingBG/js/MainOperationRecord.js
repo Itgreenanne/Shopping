@@ -17,11 +17,8 @@ function GetSearchAllOperationRecord() {
             success: function (data) {
                 if (data) {
                     var jsonResult = JSON.parse(data);
-
                     if (RepeatedStuff(jsonResult)) {
-                        return;
-                    } else if (jsonResult == 3) {
-                        alert('找不到訂單');
+                        return;                    
                     } else {
                         PrintOperationRecord(jsonResult);
                     }
@@ -47,32 +44,96 @@ function ClearRecord() {
     $('#endDateForRecord').val('');
     $('#operationRecordList').html('');
 }
-//列印起迄日的表格
+
+//列印起迄日期間操作紀錄的表格
 function PrintOperationRecord(jsonResult) {
     $('#operationRecordList').html('');
 
     var tableRow = '';
     tableRow = '<tr>' +
-        '<th>訂單代號</th>' +
-        '<th>總價</th>' +
-        '<th>折扣</th>' +
-        '<th>付款金額</th>' +
-        '<th>會員身份証字號</th>' +
-        '<th>訂單建立時間</th>' +
+        '<th>資料id</th>' +
+        '<th>資料種類</th>' +
+        '<th>操作種類</th>' +
+        '<th>修改前</th>' +
+        '<th>修改後</th>' +
+        '<th>操作紀錄寫入時間</th>' +
         '</tr>';
 
     for (var i = jsonResult.length - 1; i >= 0; i--) {
+        console.log(jsonResult);
+        var typeArr = ['職責', '人員', '產品', '會員', '訂單'];
+        var functionType = ['新增', '刪除', '修改'];
+
+        if ((jsonResult[i].function) == 3) {
+            var beforeData = dataConversionList(jsonResult[i].type, jsonResult[i].before);
+            var afterData = dataConversionList(jsonResult[i].type, jsonResult[i].after);
+        } else {
+            var beforeData = jsonResult[i].before;
+            var afterData = jsonResult[i].after;
+        }
+
         tableRow +=
             '<tr>' +
-            '<td class="orderNoColumn">' + jsonResult[i].orderNumber + '</td>' +
-            '<td class="totalPriceColumn">' + jsonResult[i].totalPrice + '</td>' +
-            '<td class="discountColumn">' + jsonResult[i].discount + '</td>' +
-            '<td class="paymentColumn">' + jsonResult[i].payment + '</td>' +
-            '<td class="idNoColumn">' + jsonResult[i].idNumber.toUpperCase() + '</td>' +
+            '<td class="dataIdColumn">' + jsonResult[i].dataId + '</td>' +
+            '<td class="typeColumn">' + typeArr[(jsonResult[i].type)-1] + '</td>' +
+            '<td class="functionColumn">' + functionType[(jsonResult[i].function)-1] + '</td>' +
+            '<td class="beforeColumn">' + beforeData + '</td>' +
+            '<td class="afterColumn">' + afterData + '</td>' +
             '<td class="timeColumn">' + jsonResult[i].createTime + '</td>' +
-            '</tr>';
+            '</tr>';    
     }
 
-    $('#orderReportList').append(tableRow);
-    $('#orderReportList').show();
+    $('#operationRecordList').append(tableRow);
+    $('#operationRecordList').show();
+}
+
+//資料種類轉換函式的選單
+function dataConversionList(index, data) {
+    switch (index){
+        case 1:
+            return dutyDataConverted(data);
+            break;
+        case 2:
+            return;
+    }
+}
+
+
+
+function dutyDataConverted(data) {
+    var jsonData = JSON.parse(data);
+
+    Object.entries(jsonData).forEach(([key, value]) => {
+        if (value == 0) {
+            jsonData[key] = '無';
+        } else if (value == 1) {
+            jsonData[key] = '有';
+        }
+    });
+
+    var keyMap = {
+        'dutyName': '職責名稱',
+        'mangDuty': '職責管理',
+        'mangUser': '人員管理',
+        'mangProType': '產品類別管理',
+        'mangProduct': '產品管理',
+        'mangOrder': '訂單管理',
+        'mangRecord': '操作紀錄管理'
+    };
+
+    //將json key改為上面物件的中文名稱
+    for (var key in jsonData) {
+        var newKey = keyMap[key];
+        if (newKey) {
+            jsonData[newKey] = jsonData[key];
+            delete jsonData[key];
+        }
+    }
+
+    var stringData = JSON.stringify(jsonData);
+    stringData = stringData.replaceAll('\"', '');
+    stringData = stringData.replace('{', '');
+    stringData = stringData.replace('}', '');
+    stringData = stringData.replace(',', '<br>');
+    return stringData;
 }

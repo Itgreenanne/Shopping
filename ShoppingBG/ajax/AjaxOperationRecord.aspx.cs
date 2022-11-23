@@ -51,13 +51,16 @@ namespace ShoppingBG.ajax
                 {
                     while (reader.Read())
                     {
-                        JObject dutyinfo = new JObject();
-                        dutyinfo.Add("id", Convert.ToInt32(reader["f_id"]));
-                        dutyinfo.Add("type", Convert.ToInt16(reader["f_type"]));
-                        dutyinfo.Add("function", Convert.ToInt16(reader["f_function"]));
-                        dutyinfo.Add("before", reader["f_before"].ToString());
-                        dutyinfo.Add("after", reader["f_after"].ToString());                        
-                        resultArray.Add(dutyinfo);
+                        JObject recordInfo = new JObject();
+                        recordInfo.Add("id", Convert.ToInt32(reader["f_id"]));
+                        recordInfo.Add("dataId", Convert.ToInt32(reader["f_dataId"]));
+                        recordInfo.Add("type", Convert.ToInt16(reader["f_type"]));
+                        recordInfo.Add("function", Convert.ToInt16(reader["f_function"]));
+                        recordInfo.Add("before", reader["f_before"].ToString());
+                        recordInfo.Add("after", reader["f_after"].ToString());
+                        DateTime strTime = DateTime.Parse(reader["f_createTime"].ToString());
+                        recordInfo.Add("createTime", String.Format("{0:yyyy/MM/dd HH:mm:ss}", strTime));
+                        resultArray.Add(recordInfo);
                     }
                 }
                 Response.Write(resultArray);

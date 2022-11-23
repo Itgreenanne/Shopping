@@ -11,12 +11,15 @@ using ShoppingBG.models;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using ShoppingBG.app_code;
+using System.Diagnostics;
+
 
 
 namespace ShoppingBG.ajax
 {
     public partial class AjaxUser : DutyAuthority
     {
+        public static JObject oldUserInfo = new JObject();
         WriteLog writeLog = new WriteLog();
          /// <summary>
         /// 新增人員各函式回傳訊息
@@ -487,6 +490,8 @@ namespace ShoppingBG.ajax
                             DutyTypeId = Convert.ToInt16(row.ItemArray[4]),
                             DutyName = row.ItemArray[5].ToString()
                         }; userArray.Add(userdata);
+                        
+                        //oldUserInfo.Add()
                     }
                     userDutyCombo.UserDataArray = userArray;
                     userDutyCombo.DutyInfoArray = dutyArray;
@@ -546,6 +551,43 @@ namespace ShoppingBG.ajax
             }
             else
             {
+                //JObject newUserInfo = new JObject();
+                //JObject afterObj = new JObject();
+                //JObject beforeObj = new JObject();
+                //newUserInfo.Add("dutyId", apiGetId);
+                //newUserInfo.Add("dutyName", apiGetDutyName);
+                //newUserInfo.Add("mangDuty", Convert.ToInt16(apiMangDuty));
+                //newUserInfo.Add("mangUser", Convert.ToInt16(apiMangUser));
+                //newUserInfo.Add("mangProType", Convert.ToInt16(apiMangProType));
+                //newUserInfo.Add("mangProduct", Convert.ToInt16(apiMangProduct));
+                //IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldUserInfo.GetEnumerator();
+                //IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newDutyInfo.GetEnumerator();
+
+                //while (oldObjEnum.MoveNext())
+                //{
+                //    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
+                //    JToken jt;
+
+                //    if (newDutyInfo.TryGetValue(pair.Key, out jt))
+                //    {
+                //        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
+                //        JToken oldItem = oldDutyInfo.GetValue(pair.Key);
+                //        JToken newItem = newDutyInfo.GetValue(pair.Key);
+
+                //        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
+                //        {
+                //            Console.WriteLine("add " + pair.Key + ": " + newItem + " to result.");
+                //            afterObj.Add(pair.Key, newItem);
+                //            beforeObj.Add(pair.Key, oldItem);
+                //        }
+                //    }
+                //}
+
+                //Debug.WriteLine("old = " + oldDutyInfo);
+                //Debug.WriteLine("new = " + newDutyInfo);
+                //Debug.WriteLine("result = " + afterObj);
+                //Debug.WriteLine("result = " + beforeObj);
+
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
                 SqlCommand cmd = new SqlCommand("pro_shoppingBG_modifyUser", conn);

@@ -105,6 +105,7 @@
     <Content Include="css\BackendLogin.css" />
     <Content Include="css\Main.css" />
     <Content Include="css\MainDuty.css" />
+    <Content Include="css\MainOperationRecord.css" />
     <Content Include="css\MainOrder.css" />
     <Content Include="css\MainProduct.css" />
     <Content Include="css\MainUser.css" />

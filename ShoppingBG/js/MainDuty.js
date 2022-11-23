@@ -297,6 +297,7 @@ function ModifyDuty() {
                 getMangRecord: manageRecord
             },
             success: function (data) {
+                console.log(data);
                 if (data) {
                     if (RepeatedStuff(data)) {
                         return;
@@ -306,6 +307,8 @@ function ModifyDuty() {
                         $('#overlay').hide();
                     } else if (data == 1) {
                         alert('已有此職責名稱');
+                    } else if (data == 7) {
+                        alert('check box的值不是整數');
                     }
                 }
             },
