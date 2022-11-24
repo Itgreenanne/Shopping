@@ -297,12 +297,8 @@ function ModifyProduct() {
     var inventoryQtn = $('#modifyQtn').val();
     var productTypeId = $('#modifyProductType').val();
     var productDetail = $('#modifyProductDetail').val();
+    var productTypeName = $('#modifyProductType').find(':selected').text();
     productData = globalProductData;
-    console.log(inputProductTitle);
-    console.log(inputUnitPrice);
-    console.log(inventoryQtn);
-    console.log(productTypeId);
-    console.log(productDetail);
 
     if (inputProductPicPath == productData.ProductPic && inputProductTitle == productData.ProductTitle && inputUnitPrice == productData.ProductUnitPrice
         && inventoryQtn == productData.ProductQtn && productTypeId == productData.ProductTypeId && productDetail == productData.ProductDetail) {
@@ -328,6 +324,7 @@ function ModifyProduct() {
                 getUnitPrice: inputUnitPrice,
                 getInventoryQtn: inventoryQtn,
                 getProType: productTypeId,
+                getProTypeName: productTypeName,
                 getProductDetail: productDetail
             },
             success: function (data) {

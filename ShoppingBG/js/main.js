@@ -129,11 +129,11 @@ $(document).ready(function () {
         $('#overlay').hide();
         $('#addDutyBlock').hide();
         $('#searchDutyBlock').hide();
-        $('#allDutyList').hide();
+        $('#allDutyList').html('');
         $('#modifyDutyBlock').hide();
         $('#addUserBlock').hide();
         $('#searchUserBlock').hide();
-        $('#allUserList').hide();
+        $('#allUserList').html('');
         $('#modifyUserBlock').hide();
         $('#addProductBlock').hide();
         $('#searchProductBlock').hide();
@@ -142,6 +142,7 @@ $(document).ready(function () {
         $('#modifyMemberBlock').hide();
         $('#orderReportBlock').hide();        
         $('#searchOrderBlock').hide();
+        $('#allOrderList').html('');
         $('#orderItemBlock').hide();
         $('#operationRecordtBlock').hide();
     }
@@ -153,7 +154,7 @@ function DutyAuthorization(userInfo) {
     $('#user').hide();
     $('#productType').hide();
     $('#product').hide();
-    $('#searchOrder').hide();
+    $('#order').hide();
     $('#operationRecord').hide();
 
     if (userInfo.mangDuty == 1) {
@@ -169,7 +170,7 @@ function DutyAuthorization(userInfo) {
         $('#product').show();
     }
     if (userInfo.mangOrder == 1) {
-        $('#searchOrder').show();
+        $('#order').show();
     }
     if (userInfo.mangRecord == 1) {
         $('#operationRecord').show();

@@ -129,6 +129,7 @@ namespace ShoppingBG.ajax
 
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@dutyName", apiGetDutyName));
                     cmd.Parameters.Add(new SqlParameter("@mangDuty", apiMangDuty));
                     cmd.Parameters.Add(new SqlParameter("@mangUser", apiMangUser));
@@ -259,7 +260,6 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void GetAllDuty()
         {
-            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
             SqlCommand cmd = new SqlCommand("pro_shoppingBG_getAllDuty", conn);
@@ -307,7 +307,6 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void GetSearchDutyByNmae()
         {
-            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WellAdded;
             string apiGetDutyName = Request.Form["getDutyName"];
 
@@ -392,7 +391,6 @@ namespace ShoppingBG.ajax
 
         public void GetSearchDutyById()
         {
-            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WellAdded;
             int apiGetId = Int32.Parse((Request.Form["getDutyId"]));
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
@@ -409,22 +407,22 @@ namespace ShoppingBG.ajax
                 //判斷是否有此職責存在
                 if (reader.HasRows)
                 {
-                    //JObject dutyInfo = new JObject();
+                    JObject dutyInfo = new JObject();
 
                     while (reader.Read())
                     {
-                        oldDutyInfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
-                        oldDutyInfo.Add("dutyName", reader["f_name"].ToString());
-                        oldDutyInfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
-                        oldDutyInfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
-                        oldDutyInfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
-                        oldDutyInfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
-                        oldDutyInfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
-                        oldDutyInfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
+                        dutyInfo.Add("dutyId", Convert.ToInt16(reader["f_id"]));
+                        dutyInfo.Add("dutyName", reader["f_name"].ToString());
+                        dutyInfo.Add("mangDuty", Convert.ToInt16(reader["f_manageDuty"]));
+                        dutyInfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
+                        dutyInfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
+                        dutyInfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
+                        dutyInfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
+                        dutyInfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
                         //oldDutyArray.Add(dutyinfo);
                     }
-                   // oldDutyInfo = dutyInfo;
-                    Response.Write(oldDutyInfo);
+                    oldDutyInfo = dutyInfo;
+                    Response.Write(dutyInfo);
                 }
                 else
                 {
@@ -461,6 +459,7 @@ namespace ShoppingBG.ajax
 
             try
             {
+                cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                 cmd.Parameters.Add(new SqlParameter("@dutyId", apiGetId));
                 SqlDataReader reader = cmd.ExecuteReader();
                 //JArray resultArray = new JArray();
@@ -555,7 +554,6 @@ namespace ShoppingBG.ajax
                 JObject newDutyInfo = new JObject();
                 JObject afterObj = new JObject();
                 JObject beforeObj = new JObject();
-                newDutyInfo.Add("dutyId", apiGetId);
                 newDutyInfo.Add("dutyName", apiGetDutyName);
                 newDutyInfo.Add("mangDuty", Convert.ToInt16(apiMangDuty));
                 newDutyInfo.Add("mangUser", Convert.ToInt16(apiMangUser));
@@ -600,6 +598,7 @@ namespace ShoppingBG.ajax
 
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@dutyId", apiGetId));
                     cmd.Parameters.Add(new SqlParameter("@dutyName", apiGetDutyName));
                     cmd.Parameters.Add(new SqlParameter("@mangDuty", apiMangDuty));

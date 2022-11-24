@@ -14,8 +14,7 @@
     <link rel="stylesheet" href="/css/MainProduct.css" />
     <link rel="stylesheet" href="/css/MainMember.css" />
     <link rel="stylesheet" href="/css/MainOrder.css" />
-
-
+    <link rel="stylesheet" href="/css/MainOperationRecord.css" />
 
 
 </head>
@@ -63,9 +62,10 @@
                         <li class="menuItem"><a href="#" id="itemSearchProduct">產品查詢</a></li>
                     </ul>
                 </li>
+
                 <li class="menuItem"><a href="#" id="searchMember">會員查詢</a></li>
-                <%--<li class="menuItem"><a href="#" id="searchOrder">訂單查詢</a></li>--%>
-                   <li><a href="#" id="order">訂單</a>
+                   
+                <li><a href="#" id="order">訂單</a>
                     <ul>
                         <li class="menuItem"><a href="#" id="itemOrderReport">報表</a></li>
                         <li class="menuItem"><a href="#" id="itemSearchOrder">訂單查詢</a></li>

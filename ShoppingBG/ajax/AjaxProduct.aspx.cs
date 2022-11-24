@@ -11,11 +11,14 @@ using ShoppingBG.models;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using ShoppingBG.app_code;
+using System.Diagnostics;
+
 
 namespace ShoppingBG.ajax
 {
     public partial class AjaxProduct : DutyAuthority
     {
+        public static JObject oldProductInfo = new JObject();
         WriteLog writeLog = new WriteLog();
         public enum ProductMsg
         {
@@ -145,6 +148,7 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void AddProduct()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             ProductMsg msgValue = ProductMsg.WrongConnection;
             string apiProductPic = Request.Form["getProductPic"];
             string apiProductTitle = Request.Form["getProductTitle"];
@@ -203,6 +207,7 @@ namespace ShoppingBG.ajax
 
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@productPic", apiProductPic));
                     cmd.Parameters.Add(new SqlParameter("@productTitle", apiProductTitle));
                     cmd.Parameters.Add(new SqlParameter("@unitPrice", apiUnitPrice));
@@ -385,6 +390,7 @@ namespace ShoppingBG.ajax
         /// </summary>
         protected void DeleteProduct()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             ProductMsg msgValue = ProductMsg.WellAdded;
             int apiProductId = 0;
             bool idIsConvToInt = int.TryParse(Request.Form["getProductId"], out apiProductId);
@@ -398,6 +404,7 @@ namespace ShoppingBG.ajax
             {
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@productId", apiProductId));
                     SqlDataReader reader = cmd.ExecuteReader();
                     JArray resultArray = new JArray();
@@ -487,7 +494,7 @@ namespace ShoppingBG.ajax
                     ///讀取產品表格
                     dt = ds.Tables[1];
                     List<ProductInfo> productInfoArray = new List<ProductInfo>();
-
+                    JObject productData = new JObject();
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         DataRow row = dt.Rows[i];
@@ -503,9 +510,16 @@ namespace ShoppingBG.ajax
                             ProductTypeName = row.ItemArray[7].ToString()
                         };
                         productInfoArray.Add(productInfo);
+                        productData.Add("productPic", row.ItemArray[1].ToString());
+                        productData.Add("productTitle", row.ItemArray[2].ToString());
+                        productData.Add("productUnitPrice", Convert.ToInt32(row.ItemArray[3]));
+                        productData.Add("productQtn", Convert.ToInt16(row.ItemArray[4]));
+                        productData.Add("productDetail", row.ItemArray[6].ToString());
+                        productData.Add("productTypeName", row.ItemArray[7].ToString());
                     }
                     productTypeCombo.ProductTypeArray = productTypeArray;
                     productTypeCombo.ProductInfoArray = productInfoArray;
+                    oldProductInfo = productData;
                     Response.Write(JsonConvert.SerializeObject(productTypeCombo));
                 }
                 catch (Exception ex)
@@ -526,27 +540,25 @@ namespace ShoppingBG.ajax
         /// 將產品修改資料存入DB
         /// </summary>
         protected void ModifyProduct() {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             ProductMsg msgValue = ProductMsg.WrongConnection;
             string productId = Request.Form["getProductId"];
             int apiProductId = 0;
             bool productIdIsConvToInt = int.TryParse(Request.Form["getProductId"], out apiProductId);
             string apiProductPicPath = Request.Form["getProductPicPath"];
             string apiProductTitle = Request.Form["getProductTitle"];
-            string unitPrice = Request.Form["getUnitPrice"];
             int apiUnitPrice = 0;
             bool priceIsConvToInt = int.TryParse(Request.Form["getUnitPrice"], out apiUnitPrice);
-            string qtn = Request.Form["getInventoryQtn"];
             int apiInventoryQtn = 0;
             bool qtnIsConvToInt = int.TryParse(Request.Form["getInventoryQtn"], out apiInventoryQtn);
-            string proType = Request.Form["getProType"];
+            string proTypeName = Request.Form["getProTypeName"];
             int apiProductTypeId = 0;
             bool typeIdIsConvToInt = int.TryParse(Request.Form["getProType"], out apiProductTypeId);
             string apiProductDetail = Request.Form["getProductDetail"].ToString();
 
 
             ///空字串驗証
-            if (string.IsNullOrEmpty(apiProductTitle) || string.IsNullOrEmpty(unitPrice) ||
-                string.IsNullOrEmpty(qtn) || string.IsNullOrEmpty(proType) ||
+            if (string.IsNullOrEmpty(apiProductTitle) || string.IsNullOrEmpty(proTypeName) ||
                 string.IsNullOrEmpty(apiProductDetail))
             {
                 msgValue = ProductMsg.NullEmptyInput;
@@ -584,6 +596,43 @@ namespace ShoppingBG.ajax
             }
             else
             {
+                JObject newproductInfo = new JObject();
+                JObject afterObj = new JObject();
+                JObject beforeObj = new JObject();
+                newproductInfo.Add("productPic", apiProductPicPath);
+                newproductInfo.Add("productTitle", apiProductTitle);
+                newproductInfo.Add("productUnitPrice", apiUnitPrice);
+                newproductInfo.Add("productQtn", apiInventoryQtn);
+                newproductInfo.Add("productDetail", apiProductDetail);
+                newproductInfo.Add("productTypeName", proTypeName);
+                IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldProductInfo.GetEnumerator();
+                IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newproductInfo.GetEnumerator();
+
+                while (oldObjEnum.MoveNext())
+                {
+                    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
+                    JToken jt;
+
+                    if (newproductInfo.TryGetValue(pair.Key, out jt))
+                    {
+                        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
+                        JToken oldItem = oldProductInfo.GetValue(pair.Key);
+                        JToken newItem = newproductInfo.GetValue(pair.Key);
+
+                        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
+                        {
+                            Console.WriteLine("add " + pair.Key + ": " + newItem + " to result.");
+                            afterObj.Add(pair.Key, newItem);
+                            beforeObj.Add(pair.Key, oldItem);
+                        }
+                    }
+                }
+
+                Debug.WriteLine("old = " + oldProductInfo);
+                Debug.WriteLine("new = " + newproductInfo);
+                Debug.WriteLine("result = " + afterObj);
+                Debug.WriteLine("result = " + beforeObj);
+
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
                 SqlCommand cmd = new SqlCommand("pro_shoppingBG_modifyProduct", conn);
@@ -592,6 +641,7 @@ namespace ShoppingBG.ajax
 
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@productId", apiProductId));
                     cmd.Parameters.Add(new SqlParameter("@productPicPath", apiProductPicPath));
                     cmd.Parameters.Add(new SqlParameter("@productTitle", apiProductTitle));
@@ -599,6 +649,8 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@qtn", apiInventoryQtn));
                     cmd.Parameters.Add(new SqlParameter("@productTypeId", apiProductTypeId));
                     cmd.Parameters.Add(new SqlParameter("@detail", apiProductDetail));
+                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject( beforeObj)));
+                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(afterObj)));
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     //判斷是否有此人員帳號存在

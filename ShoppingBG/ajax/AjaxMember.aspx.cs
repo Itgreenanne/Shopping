@@ -11,12 +11,16 @@ using ShoppingBG.models;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using ShoppingBG.app_code;
+using System.Diagnostics;
+
 
 namespace ShoppingBG.ajax
 {
     public partial class AjaxMember : DutyAuthority
     {
         WriteLog writeLog = new WriteLog();
+        public static JObject oldMemberInfo = new JObject();
+
         public enum MsgType {
             /// <summary>
             /// 網路錯誤
@@ -153,11 +157,12 @@ namespace ShoppingBG.ajax
         /// 刪除會員
         /// </summary>
         private void DeleteMember() {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             int apiMemberId = 0;
             bool idIsConvToInt = int.TryParse(Request.Form["getMemberId"], out apiMemberId);
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
             SqlConnection conn = new SqlConnection(strConnString);
-            SqlCommand cmd = new SqlCommand("pro_shoppingFG_deleteMember", conn);
+            SqlCommand cmd = new SqlCommand("pro_shoppingBG_delMember", conn);
             cmd.CommandType = CommandType.StoredProcedure;
             conn.Open();
 
@@ -165,6 +170,7 @@ namespace ShoppingBG.ajax
             {
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@memberId", apiMemberId));
                     SqlDataReader reader = cmd.ExecuteReader();
                     JArray resultArray = new JArray();
@@ -229,17 +235,18 @@ namespace ShoppingBG.ajax
                     {
                         memberInfo.Add("memberId", Convert.ToInt16(reader["f_id"]));
                         memberInfo.Add("idNumber", reader["f_idNumber"].ToString());
-                        memberInfo.Add("lastname", reader["f_lastname"].ToString());
-                        memberInfo.Add("firstname", reader["f_firstname"].ToString());
+                        memberInfo.Add("lastName", reader["f_lastname"].ToString());
+                        memberInfo.Add("firstName", reader["f_firstname"].ToString());
                         memberInfo.Add("gender", Convert.ToInt16(reader["f_gender"]));
                         memberInfo.Add("birth", reader["f_birthday"].ToString());
                         memberInfo.Add("pwd", reader["f_pwd"].ToString());
                         memberInfo.Add("mail", reader["f_mail"].ToString());
-                        memberInfo.Add("phone", reader["f_phone"].ToString());
+                        memberInfo.Add("tel", reader["f_phone"].ToString());
                         memberInfo.Add("address", reader["f_address"].ToString());
                         memberInfo.Add("points", Convert.ToInt32(reader["f_points"]));
                         memberInfo.Add("level", Convert.ToInt16(reader["f_level"]));
                     }
+                    oldMemberInfo = memberInfo;
                     Response.Write(memberInfo);
                 }
                 else
@@ -265,15 +272,17 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void ModifyMember()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WrongConnection;
             string tel = Request.Form["getTel"];
             string pwd = Request.Form["getPwd"];
-            string gender = Request.Form["getGender"];
             string lastName = Request.Form["getLastName"];
             string firstName = Request.Form["getFirstname"];
             string birth = Request.Form["getBirth"];
             string mail = Request.Form["getMail"];
             string address = Request.Form["getAddress"];
+            int gender = 0;
+            bool genderIsConvToInt = int.TryParse(Request.Form["getGender"], out gender);
             int apiId = 0;
             bool idIsConvToInt = int.TryParse(Request.Form["getId"], out apiId);
             int apiLevel = 0;
@@ -281,11 +290,9 @@ namespace ShoppingBG.ajax
             int apiPoints = 0;
             bool pointsIsConvToInt = int.TryParse(Request.Form["getPoints"], out apiPoints);
 
-
             //空字串驗証
-            if (string.IsNullOrEmpty(tel) || string.IsNullOrEmpty(pwd) || string.IsNullOrEmpty(gender)
-                || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(firstName)
-                || string.IsNullOrEmpty(birth) || string.IsNullOrEmpty(mail))
+            if (string.IsNullOrEmpty(tel) || string.IsNullOrEmpty(pwd) || string.IsNullOrEmpty(lastName) || 
+                string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(birth) || string.IsNullOrEmpty(mail))
             {
                 msgValue = MsgType.NullEmptyInput;
                 Response.Write((int)msgValue);
@@ -317,14 +324,56 @@ namespace ShoppingBG.ajax
             }
             else
             {
+                JObject newMemberInfo = new JObject();
+                JObject afterObj = new JObject();
+                JObject beforeObj = new JObject();
+                newMemberInfo.Add("tel", tel);
+                newMemberInfo.Add("pwd", pwd);
+                newMemberInfo.Add("lastName", lastName);
+                newMemberInfo.Add("firstName", firstName);
+                newMemberInfo.Add("gender", gender);
+                newMemberInfo.Add("birth", birth);
+                newMemberInfo.Add("mail", mail);
+                newMemberInfo.Add("address", address);
+                newMemberInfo.Add("points", apiPoints);
+                newMemberInfo.Add("level", apiLevel);
+                IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldMemberInfo.GetEnumerator();
+                IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newMemberInfo.GetEnumerator();
+
+                while (oldObjEnum.MoveNext())
+                {
+                    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
+                    JToken jt;
+
+                    if (newMemberInfo.TryGetValue(pair.Key, out jt))
+                    {
+                        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
+                        JToken oldItem = oldMemberInfo.GetValue(pair.Key);
+                        JToken newItem = newMemberInfo.GetValue(pair.Key);
+
+                        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
+                        {
+                            Console.WriteLine("add " + pair.Key + ": " + newItem + " to result.");
+                            afterObj.Add(pair.Key, newItem);
+                            beforeObj.Add(pair.Key, oldItem);
+                        }
+                    }
+                }
+
+                Debug.WriteLine("old = " + oldMemberInfo);
+                Debug.WriteLine("new = " + newMemberInfo);
+                Debug.WriteLine("result = " + afterObj);
+                Debug.WriteLine("result = " + beforeObj);
+
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
-                SqlCommand cmd = new SqlCommand("pro_shoppingFG_modifyMember", conn);
+                SqlCommand cmd = new SqlCommand("pro_shoppingBG_modifyMember ", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 conn.Open();
 
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@id", apiId));
                     cmd.Parameters.Add(new SqlParameter("@tel", tel));
                     cmd.Parameters.Add(new SqlParameter("@pwd", pwd));
@@ -336,6 +385,8 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@address", address));
                     cmd.Parameters.Add(new SqlParameter("@level", apiLevel));
                     cmd.Parameters.Add(new SqlParameter("@points", apiPoints));
+                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(beforeObj)));
+                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(afterObj)));
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     //判斷是否有此會員帳號存在

@@ -284,9 +284,8 @@ function ModifyUser() {
     /*var userPwd = userData[0].UserPwd;*/
     var userPwd = globalUserData.UserPwd;
     var dutyId = $('#modifyDutyMenu').val();
-    var dutyName = $('#modifyDutyMenu').html('option');
-    console.log(dutyName);
-
+    var dutyName = $('#modifyDutyMenu').find(':selected').text();
+;
     if (inputNickname == globalUserData.UserNickname && userPwd == oldUserPwd && dutyId == globalUserData.DutyTypeId) {
         alert('資料完全沒有修改');
     } else if (!inputNickname || !userPwd || dutyId == 0) {
@@ -303,19 +302,18 @@ function ModifyUser() {
                 getUserId: globalUserData.UserId,
                 getNickName: inputNickname,
                 getUserPwd: userPwd,
+                getDutyName: dutyName,
                 getUserDutyId: dutyId
             },
             success: function (data) {
                 if (data) {
                     if (RepeatedStuff(data)) {
                         return;
-                    } else if (data == 7) {
+                    } else {
                         alert("人員修改成功");
                         $('#modifyUserBlock').hide();
                         $('#overlay').hide();
-                    } else if (data == 1) {
-                        alert('已有此人員帳號');
-                    }
+                    }                    
                 } else {
                     alert('資料錯誤');
                 }

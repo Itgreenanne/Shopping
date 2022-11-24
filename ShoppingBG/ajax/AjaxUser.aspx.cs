@@ -149,6 +149,7 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void AddUserVerify()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WrongConnection;
             string apiUserAccount = Request.Form["getUserAccount"];
             string apiNickname = Request.Form["getNickname"];
@@ -193,6 +194,7 @@ namespace ShoppingBG.ajax
 
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@userId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@userAccount", apiUserAccount));
                     cmd.Parameters.Add(new SqlParameter("@nickname", apiNickname));
                     cmd.Parameters.Add(new SqlParameter("@userPwd", apiUserPwd));
@@ -382,6 +384,7 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void DeleteUser()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             int apiUserId = 0;
             bool idIsConvToInt = int.TryParse(Request.Form["getUserId"], out apiUserId);
             string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
@@ -394,6 +397,7 @@ namespace ShoppingBG.ajax
             {
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@currentUserId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@userId", apiUserId));
                     SqlDataReader reader = cmd.ExecuteReader();
                     JArray resultArray = new JArray();
@@ -403,13 +407,13 @@ namespace ShoppingBG.ajax
                     {
                         while (reader.Read())
                         {
-                            JObject userInfo = new JObject();
-                            userInfo.Add("UserId", Convert.ToInt16(reader["f_id"]));
-                            userInfo.Add("UserAccount", reader["f_account"].ToString());
-                            userInfo.Add("UserNickname", reader["f_nickname"].ToString());
-                            userInfo.Add("UserPwd", reader["f_pwd"].ToString());
-                            userInfo.Add("DutyName", reader["f_name"].ToString());
-                            resultArray.Add(userInfo);
+                            JObject userData = new JObject();
+                            userData.Add("UserId", Convert.ToInt16(reader["f_id"]));
+                            userData.Add("UserAccount", reader["f_account"].ToString());
+                            userData.Add("UserNickname", reader["f_nickname"].ToString());
+                            userData.Add("UserPwd", reader["f_pwd"].ToString());
+                            userData.Add("DutyName", reader["f_name"].ToString());
+                            resultArray.Add(userData);
                         }
                     }
                     Response.Write(resultArray);
@@ -477,7 +481,7 @@ namespace ShoppingBG.ajax
                     ///讀取人員表格
                     dt = ds.Tables[1];
                     List<UserDataArray> userArray = new List<UserDataArray>();
-
+                    JObject userInfo = new JObject();
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         DataRow row = dt.Rows[i];
@@ -490,9 +494,12 @@ namespace ShoppingBG.ajax
                             DutyTypeId = Convert.ToInt16(row.ItemArray[4]),
                             DutyName = row.ItemArray[5].ToString()
                         }; userArray.Add(userdata);
-                        
-                        //oldUserInfo.Add()
+
+                        userInfo.Add("userNickname", row.ItemArray[2].ToString());
+                        userInfo.Add("userPwd", row.ItemArray[3].ToString());
+                        userInfo.Add("dutyName", row.ItemArray[5].ToString());
                     }
+                    oldUserInfo = userInfo;
                     userDutyCombo.UserDataArray = userArray;
                     userDutyCombo.DutyInfoArray = dutyArray;
                     Response.Write(JsonConvert.SerializeObject(userDutyCombo));
@@ -515,15 +522,17 @@ namespace ShoppingBG.ajax
         /// </summary>
         private void ModifyUser()
         {
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WrongConnection;
             int apiUserId = 0;
             bool userIdIsConvToInt = int.TryParse(Request.Form["getUserId"], out apiUserId);
             string apiNickname = Request.Form["getNickname"];
             string apiUserPwd = Request.Form["getUserPwd"];
+            string apiDutyName = Request.Form["getDutyName"];
             int apiUserDutyId = 0;
             bool idIsConvToInt = int.TryParse(Request.Form["getUserDutyId"], out apiUserDutyId);
             //空字串驗証
-            if (string.IsNullOrEmpty(apiNickname) || string.IsNullOrEmpty(apiUserPwd))
+            if (string.IsNullOrEmpty(apiNickname) || string.IsNullOrEmpty(apiUserPwd) || string.IsNullOrEmpty(apiDutyName))
             {
                 msgValue = MsgType.NullEmptyInput;
                 Response.Write((int)msgValue);
@@ -551,42 +560,39 @@ namespace ShoppingBG.ajax
             }
             else
             {
-                //JObject newUserInfo = new JObject();
-                //JObject afterObj = new JObject();
-                //JObject beforeObj = new JObject();
-                //newUserInfo.Add("dutyId", apiGetId);
-                //newUserInfo.Add("dutyName", apiGetDutyName);
-                //newUserInfo.Add("mangDuty", Convert.ToInt16(apiMangDuty));
-                //newUserInfo.Add("mangUser", Convert.ToInt16(apiMangUser));
-                //newUserInfo.Add("mangProType", Convert.ToInt16(apiMangProType));
-                //newUserInfo.Add("mangProduct", Convert.ToInt16(apiMangProduct));
-                //IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldUserInfo.GetEnumerator();
-                //IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newDutyInfo.GetEnumerator();
+                JObject newUserInfo = new JObject();
+                JObject afterObj = new JObject();
+                JObject beforeObj = new JObject();
+                newUserInfo.Add("userNickname", apiNickname);
+                newUserInfo.Add("userPwd", apiUserPwd);
+                newUserInfo.Add("dutyName", apiDutyName);
+                IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldUserInfo.GetEnumerator();
+                IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newUserInfo.GetEnumerator();
 
-                //while (oldObjEnum.MoveNext())
-                //{
-                //    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
-                //    JToken jt;
+                while (oldObjEnum.MoveNext())
+                {
+                    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
+                    JToken jt;
 
-                //    if (newDutyInfo.TryGetValue(pair.Key, out jt))
-                //    {
-                //        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
-                //        JToken oldItem = oldDutyInfo.GetValue(pair.Key);
-                //        JToken newItem = newDutyInfo.GetValue(pair.Key);
+                    if (newUserInfo.TryGetValue(pair.Key, out jt))
+                    {
+                        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
+                        JToken oldItem = oldUserInfo.GetValue(pair.Key);
+                        JToken newItem = newUserInfo.GetValue(pair.Key);
 
-                //        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
-                //        {
-                //            Console.WriteLine("add " + pair.Key + ": " + newItem + " to result.");
-                //            afterObj.Add(pair.Key, newItem);
-                //            beforeObj.Add(pair.Key, oldItem);
-                //        }
-                //    }
-                //}
+                        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
+                        {
+                            Console.WriteLine("add " + pair.Key + ": " + newItem + " to result.");
+                            afterObj.Add(pair.Key, newItem);
+                            beforeObj.Add(pair.Key, oldItem);
+                        }
+                    }
+                }
 
-                //Debug.WriteLine("old = " + oldDutyInfo);
-                //Debug.WriteLine("new = " + newDutyInfo);
-                //Debug.WriteLine("result = " + afterObj);
-                //Debug.WriteLine("result = " + beforeObj);
+                Debug.WriteLine("old = " + oldUserInfo);
+                Debug.WriteLine("new = " + newUserInfo);
+                Debug.WriteLine("result = " + afterObj);
+                Debug.WriteLine("result = " + beforeObj);
 
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
@@ -596,10 +602,13 @@ namespace ShoppingBG.ajax
 
                 try
                 {
+                    cmd.Parameters.Add(new SqlParameter("@currentUserId", userInfo.UserId));
                     cmd.Parameters.Add(new SqlParameter("@userId", apiUserId));
                     cmd.Parameters.Add(new SqlParameter("@userNickname", apiNickname));
                     cmd.Parameters.Add(new SqlParameter("@userPwd", apiUserPwd));
                     cmd.Parameters.Add(new SqlParameter("@dutyTypeId", apiUserDutyId));
+                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(beforeObj)));
+                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(afterObj)));
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     //判斷是否有此人員帳號存在

@@ -124,9 +124,9 @@ function ModifyMemberBlock(memberId) {
                     dataId = memberId;                  
                     //顯示跟選擇列資料一樣的資料
                     $('#idNoShown').text(jsonResult.idNumber.toUpperCase());
-                    $('#lastNameInput').val(jsonResult.lastname);
-                    $('#firstNameInput').val(jsonResult.firstname);
-                    $('#modifyPhone').val(jsonResult.phone);
+                    $('#lastNameInput').val(jsonResult.lastName);
+                    $('#firstNameInput').val(jsonResult.firstName);
+                    $('#modifyPhone').val(jsonResult.tel);
                     $('#modifyPwd').val(jsonResult.pwd);
                     $('#modifyMail').val(jsonResult.mail);
                     $('#modifyAddress').val(jsonResult.address);
@@ -205,7 +205,7 @@ function ModifyMember() {
                 getId: dataId,
                 getTel: tel,
                 getPwd: pwd,
-                getGender: gender,
+                getGender: Number(gender),
                 getLastName: lastname,
                 getFirstname: firstname,
                 getBirth: birth,

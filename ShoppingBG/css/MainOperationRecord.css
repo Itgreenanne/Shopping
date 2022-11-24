@@ -1,5 +1,5 @@
 ﻿.dataIdColumn {
-
+    width: 90px;
 }
 
 .typeColumn {
@@ -8,4 +8,8 @@
 
 .functionColumn {
     width: 90px;
+}
+
+.createTimeForRecord {
+    width: 120px;
 }

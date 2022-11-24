@@ -53,6 +53,7 @@ namespace ShoppingBG.ajax
                     {
                         JObject recordInfo = new JObject();
                         recordInfo.Add("id", Convert.ToInt32(reader["f_id"]));
+                        recordInfo.Add("userId", Convert.ToInt32(reader["f_userId"]));
                         recordInfo.Add("dataId", Convert.ToInt32(reader["f_dataId"]));
                         recordInfo.Add("type", Convert.ToInt16(reader["f_type"]));
                         recordInfo.Add("function", Convert.ToInt16(reader["f_function"]));

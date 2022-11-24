@@ -20,6 +20,7 @@ function GetSearchAllOperationRecord() {
                     if (RepeatedStuff(jsonResult)) {
                         return;                    
                     } else {
+                        console.log(jsonResult);
                         PrintOperationRecord(jsonResult);
                     }
 
@@ -51,6 +52,7 @@ function PrintOperationRecord(jsonResult) {
 
     var tableRow = '';
     tableRow = '<tr>' +
+        '<th>人員id</th>' +
         '<th>資料id</th>' +
         '<th>資料種類</th>' +
         '<th>操作種類</th>' +
@@ -60,7 +62,7 @@ function PrintOperationRecord(jsonResult) {
         '</tr>';
 
     for (var i = jsonResult.length - 1; i >= 0; i--) {
-        console.log(jsonResult);
+      
         var typeArr = ['職責', '人員', '產品', '會員', '訂單'];
         var functionType = ['新增', '刪除', '修改'];
 
@@ -74,12 +76,13 @@ function PrintOperationRecord(jsonResult) {
 
         tableRow +=
             '<tr>' +
+            '<td class="dataIdColumn">' + jsonResult[i].userId + '</td>' +
             '<td class="dataIdColumn">' + jsonResult[i].dataId + '</td>' +
             '<td class="typeColumn">' + typeArr[(jsonResult[i].type)-1] + '</td>' +
             '<td class="functionColumn">' + functionType[(jsonResult[i].function)-1] + '</td>' +
             '<td class="beforeColumn">' + beforeData + '</td>' +
             '<td class="afterColumn">' + afterData + '</td>' +
-            '<td class="timeColumn">' + jsonResult[i].createTime + '</td>' +
+            '<td class="createTimeForRecord">' + jsonResult[i].createTime + '</td>' +
             '</tr>';    
     }
 
@@ -94,12 +97,19 @@ function dataConversionList(index, data) {
             return dutyDataConverted(data);
             break;
         case 2:
-            return;
+            return userDataConverted(data);
+            break;
+        case 3:
+            return productDataConverted(data);
+            break;
+        case 4:
+            return memberDataConverted(data);
+            break;
     }
 }
 
 
-
+//將職責資料輸出改為中文，chk box的0與1改為'無'與'有'
 function dutyDataConverted(data) {
     var jsonData = JSON.parse(data);
 
@@ -134,6 +144,119 @@ function dutyDataConverted(data) {
     stringData = stringData.replaceAll('\"', '');
     stringData = stringData.replace('{', '');
     stringData = stringData.replace('}', '');
-    stringData = stringData.replace(',', '<br>');
+    stringData = stringData.replaceAll(',', '<br>');
+    return stringData;
+}
+
+//將人員資料輸出改為中文
+function userDataConverted(data) {
+    var jsonData = JSON.parse(data);
+
+    Object.entries(jsonData).forEach(([key, value]) => {
+        if (key == 'userPwd') {
+            jsonData[key] = '*****';
+        }        
+    });
+
+    var keyMap = {
+        'userNickname': '暱稱',
+        'userPwd': '人員密碼',
+        'dutyName': '職責名稱',
+    };
+
+    //將json key改為上面物件的中文名稱
+    for (var key in jsonData) {
+        var newKey = keyMap[key];
+        if (newKey) {
+            jsonData[newKey] = jsonData[key];
+            delete jsonData[key];
+        }
+    }
+
+    var stringData = JSON.stringify(jsonData);
+    stringData = stringData.replaceAll('\"', '');
+    stringData = stringData.replace('{', '');
+    stringData = stringData.replace('}', '');
+    stringData = stringData.replaceAll(',', '<br>');
+    return stringData;
+}
+
+//將產品資料輸出改為中文
+function productDataConverted(data) {
+    var jsonData = JSON.parse(data);
+
+    var keyMap = {
+        'productPic': '圖片',
+        'productTitle': '標題',
+        'productUnitPrice': '單價',
+        'productQtn': '庫存數量',
+        'productDetail': '詳情',
+        'productTypeName': '產品類別'
+    };
+
+    //將json key改為上面物件的中文名稱
+    for (var key in jsonData) {
+        var newKey = keyMap[key];
+        if (newKey) {
+            jsonData[newKey] = jsonData[key];
+            delete jsonData[key];
+        }
+    }
+
+    var stringData = JSON.stringify(jsonData);
+    stringData = stringData.replaceAll('\"', '');
+    stringData = stringData.replace('{', '');
+    stringData = stringData.replace('}', '');
+    stringData = stringData.replace('\\t', '');
+    stringData = stringData.replaceAll('\\', ' ');
+    stringData = stringData.replaceAll(',', '<br>');
+    console.log(stringData);
+    return stringData;
+}
+
+//將會員資料輸出改為中文
+function memberDataConverted(data) {
+    var jsonData = JSON.parse(data);
+
+    Object.entries(jsonData).forEach(([key, value]) => {
+        if (key == 'gender')
+        {
+            if (value == 1) {
+                jsonData[key] = '男';
+            } else if (value == 2) {
+                jsonData[key] = '女';
+            } else {
+                jsonData[key] = '其他';
+            }
+        }
+    });
+
+    var keyMap = {
+        'tel': '聯絡電話',
+        'pwd': '密碼',
+        'lastName': '性',
+        'firstName': '職責名稱',
+        'gender': '性別',
+        'birth': '生日',
+        'mail': 'E-mail',
+        'address': '住址',
+        'points': '點數',
+        'level': '等級'
+    };
+
+    //將json key改為上面物件的中文名稱
+    for (var key in jsonData) {
+        var newKey = keyMap[key];
+        if (newKey) {
+            jsonData[newKey] = jsonData[key];
+            delete jsonData[key];
+        }
+    }
+
+    var stringData = JSON.stringify(jsonData);
+    stringData = stringData.replaceAll('\"', '');
+    stringData = stringData.replace('{', '');
+    stringData = stringData.replace('}', '');
+    stringData = stringData.replaceAll(',', '<br>');
     return stringData;
 }

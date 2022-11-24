@@ -416,6 +416,7 @@ function ClearOrderReport() {
 
 //輸入訂單編號或會員身份証字號來搜尋訂單
 function GetSearchpOrder() {
+
     var inputString = $('#searchOrderByNum').val();
     console.log('輸入字元長度', inputString.length);
 
