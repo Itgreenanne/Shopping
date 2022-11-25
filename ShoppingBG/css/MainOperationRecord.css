@@ -13,3 +13,23 @@
 .createTimeForRecord {
     width: 120px;
 }
+
+.btnAllRecord {
+    font-size: 20px;
+    color: #466CA6;
+    height: 30px;
+    text-align: center;
+    border: solid 1px #466CA6;
+    margin-left: 10px;
+    background-color: #E3F2FD;
+    width: 100px;
+}
+
+.functionMenu {
+    display: flex;
+    margin-top: 50px;
+}
+
+.labelFunctionType {
+    font-size: 20px;
+}

@@ -105,6 +105,7 @@ function TimeStringToNumber(timeString) {
     return timeFormat;
 }
 
+//起日不能晚於迄日的檢查
 function NoLaterThanEndDate(dateString) {
     startDate = dateString;
     startTime = TimeStringToNumber(dateString);
@@ -118,6 +119,7 @@ function NoLaterThanEndDate(dateString) {
     }
 }
 
+//迄日不能早於起日的檢查
 function NoEarlierThanStartDate(dateString) {
     endDate = dateString;
     endTime = TimeStringToNumber(dateString);

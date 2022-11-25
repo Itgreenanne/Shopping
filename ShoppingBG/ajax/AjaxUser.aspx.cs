@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using ShoppingBG.app_code;
 using System.Diagnostics;
+using NLog;
 
 
 
@@ -20,7 +21,6 @@ namespace ShoppingBG.ajax
     public partial class AjaxUser : DutyAuthority
     {
         public static JObject oldUserInfo = new JObject();
-        WriteLog writeLog = new WriteLog();
          /// <summary>
         /// 新增人員各函式回傳訊息
         /// </summary>
@@ -136,7 +136,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                writeLog.Bglogger(ex.Message);
+                Bglogger(ex.Message);
             }
             finally
             {
@@ -224,7 +224,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    writeLog.Bglogger(ex.Message);
+                    Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -292,7 +292,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                writeLog.Bglogger(ex.Message);
+                Bglogger(ex.Message);
             }
             finally
             {
@@ -369,7 +369,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    writeLog.Bglogger(ex.Message);
+                    Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -421,7 +421,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    writeLog.Bglogger(ex.Message);
+                    Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -507,7 +507,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    writeLog.Bglogger(ex.Message);
+                    Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -566,11 +566,14 @@ namespace ShoppingBG.ajax
                 newUserInfo.Add("userNickname", apiNickname);
                 newUserInfo.Add("userPwd", apiUserPwd);
                 newUserInfo.Add("dutyName", apiDutyName);
+
+                //所附屬的資料集合中的元素，一個一個的取出並回傳
                 IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldUserInfo.GetEnumerator();
                 IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newUserInfo.GetEnumerator();
 
                 while (oldObjEnum.MoveNext())
                 {
+                    //物件之各屬性內容以 KeyValuePair<key, value> 陣列儲存
                     KeyValuePair<String, JToken> pair = oldObjEnum.Current;
                     JToken jt;
 
@@ -582,7 +585,6 @@ namespace ShoppingBG.ajax
 
                         if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
                         {
-                            Console.WriteLine("add " + pair.Key + ": " + newItem + " to result.");
                             afterObj.Add(pair.Key, newItem);
                             beforeObj.Add(pair.Key, oldItem);
                         }
@@ -625,7 +627,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    writeLog.Bglogger(ex.Message);
+                    Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -633,8 +635,31 @@ namespace ShoppingBG.ajax
                     conn.Dispose();
                 }
             }
+        }
 
+        /// <summary>
+        /// 後端寫入exception log
+        /// </summary>
+        /// <param name="message"></param>
+        private void Bglogger(string message)
+        {
+            Logger logger = LogManager.GetLogger("bGLogger");
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
+
+            if (Session["userInfo"] != null)
+            {
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, message);
+            }
+            else
+            {
+                logger.Error("{errorMessage}", message);
+            }
+            ExceptionAlert exp = new ExceptionAlert()
+            {
+                ErrorIndex = "error",
+                ErrorMessage = message
+            };
+            Response.Write(JsonConvert.SerializeObject(exp));
         }
     }
-
 }

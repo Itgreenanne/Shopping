@@ -238,6 +238,7 @@
                     </div>
                 </div>
 
+
              <div class="searchOrderBlock" id="operationRecordtBlock">
                     <p class="dutyBlockTitle">操作紀錄查詢</p>
                     <div class="DutyTypeInputblock">
@@ -245,17 +246,22 @@
                         <input type="date" class="orderReportDateInput" id="startDateForRecord" onchange="NoLaterThanEndDate(this.value)" />
                         <label for="endDateForOrder" class="labUserSearchDutyType">紀錄建立時間迄日： </label>
                         <input type="date" class="orderReportDateInput" id="endDateForRecord" onchange="NoEarlierThanStartDate(this.value)"/>
-                        <button class="btnSearchUser" onclick="GetSearchAllOperationRecord()">確定</button>
+                        <button class="btnSearchUser" onclick="GetSearchOperationRecordByDate()">確定</button>
                         <button class="btnSearchUser" onclick="ClearRecord()">清除</button>
+                        <button class="btnAllRecord" onclick="GetSearchAllOperationRecord()">顯示全部</button>
+                    </div>
+                    <div class="functionMenu">
+                        <label for="dutyType" class="labelFunctionType">操作種類： </label>
+                        <select name="dutyType" class="searchDutyTypeMenu" id="functionMenu">
+                            <option value="0">請選擇</option>
+                            <option value="1">新增</option>
+                            <option value="2">刪除</option>
+                            <option value="3">修改</option>
+                        </select><br/>
+                        <button class="btnSearchUser" onclick="GetSearchOperationRecordByFunction()">確定</button>
                     </div>
                     <table class="orderTable" id="operationRecordList"></table>
              </div>
-
-
-
-
-
-
 
             <div class="searchOrderBlock" id="searchOrderBlock">
                 <p class="orderBlockTitle">訂單查詢</p>

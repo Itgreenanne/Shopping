@@ -31,8 +31,6 @@ namespace ShoppingBG.app_code
 
         protected void Page_Init(object sender, EventArgs e)
         {
-            ajax.WriteLog writeLog = new ajax.WriteLog();
-
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             if (Session["userInfo"] == null)
             {
@@ -91,12 +89,31 @@ namespace ShoppingBG.app_code
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                writeLog.Bglogger(ex.Message);
+                Bglogger(ex.Message);
             }
             finally
             {
                 conn.Close();
                 conn.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// 後端寫入exception log
+        /// </summary>
+        /// <param name="message"></param>
+        private void Bglogger(string message)
+        {
+            Logger logger = LogManager.GetLogger("bGLogger");
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
+
+            if (Session["userInfo"] != null)
+            {
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, message);
+            }
+            else
+            {
+                logger.Error("{errorMessage}", message);
             }
         }
     }

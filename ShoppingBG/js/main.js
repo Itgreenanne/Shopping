@@ -145,6 +145,7 @@ $(document).ready(function () {
         $('#allOrderList').html('');
         $('#orderItemBlock').hide();
         $('#operationRecordtBlock').hide();
+        $('#operationRecordList').html('');
     }
 })
 
@@ -188,9 +189,12 @@ function NoSpaceKey(inputName) {
 
 //重覆的東西
 function RepeatedStuff(data) {
-    if (data && data['result'] == 0 || data && data['result'] == 1 ) {
+    if (data && data['result'] == 0 || data && data['result'] == 1) {
         alert('即將被登出');
         window.location.href = "/view/LoginPage.aspx";
+        return true;
+    } else if (data.ErrorIndex == 'error') {
+        alert(data.ErrorMessage);
         return true;
     }
     return false;    

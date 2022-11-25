@@ -70,34 +70,36 @@ function AddUser() {
             },
             success: function (data) {
                 if (data) {
-                    if (RepeatedStuff(data)) {
+                    var jsonResult = JSON.parse(data);
+                    if (RepeatedStuff(jsonResult)) {
                         return;
-                    }
-                    switch (data) {
-                        case '0':
-                            alert("新增人員成功");
-                            ResetAll();
-                            $("#addUserBlock").hide();
-                            $("#searchUserBlock").show();
-                            GetAllUser();
-                            break;
-                        case '1':
-                            alert('已有此人員帳號');
-                            break;
-                        case '3':
-                            alert('帳號輸入超過20字元');
-                            break;
-                        case '4':
-                            alert('暱稱輸入超過20字元');
-                            break;
-                        case '5':
-                            alert('密碼輸入超過20字元');
-                            break;
-                        case '9':
-                            alert('id型別錯誤');
-                            break;
-                        default:
-                            alert('資料錯誤');
+                    } else {
+                        switch (data) {
+                            case '0':
+                                alert("新增人員成功");
+                                ResetAll();
+                                $("#addUserBlock").hide();
+                                $("#searchUserBlock").show();
+                                GetAllUser();
+                                break;
+                            case '1':
+                                alert('已有此人員帳號');
+                                break;
+                            case '3':
+                                alert('帳號輸入超過20字元');
+                                break;
+                            case '4':
+                                alert('暱稱輸入超過20字元');
+                                break;
+                            case '5':
+                                alert('密碼輸入超過20字元');
+                                break;
+                            case '9':
+                                alert('id型別錯誤');
+                                break;
+                            default:
+                                alert('資料錯誤');
+                        }
                     }
                 } else {
                     alert('資料錯誤');
@@ -307,7 +309,8 @@ function ModifyUser() {
             },
             success: function (data) {
                 if (data) {
-                    if (RepeatedStuff(data)) {
+                    var jsonResult = JSON.parse(data);
+                    if (RepeatedStuff(jsonResult)) {
                         return;
                     } else {
                         alert("人員修改成功");

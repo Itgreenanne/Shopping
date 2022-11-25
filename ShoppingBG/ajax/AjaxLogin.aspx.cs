@@ -15,7 +15,6 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxLogin : System.Web.UI.Page
     {
-        WriteLog writeLog = new WriteLog();
         public enum MsgType
         {
             ///summary
@@ -103,7 +102,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    writeLog.Bglogger(ex.Message);
+                    Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -126,6 +125,31 @@ namespace ShoppingBG.ajax
                 ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
             }
             return ip;
+        }
+
+        /// <summary>
+        /// 後端寫入exception log
+        /// </summary>
+        /// <param name="message"></param>
+        private void Bglogger(string message)
+        {
+            Logger logger = LogManager.GetLogger("bGLogger");
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
+
+            if (Session["userInfo"] != null)
+            {
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, message);
+            }
+            else
+            {
+                logger.Error("{errorMessage}", message);
+            }
+            ExceptionAlert exp = new ExceptionAlert()
+            {
+                ErrorIndex = "error",
+                ErrorMessage = message
+            };
+            Response.Write(JsonConvert.SerializeObject(exp));
         }
     }
 }

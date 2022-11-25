@@ -31,7 +31,8 @@ function AddDuty() {
             },
             success: function (data) {                
                 if (data) {
-                    if (RepeatedStuff(data)) {
+                    var jsonResult = JSON.parse(data);
+                    if (RepeatedStuff(jsonResult)) {
                         return;
                     } else if (data == 0) {
                         alert("新增職責成功");
@@ -299,7 +300,8 @@ function ModifyDuty() {
             success: function (data) {
                 console.log(data);
                 if (data) {
-                    if (RepeatedStuff(data)) {
+                    var jsonResult = JSON.parse(data);
+                    if (RepeatedStuff(jsonResult)) {
                         return;
                     } else if (data == 5) {
                         alert("職責修改成功");

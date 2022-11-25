@@ -74,8 +74,9 @@ function AddProduct() {
             },
             success: function (data) {
 
-                if (data) {                    
-                    if (RepeatedStuff(data)) {
+                if (data) {
+                    var jsonResult = JSON.parse(data);
+                    if (RepeatedStuff(jsonResult)) {
                         return;
                     } else {
                         switch (data) {
@@ -175,7 +176,6 @@ function GetSearchProduct() {
             },
             success: function (data) {
                 if (data) {
-                    console.log(data);
                     var jsonResult = JSON.parse(data);
                     if (RepeatedStuff(jsonResult)) {
                         return;
@@ -339,13 +339,13 @@ function ModifyProduct() {
                         alert('資料錯誤');
                     }
                 }
-                },
-                error: function (err) {
-                    str = JSON.stringify(err, null, 2);
-                    console.log('err:');
-                    console.log(err);
-                    alert(str);
-                }            
+            },
+            error: function (err) {
+                str = JSON.stringify(err, null, 2);
+                console.log('err:');
+                console.log(err);
+                alert(str);
+            }            
         });
         GetAllProduct();
     }
@@ -354,8 +354,6 @@ function ModifyProduct() {
 //建立產品表格
 function PrintProductTable(jsonResult) {
     $('#allProductList').html('');
-    console.log('table=',jsonResult);
-
     var tableRow = '';
     tableRow = '<tr>' +
         '<th>產品圖片</th>' +

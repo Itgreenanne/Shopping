@@ -187,12 +187,10 @@
     <Compile Include="ajax\AjaxOperationRecord.aspx.designer.cs">
       <DependentUpon>AjaxOperationRecord.aspx</DependentUpon>
     </Compile>
-    <Compile Include="ajax\WriteLog.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="app_code\DutyAuthority.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="models\ExceptionAlert.cs" />
     <Compile Include="models\ProductTypeInfo.cs" />
     <Compile Include="models\ProductInfo.cs" />
     <Compile Include="models\ProductTypeCombo.cs" />

@@ -12,13 +12,13 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using ShoppingBG.app_code;
 using System.Diagnostics;
+using NLog;
 
 
 namespace ShoppingBG.ajax
 {
     public partial class AjaxMember : DutyAuthority
     {
-        WriteLog writeLog = new WriteLog();
         public static JObject oldMemberInfo = new JObject();
 
         public enum MsgType {
@@ -144,7 +144,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                writeLog.Bglogger(ex.Message);
+                Bglogger(ex.Message);
             }
             finally
             {
@@ -200,7 +200,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    writeLog.Bglogger(ex.Message);
+                    Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -258,7 +258,7 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                writeLog.Bglogger(ex.Message);
+                Bglogger(ex.Message);
             }
             finally
             {
@@ -353,7 +353,6 @@ namespace ShoppingBG.ajax
 
                         if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
                         {
-                            Console.WriteLine("add " + pair.Key + ": " + newItem + " to result.");
                             afterObj.Add(pair.Key, newItem);
                             beforeObj.Add(pair.Key, oldItem);
                         }
@@ -405,7 +404,7 @@ namespace ShoppingBG.ajax
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
-                    writeLog.Bglogger(ex.Message);
+                    Bglogger(ex.Message);
                 }
                 finally
                 {
@@ -413,6 +412,31 @@ namespace ShoppingBG.ajax
                     conn.Dispose();
                 }
             }
+        }
+
+        /// <summary>
+        /// 後端寫入exception log
+        /// </summary>
+        /// <param name="message"></param>
+        private void Bglogger(string message)
+        {
+            Logger logger = LogManager.GetLogger("bGLogger");
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
+
+            if (Session["userInfo"] != null)
+            {
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, message);
+            }
+            else
+            {
+                logger.Error("{errorMessage}", message);
+            }
+            ExceptionAlert exp = new ExceptionAlert()
+            {
+                ErrorIndex = "error",
+                ErrorMessage = message
+            };
+            Response.Write(JsonConvert.SerializeObject(exp));
         }
     }
 }

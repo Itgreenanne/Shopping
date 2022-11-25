@@ -11,12 +11,12 @@ using ShoppingBG.models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ShoppingBG.app_code;
+using NLog;
 
 namespace ShoppingBG.ajax
 {
     public partial class AjaxMain : DutyAuthority
     {
-        WriteLog writeLog = new WriteLog();
         protected void Page_Load(object sender, EventArgs e)
         {
             JObject result = new JObject();
@@ -48,8 +48,33 @@ namespace ShoppingBG.ajax
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                writeLog.Bglogger(ex.Message);
+                Bglogger(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// 後端寫入exception log
+        /// </summary>
+        /// <param name="message"></param>
+        private void Bglogger(string message)
+        {
+            Logger logger = LogManager.GetLogger("bGLogger");
+            UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
+
+            if (Session["userInfo"] != null)
+            {
+                logger.Error("{userId}{userIp}{errorMessage}", userInfo.UserId, userInfo.UserIp, message);
+            }
+            else
+            {
+                logger.Error("{errorMessage}", message);
+            }
+            ExceptionAlert exp = new ExceptionAlert()
+            {
+                ErrorIndex = "error",
+                ErrorMessage = message
+            };
+            Response.Write(JsonConvert.SerializeObject(exp));
         }
     }
 }

@@ -217,33 +217,38 @@ function ModifyMember() {
             success: function (data) {
                 console.log(data);
                 if (data) {
-                    switch (data) {
-                        case '14':
-                            alert("修改會員資料成功");
-                            $('#modifyMemberBlock').hide();                        
-                            $('#overlay').hide();
-                            GetAllMember();
-                            break;                    
-                        case '3':
-                            alert('資料輸入錯誤');
-                            break;
-                        case '5':
-                            alert('電話號碼輸入長度錯誤');
-                            break;
-                        case '6':
-                            alert('密碼長度不對');
-                            break;
-                        case '10':
-                            alert('姓太長');
-                            break;
-                        case '11':
-                            alert('名太長');
-                            break;
-                        case '12':
-                            alert('email長度太長');
-                            break;
-                        default:
-                            alert('資料錯誤');
+                    var jsonResult = JSON.parse(data);
+                    if (RepeatedStuff(jsonResult)) {
+                        return;
+                    } else {
+                        switch (data) {
+                            case '14':
+                                alert("修改會員資料成功");
+                                $('#modifyMemberBlock').hide();
+                                $('#overlay').hide();
+                                GetAllMember();
+                                break;
+                            case '3':
+                                alert('資料輸入錯誤');
+                                break;
+                            case '5':
+                                alert('電話號碼輸入長度錯誤');
+                                break;
+                            case '6':
+                                alert('密碼長度不對');
+                                break;
+                            case '10':
+                                alert('姓太長');
+                                break;
+                            case '11':
+                                alert('名太長');
+                                break;
+                            case '12':
+                                alert('email長度太長');
+                                break;
+                            default:
+                                alert('資料錯誤');
+                        }
                     }
                 } else {
                     alert('資料錯誤');
