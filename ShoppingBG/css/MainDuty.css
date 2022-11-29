@@ -203,6 +203,10 @@ td {
     justify-content: space-evenly;
 }
 
+.operationCol {
+    width: 180px;
+}
+
 
 
 

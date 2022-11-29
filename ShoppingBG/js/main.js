@@ -179,13 +179,15 @@ function DutyAuthorization(userInfo) {
 }
 
 
-//不能輸入空白鍵
-function NoSpaceKey(inputName) {
+//不能輸入空白鍵與<
+function NoSpaceNoSmallerthanKey(inputName) {
     var id = '#' + inputName;
     var inputText = $(id).val();
-    inputText = inputText.replace(/\s/g, '');
+    inputText = inputText.replace(/[<]|\s/, '');
     $(id).val(inputText);
 }
+
+
 
 //重覆的東西
 function RepeatedStuff(data) {

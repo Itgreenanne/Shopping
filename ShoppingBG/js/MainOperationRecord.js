@@ -135,9 +135,10 @@ function ClearRecord() {
 
 //列印起迄日期間操作紀錄的表格
 function PrintOperationRecord(jsonResult) {
+    console.log(jsonResult);
     $('#operationRecordList').html('');
-    var typeArr = ['職責', '人員', '產品', '會員', '訂單'];
-    var functionType = ['新增', '刪除', '修改'];
+    var typeArr = ['', '職責', '人員', '產品', '會員', '訂單'];
+    var functionType = ['', '新增', '刪除', '修改'];
     var tableRow = '';
     tableRow = '<tr>' +
         '<th>人員帳號</th>' +
@@ -150,26 +151,18 @@ function PrintOperationRecord(jsonResult) {
 
     for (var i = 0; i < jsonResult.length; i++) {
 
-        console.log(jsonResult[i].after);
-
-        var beforeData = jsonResult[i].before;
-        var afterData = DataConversionList(jsonResult[i].type, jsonResult[i].after);
-
-        //if ((jsonResult[i].function) == 3) {
-        //    var beforeData = DataConversionList(jsonResult[i].type, jsonResult[i].before);
-        //    var afterData = DataConversionList(jsonResult[i].type, jsonResult[i].after);
-        //} else {
-        //    var beforeData = jsonResult[i].before;
-        //    var afterData = jsonResult[i].after;
-        //}
+        jsonResult[i].after = jsonResult[i].after.replace('[', '');
+        jsonResult[i].after = jsonResult[i].after.replace(']', '');
+       
+        var operationDetail = DataConversionList(jsonResult[i].function, jsonResult[i].type, jsonResult[i].before, jsonResult[i].after);
+        //var operationDetail = DataConversionList(jsonResult[i].type, jsonResult[i].after);
 
         tableRow +=
             '<tr>' +
             '<td class="dataIdColumn">' + jsonResult[i].userAccount + '</td>' +
-            '<td class="typeColumn">' + typeArr[(jsonResult[i].type) + 1] + '</td>' +
-            '<td class="functionColumn">' + functionType[(jsonResult[i].function) + 1] + '</td>' +
-            '<td class="beforeColumn">' + beforeData + '</td>' +
-            '<td class="afterColumn">' + afterData + '</td>' +
+            '<td class="typeColumn">' + (typeArr[(jsonResult[i].type)]) + '</td>' +
+            '<td class="functionColumn">' + (functionType[(jsonResult[i].function)]) + '</td>' +
+            operationDetail +
             '<td class="createTimeForRecord">' + jsonResult[i].createTime + '</td>' +
             '</tr>';    
     }
@@ -179,28 +172,46 @@ function PrintOperationRecord(jsonResult) {
 }
 
 //資料種類轉換函式的選單
-function DataConversionList(index, data) {
-    switch (index){
-        case 1:
-            return DutyDataConverted(data);
-            break;
-        case 2:
-            return UserDataConverted(data);
-            break;
-        case 3:
-            return ProductDataConverted(data);
-            break;
-        case 4:
-            return MemberDataConverted(data);
-            break;
+function DataConversionList(functionIndex, dataTypeIndex, beforeObj, afterObj) {
+    if (functionIndex == 3)
+    {
+        switch (dataTypeIndex) {
+            case 1:
+                return DutyDataConvertedForModify(beforeObj, afterObj);
+                break;
+            case 2:
+                return UserDataConvertedForModify(beforeObj, afterObj);
+                break;
+            case 3:
+                return ProductDataConvertedForModify(beforeObj, afterObj);
+                break;
+            case 4:
+                return MemberDataConvertedForModify(beforeObj, afterObj);
+                break;
+        }
+    } else
+    {
+        switch (dataTypeIndex) {
+            case 1:
+                return DutyDataConvertedForAddAndDelete(afterObj);
+                break;
+            case 2:
+                return UserDataConvertedForAddAndDelete(afterObj);
+                break;
+            case 3:
+                return ProductDataConvertedForAddAndDelete(afterObj);
+                break;
+            case 4:
+                return MemberDataConvertedForAddAndDelete(afterObj);
+                break;
+        }
     }
 }
 
-
-//將職責資料輸出改為中文，chk box的0與1改為'無'與'有'
-function DutyDataConverted(data) {
-    var jsonData = JSON.parse(data);
-    console.log(data);
+//職責修改前後欄位內容轉為中文，chk box的0與1改為'無'與'有'，並在有差異的資料以紅色字顯示
+function DutyDataConvertedForModify(beforeObj, afterObj) {
+    var jsonBeforeObj = JSON.parse(beforeObj);
+    var jsonAfterObj = JSON.parse(afterObj);
     var keyMap = {
         'dutyName': '職責名稱',
         'mangDuty': '職責管理',
@@ -211,62 +222,208 @@ function DutyDataConverted(data) {
         'mangRecord': '操作紀錄管理'
     };
 
-    //將json key改為上面物件的中文名稱
-    for (var key in jsonData) {
+    var dataRow = '<td class="beforeAndAfterColumn">';
+    //將before跟 after 的key跟chk的value改為中文
+    for (var key in jsonBeforeObj, jsonAfterObj)
+    {
         var newKey = keyMap[key];
+        //將欄位名稱根據上面陣列匹配後改為中文
         if (newKey) {
-            jsonData[newKey] = jsonData[key];
-            delete jsonData[key];
+            jsonBeforeObj[newKey] = jsonBeforeObj[key];
+            jsonAfterObj[newKey] = jsonAfterObj[key];
+            delete jsonBeforeObj[key];
+            delete jsonAfterObj[key];
         }
-        if (jsonData[newKey] == 0) {
-            jsonData[newKey] = '無';
-        } else if (jsonData[newKey] == 1) {
-            jsonData[newKey] = '有';
+
+         //將before跟 after 的chk box value改為中文
+        if (jsonBeforeObj[newKey] == 0) {
+            jsonBeforeObj[newKey] = '無';
+        } else if (jsonBeforeObj[newKey] == 1) {
+            jsonBeforeObj[newKey] = '有';           
+        } if (jsonAfterObj[newKey] == 0 || jsonAfterObj[newKey] == false) {
+            jsonAfterObj[newKey] = '無';
+        } else if (jsonAfterObj[newKey] == 1 || jsonAfterObj[newKey] == true) {
+            jsonAfterObj[newKey] = '有';
         }
+
+        //將before欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
+        //if (jsonBeforeObj[newKey] != jsonAfterObj[newKey]) {
+        //    dataRow += '<font style="color: red">' + newKey + ': ' + jsonBeforeObj[newKey] + '</font></br>';
+
+        //} else {
+        //    dataRow += newKey + ': ' + jsonBeforeObj[newKey] + '</br>';
+        //}
+        
+        dataRow += CompareAndColorData(newKey, jsonAfterObj[newKey], jsonBeforeObj[newKey]);
     }
 
-    var stringData = JSON.stringify(jsonData);
-    stringData = stringData.replaceAll('\"', '');
-    stringData = stringData.replace('{', '');
-    stringData = stringData.replace('}', '');
-    stringData = stringData.replaceAll(',', '<br>');
-    return stringData;
+    dataRow += '</td><td class="beforeAndAfterColumn">';
+
+     //將after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
+    for (var newKey in jsonBeforeObj, jsonAfterObj)
+    {
+        //if (jsonBeforeObj[newKey] != jsonAfterObj[newKey]) {
+        //    dataRow += '<font style="color: red">' + newKey + ': ' + jsonAfterObj[newKey] + '</font></br>';
+
+        //} else {
+        //    dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
+        //}
+        dataRow += CompareAndColorData(newKey, jsonBeforeObj[newKey], jsonAfterObj[newKey]);
+    }
+
+    dataRow += '</td>';
+    return dataRow;
 }
 
-//將人員資料輸出改為中文
-function UserDataConverted(data) {
-    var jsonData = JSON.parse(data);
+//將before跟after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
+function CompareAndColorData(newKey, obj1, obj2) {
 
+    var dataProcessed;
+
+    if (obj1 != obj2) {
+        dataProcessed = '<font style="color: red">' + newKey + ': ' + obj2 + '</font></br>';
+
+    } else {
+        dataProcessed = newKey + ': ' + obj2 + '</br>';
+    }
+    return dataProcessed;
+}
+
+//職責新增與刪改後欄位內容轉為中文，chk box的true與false改為'無'與'有'
+function DutyDataConvertedForAddAndDelete(afterObj) {
+    console.log(afterObj);
+    var jsonAfterObj = JSON.parse(afterObj);
+    console.log(jsonAfterObj);
+    var keyMap = {
+        'dutyName': '職責名稱',
+        'mangDuty': '職責管理',
+        'mangUser': '人員管理',
+        'mangProType': '產品類別管理',
+        'mangProduct': '產品管理',
+        'mangOrder': '訂單管理',
+        'mangRecord': '操作紀錄管理'
+    };
+
+    var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
+
+    //將before跟 after 的key跟chk的value改為中文
+    for (var key in jsonAfterObj) {
+        var newKey = keyMap[key];
+        //將欄位名稱根據上面陣列匹配後改為中文
+        if (newKey) {
+            jsonAfterObj[newKey] = jsonAfterObj[key];
+            delete jsonAfterObj[key];
+        }
+
+        //將before跟 after 的chk box value改為中文
+        if (jsonAfterObj[newKey] == false) {
+            jsonAfterObj[newKey] = '無';
+        } else if (jsonAfterObj[newKey] == true) {
+            jsonAfterObj[newKey] = '有';
+        }     
+
+        dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
+    }  
+
+    dataRow += '</td>';
+    return dataRow;
+}
+
+//將人員資料輸出改為中文，並在有差異的資料以紅色字顯示
+function UserDataConvertedForModify(beforeObj, afterObj) {
+    var jsonBeforeObj = JSON.parse(beforeObj);
+    var jsonAfterObj = JSON.parse(afterObj);
     var keyMap = {
         'userNickname': '暱稱',
         'userPwd': '人員密碼',
         'dutyName': '職責名稱',
     };
 
+    var dataRow = '<td class="beforeAndAfterColumn">';
     //將json key改為上面物件的中文名稱
-    for (var key in jsonData) {
-        if (key == 'userPwd') {
-            jsonData[key] = '****';
-        }
+    for (var key in jsonBeforeObj, jsonAfterObj)
+    {
         var newKey = keyMap[key];
+
+        //將欄位名稱根據上面陣列匹配後改為中文
         if (newKey) {
-            jsonData[newKey] = jsonData[key];
-            delete jsonData[key];
+            jsonBeforeObj[newKey] = jsonBeforeObj[key];
+            jsonAfterObj[newKey] = jsonAfterObj[key];
+            delete jsonBeforeObj[key];
+            delete jsonAfterObj[key];
+        }
+
+        if (jsonBeforeObj[newKey] != jsonAfterObj[newKey]) {
+            if (newKey == '人員密碼') {
+                jsonBeforeObj[newKey] = '****';
+            }
+            dataRow += '<font style="color: red">' + newKey + ': ' + jsonBeforeObj[newKey] + '</font></br>';
+
+        } else {
+            dataRow += newKey + ': ' + jsonBeforeObj[newKey] + '</br>';
+        }
+
+        /*dataRow += CompareAndColorData(newKey, jsonAfterObj[newKey], jsonBeforeObj[newKey]);*/
+    }
+
+    dataRow += '</td><td class="beforeAndAfterColumn">';
+
+    //將after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
+    for (var newKey in jsonBeforeObj, jsonAfterObj) {
+    
+        if (jsonBeforeObj[newKey] != jsonAfterObj[newKey]) {
+            if (newKey == '人員密碼') {
+                jsonAfterObj[newKey] = '****';
+            }
+            dataRow += '<font style="color: red">' + newKey + ': ' + jsonAfterObj[newKey] + '</font></br>';
+
+        } else {
+            dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
         }
     }
 
-    var stringData = JSON.stringify(jsonData);
-    stringData = stringData.replaceAll('\"', '');
-    stringData = stringData.replace('{', '');
-    stringData = stringData.replace('}', '');
-    stringData = stringData.replaceAll(',', '<br>');
-    return stringData;
+    dataRow += '</td>';
+    return dataRow;
+}
+
+//人員新增與刪改後欄位內容轉為中文，人員密碼只顯示****
+function UserDataConvertedForAddAndDelete(afterObj) {
+    console.log(afterObj);
+    var jsonAfterObj = JSON.parse(afterObj);
+    console.log(jsonAfterObj);
+    var keyMap = {
+        'userAccount': '帳號',
+        'userNickname': '暱稱',
+        'userPwd': '人員密碼',
+        'dutyName': '職責名稱',
+    };
+
+    var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
+
+    //將before跟 after 的key跟chk的value改為中文
+    for (var key in jsonAfterObj) {
+        var newKey = keyMap[key];
+        //將欄位名稱根據上面陣列匹配後改為中文
+        if (newKey) {
+            jsonAfterObj[newKey] = jsonAfterObj[key];
+            delete jsonAfterObj[key];
+        }
+
+        if (newKey == '人員密碼') {
+            jsonAfterObj[newKey] = '****';
+        }
+
+        dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
+    }
+
+    dataRow += '</td>';
+    return dataRow;
 }
 
 //將產品資料輸出改為中文
-function ProductDataConverted(data) {
-    var jsonData = JSON.parse(data);
-
+function ProductDataConvertedForModify(beforeObj, afterObj) {
+    var jsonBeforeObj = JSON.parse(beforeObj);
+    var jsonAfterObj = JSON.parse(afterObj);
     var keyMap = {
         'productPic': '圖片',
         'productTitle': '標題',
@@ -276,41 +433,74 @@ function ProductDataConverted(data) {
         'productTypeName': '產品類別'
     };
 
+    var dataRow = '<td class="beforeAndAfterColumn">';
     //將json key改為上面物件的中文名稱
-    for (var key in jsonData) {
+    for (var key in jsonBeforeObj, jsonAfterObj) {
+
         var newKey = keyMap[key];
+
         if (newKey) {
-            jsonData[newKey] = jsonData[key];
-            delete jsonData[key];
+            jsonBeforeObj[newKey] = jsonBeforeObj[key];
+            jsonAfterObj[newKey] = jsonAfterObj[key];
+            delete jsonBeforeObj[key];
+            delete jsonAfterObj[key];
         }
+
+        dataRow += CompareAndColorData(newKey, jsonAfterObj[newKey], jsonBeforeObj[newKey]);
     }
 
-    var stringData = JSON.stringify(jsonData);
-    stringData = stringData.replaceAll('\"', '');
-    stringData = stringData.replace('{', '');
-    stringData = stringData.replace('}', '');
-    stringData = stringData.replace('\\t', '');
-    stringData = stringData.replaceAll('\\', ' ');
-    stringData = stringData.replaceAll(',', '<br>');
-    return stringData;
+    dataRow += '</td><td class="beforeAndAfterColumn">';
+
+    //將after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
+    for (var newKey in jsonBeforeObj, jsonAfterObj) {
+
+        dataRow += CompareAndColorData(newKey, jsonBeforeObj[newKey], jsonAfterObj[newKey]);
+    }
+
+    dataRow += '</td>';
+    return dataRow;
+}
+
+//產品新增與刪改後欄位內容轉為中文，人員密碼只顯示****
+function ProductDataConvertedForAddAndDelete(afterObj) {
+    console.log(afterObj);
+    var jsonAfterObj = JSON.parse(afterObj);
+    console.log(jsonAfterObj);
+    var keyMap = {
+        'productPic': '圖片',
+        'productTitle': '標題',
+        'productUnitPrice': '單價',
+        'productQtn': '庫存數量',
+        'productDetail': '詳情',
+        'productTypeName': '產品類別'
+    };
+
+    var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
+
+    //將before跟 after 的key跟chk的value改為中文
+    for (var key in jsonAfterObj) {
+        var newKey = keyMap[key];
+        //將欄位名稱根據上面陣列匹配後改為中文
+        if (newKey) {
+            jsonAfterObj[newKey] = jsonAfterObj[key];
+            delete jsonAfterObj[key];
+        }
+
+        if (newKey == '人員密碼') {
+            jsonAfterObj[newKey] = '****';
+        }
+
+        dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
+    }
+
+    dataRow += '</td>';
+    return dataRow;
 }
 
 //將會員資料輸出改為中文
-function MemberDataConverted(data) {
-    var jsonData = JSON.parse(data);
-
-    //Object.entries(jsonData).forEach(([key, value]) => {
-    //    if (key == 'gender')
-    //    {
-    //        if (value == 1) {
-    //            jsonData[key] = '男';
-    //        } else if (value == 2) {
-    //            jsonData[key] = '女';
-    //        } else {
-    //            jsonData[key] = '其他';
-    //        }
-    //    }
-    //});
+function MemberDataConvertedForModify(beforeObj, afterObj) {
+    var jsonBeforeObj = JSON.parse(beforeObj);
+    var jsonAfterObj = JSON.parse(afterObj);
 
     var keyMap = {
         'tel': '聯絡電話',
@@ -325,28 +515,109 @@ function MemberDataConverted(data) {
         'level': '等級'
     };
 
+    var dataRow = '<td class="beforeAndAfterColumn">';
     //將json key改為上面物件的中文名稱
-    for (var key in jsonData) {
+    for (var key in jsonBeforeObj, jsonAfterObj) {
+
+        var newKey = keyMap[key];
+
         if (key == 'gender') {
-            if (jsonData[key] == 1) {
-                jsonData[key] = '男';
-            } else if (jsonData[key] == 2) {
-                jsonData[key] = '女';
+            if (jsonBeforeObj[key] == 1) {
+                jsonBeforeObj[key] = '男';
+            }
+            else if (jsonAfterObj[key] == 1) {
+                jsonAfterObj[key] = '男';
+            }
+            else if (jsonBeforeObj[key] == 2) {
+                jsonBeforeObj[key]= '女';
+            } else if (jsonAfterObj[key] == 2) {
+                jsonAfterObj[key] = '女';
             } else {
-                jsonData[key] = '其他';
+                jsonBeforeObj[key] = '其他';
+                jsonAfterObj[key] = '其他';
             }
         }
-        var newKey = keyMap[key];
+
         if (newKey) {
-            jsonData[newKey] = jsonData[key];
-            delete jsonData[key];
+            jsonBeforeObj[newKey] = jsonBeforeObj[key];
+            jsonAfterObj[newKey] = jsonAfterObj[key];
+            delete jsonBeforeObj[key];
+            delete jsonAfterObj[key];
         }
+
+        dataRow += CompareAndColorData(newKey, jsonAfterObj[newKey], jsonBeforeObj[newKey]);
     }
 
-    var stringData = JSON.stringify(jsonData);
-    stringData = stringData.replaceAll('\"', '');
-    stringData = stringData.replace('{', '');
-    stringData = stringData.replace('}', '');
-    stringData = stringData.replaceAll(',', '<br>');
-    return stringData;
+    dataRow += '</td><td class="beforeAndAfterColumn">';
+
+    //將after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
+    for (var newKey in jsonBeforeObj, jsonAfterObj) {
+
+        dataRow += CompareAndColorData(newKey, jsonBeforeObj[newKey], jsonAfterObj[newKey]);
+    }
+
+    dataRow += '</td>'
+    return dataRow;
 }
+
+//會員新增與刪改後欄位內容轉為中文
+function MemberDataConvertedForAddAndDelete(afterObj) {
+    console.log(afterObj);
+    var jsonAfterObj = JSON.parse(afterObj);
+    console.log(jsonAfterObj);
+    var keyMap = {
+        'idNo': '身份証字號',
+        'tel': '聯絡電話',
+        'pwd': '密碼',
+        'lastName': '姓',
+        'firstName': '名',
+        'gender': '性別',
+        'birth': '生日',
+        'mail': 'E-mail',
+        'address': '住址',
+        'points': '點數',
+        'level': '等級'
+    };
+
+    var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
+
+    //將before跟 after 的key跟chk的value改為中文
+    for (var key in jsonAfterObj) {
+        var newKey = keyMap[key];
+        //將欄位名稱根據上面陣列匹配後改為中文
+        if (newKey) {
+            jsonAfterObj[newKey] = jsonAfterObj[key];
+            delete jsonAfterObj[key];
+        }
+
+        if (key == 'gender') {           
+            if (jsonAfterObj[key] == 1) {
+                jsonAfterObj[key] = '男';
+            } else if (jsonAfterObj[key] == 2) {
+                jsonAfterObj[key] = '女';
+            } else {
+                jsonAfterObj[key] = '其他';
+            }
+        }
+
+        dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
+    }
+
+    dataRow += '</td>';
+    return dataRow;
+}
+
+
+
+    //Object.entries(jsonData).forEach(([key, value]) => {
+    //    if (key == 'gender')
+    //    {
+    //        if (value == 1) {
+    //            jsonData[key] = '男';
+    //        } else if (value == 2) {
+    //            jsonData[key] = '女';
+    //        } else {
+    //            jsonData[key] = '其他';
+    //        }
+    //    }
+    //});

@@ -216,6 +216,7 @@ function ModifyDutyReadBack(dutyId) {
             getDutyId: dutyId
         },
         success: function (data) {
+            console.log(data);
             if (data) {
                 var jsonResult = (JSON.parse(data));
 
@@ -301,6 +302,7 @@ function ModifyDuty() {
                 console.log(data);
                 if (data) {
                     var jsonResult = JSON.parse(data);
+                    console.log(jsonResult);
                     if (RepeatedStuff(jsonResult)) {
                         return;
                     } else if (data == 5) {
@@ -361,7 +363,7 @@ function PrintDutyTable(jsonResult) {
             '<td>' + getMark(jsonResult[i], 'mangProduct') + '</td>' +
             '<td>' + getMark(jsonResult[i], 'mangOrder') + '</td>' +
             '<td>' + getMark(jsonResult[i], 'mangRecord') + '</td>' +
-            '<td> <button onclick="DeleteDuty(\'' + jsonResult[i].dutyId + '\')">' +
+            '<td class="operationCol"> <button onclick="DeleteDuty(\'' + jsonResult[i].dutyId + '\')">' +
             '刪除' + '</button>' + ' ' +
             '<button onclick="ModifyDutyReadFront(\'' + jsonResult[i].dutyId + '\')">' + '修改(前)' + '</button>' + ' ' +
             '<button onclick="ModifyDutyReadBack(\'' + jsonResult[i].dutyId + '\')">' + '修改(後)' + '</button>' + '</td>' +

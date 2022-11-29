@@ -20,9 +20,6 @@ namespace ShoppingBG.ajax
 {
      public partial class AjaxDuty : DutyAuthority
     {
-        public static JObject oldDutyInfo = new JObject();
-
-        //JArray oldDutyArray = new JArray();
         /// <summary>
         /// 新增職責訊息
         /// </summary>
@@ -63,6 +60,7 @@ namespace ShoppingBG.ajax
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+            //JObject aa = new JObject();
             string fnSelected = Request.QueryString["fn"];
             switch (fnSelected)
             {
@@ -87,7 +85,7 @@ namespace ShoppingBG.ajax
                     break;
 
                 case "ModifyDuty":
-                    ModifyDuty();
+                    ModifyDuty(GetSearchDutyById());
                     break;
             }
         }
@@ -393,7 +391,7 @@ namespace ShoppingBG.ajax
             }
         }
 
-        public void GetSearchDutyById()
+        private JObject GetSearchDutyById()
         {
             MsgType msgValue = MsgType.WellAdded;
             int apiGetId = Int32.Parse((Request.Form["getDutyId"]));
@@ -425,26 +423,29 @@ namespace ShoppingBG.ajax
                         dutyInfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
                         //oldDutyArray.Add(dutyinfo);
                     }
-                    oldDutyInfo = dutyInfo;
                     Response.Write(dutyInfo);
+                    dutyInfo.Remove("dutyId");
+                    return dutyInfo;
                 }
                 else
                 {
                     msgValue = MsgType.DutyNotExisted;
                     Response.Write((int)msgValue);
+                    return (JObject)false;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 Bglogger(ex.Message);
+                return (JObject)false;
+
             }
             finally
             {
                 conn.Close();
-                conn.Dispose();
+                conn.Dispose();                
             }
-
         }
 
         /// <summary>
@@ -529,7 +530,7 @@ namespace ShoppingBG.ajax
         /// <summary>
         /// 修改職責
         /// </summary>
-        private void ModifyDuty()
+        private void ModifyDuty(JObject oldDutyInfo)
         {
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WellAdded;
@@ -556,8 +557,6 @@ namespace ShoppingBG.ajax
             else
             {
                 JObject newDutyInfo = new JObject();
-                JObject afterObj = new JObject();
-                JObject beforeObj = new JObject();
                 newDutyInfo.Add("dutyName", apiGetDutyName);
                 newDutyInfo.Add("mangDuty", Convert.ToInt16(apiMangDuty));
                 newDutyInfo.Add("mangUser", Convert.ToInt16(apiMangUser));
@@ -565,35 +564,6 @@ namespace ShoppingBG.ajax
                 newDutyInfo.Add("mangProduct", Convert.ToInt16(apiMangProduct));
                 newDutyInfo.Add("mangOrder", Convert.ToInt16(apiMangOrder));
                 newDutyInfo.Add("mangRecord", Convert.ToInt16(apiMangRecord));
-
-                //get 
-                IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldDutyInfo.GetEnumerator();
-                IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newDutyInfo.GetEnumerator();
-
-                while (oldObjEnum.MoveNext())
-                {
-                    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
-                    //暫時的value存在jt
-                    JToken jt;
-
-                    if (newDutyInfo.TryGetValue(pair.Key, out jt))
-                    {
-                        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
-                        JToken oldItem = oldDutyInfo.GetValue(pair.Key);
-                        JToken newItem = newDutyInfo.GetValue(pair.Key);
-
-                        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
-                        {
-                            afterObj.Add(pair.Key, newItem);
-                            beforeObj.Add(pair.Key, oldItem);
-                        }
-                    }
-                }
-
-                Debug.WriteLine("old = " + oldDutyInfo);
-                Debug.WriteLine("new = " + newDutyInfo);
-                Debug.WriteLine("result = " + afterObj);
-                Debug.WriteLine("result = " + beforeObj);
 
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
@@ -612,10 +582,11 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@mangProduct", apiMangProduct));
                     cmd.Parameters.Add(new SqlParameter("@mangOrder", apiMangOrder));
                     cmd.Parameters.Add(new SqlParameter("@mangRecord", apiMangRecord));
-                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(beforeObj)));
-                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(afterObj)));
+                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(oldDutyInfo)));
+                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(newDutyInfo)));
 
                     SqlDataReader reader = cmd.ExecuteReader();
+                    Response.Clear();
 
                     //判斷是否有此職責存在
                     if (reader.HasRows)
@@ -676,3 +647,44 @@ namespace ShoppingBG.ajax
         }
     }  
 }
+
+
+//JObject newDutyInfo = new JObject();
+//JObject afterObj = new JObject();
+//JObject beforeObj = new JObject();
+//newDutyInfo.Add("dutyName", apiGetDutyName);
+//newDutyInfo.Add("mangDuty", Convert.ToInt16(apiMangDuty));
+//newDutyInfo.Add("mangUser", Convert.ToInt16(apiMangUser));
+//newDutyInfo.Add("mangProType", Convert.ToInt16(apiMangProType));
+//newDutyInfo.Add("mangProduct", Convert.ToInt16(apiMangProduct));
+//newDutyInfo.Add("mangOrder", Convert.ToInt16(apiMangOrder));
+//newDutyInfo.Add("mangRecord", Convert.ToInt16(apiMangRecord));
+
+////get 
+//IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldDutyInfo.GetEnumerator();
+//IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newDutyInfo.GetEnumerator();
+
+//while (oldObjEnum.MoveNext())
+//{
+//    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
+//    //暫時的value存在jt
+//    JToken jt;
+
+//    if (newDutyInfo.TryGetValue(pair.Key, out jt))
+//    {
+//        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
+//        JToken oldItem = oldDutyInfo.GetValue(pair.Key);
+//        JToken newItem = newDutyInfo.GetValue(pair.Key);
+
+//        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
+//        {
+//            afterObj.Add(pair.Key, newItem);
+//            beforeObj.Add(pair.Key, oldItem);
+//        }
+//    }
+//}
+
+//Debug.WriteLine("old = " + oldDutyInfo);
+//Debug.WriteLine("new = " + newDutyInfo);
+//Debug.WriteLine("result = " + afterObj);
+//Debug.WriteLine("result = " + beforeObj);

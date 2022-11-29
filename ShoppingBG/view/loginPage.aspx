@@ -19,7 +19,7 @@
             <div class="grayBoxName">登入後台管理系統</div>
             <div class="grayBoxContainer" >
                 <p>帳號</p>
-                <input type="text" class="grayBoxInput" id="txbGetId" oninput="NoSpaceKey()" value="1"/>
+                <input type="text" class="grayBoxInput" id="txbGetId" oninput="NoSpaceNoSmallerthanKey(txbGetId)" value="1"/>
                 <p>密碼</p>
                 <input type="password" class="grayBoxInput" id="txbGetPwd"  value="1"/><br/>
                 <div id="message"></div>

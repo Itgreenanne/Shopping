@@ -20,7 +20,6 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxUser : DutyAuthority
     {
-        public static JObject oldUserInfo = new JObject();
          /// <summary>
         /// 新增人員各函式回傳訊息
         /// </summary>
@@ -98,7 +97,7 @@ namespace ShoppingBG.ajax
                     break;
 
                 case "ModifyUser":
-                    ModifyUser();
+                    ModifyUser(GetSearchUserById());
                     break;
             }
         }
@@ -435,7 +434,7 @@ namespace ShoppingBG.ajax
         /// <summary>
         /// 人員修改視窗中用來搜尋選中人員的資料
         /// </summary>
-        private void GetSearchUserById()
+        private JObject GetSearchUserById()
         {
             MsgType msgValue = MsgType.WrongConnection;
             int apiUserId = 0;
@@ -499,15 +498,16 @@ namespace ShoppingBG.ajax
                         userInfo.Add("userPwd", row.ItemArray[3].ToString());
                         userInfo.Add("dutyName", row.ItemArray[5].ToString());
                     }
-                    oldUserInfo = userInfo;
                     userDutyCombo.UserDataArray = userArray;
                     userDutyCombo.DutyInfoArray = dutyArray;
                     Response.Write(JsonConvert.SerializeObject(userDutyCombo));
+                    return userInfo;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     Bglogger(ex.Message);
+                    return (JObject)false;
                 }
                 finally
                 {
@@ -515,12 +515,13 @@ namespace ShoppingBG.ajax
                     conn.Dispose();
                 }
             }
+            return (JObject)false;
         }
 
         /// <summary>
         /// 將人員修改資料存入DB
         /// </summary>
-        private void ModifyUser()
+        private void ModifyUser(JObject oldUserInfo)
         {
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WrongConnection;
@@ -561,40 +562,10 @@ namespace ShoppingBG.ajax
             else
             {
                 JObject newUserInfo = new JObject();
-                JObject afterObj = new JObject();
-                JObject beforeObj = new JObject();
+              
                 newUserInfo.Add("userNickname", apiNickname);
                 newUserInfo.Add("userPwd", apiUserPwd);
-                newUserInfo.Add("dutyName", apiDutyName);
-
-                //所附屬的資料集合中的元素，一個一個的取出並回傳
-                IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldUserInfo.GetEnumerator();
-                IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newUserInfo.GetEnumerator();
-
-                while (oldObjEnum.MoveNext())
-                {
-                    //物件之各屬性內容以 KeyValuePair<key, value> 陣列儲存
-                    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
-                    JToken jt;
-
-                    if (newUserInfo.TryGetValue(pair.Key, out jt))
-                    {
-                        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
-                        JToken oldItem = oldUserInfo.GetValue(pair.Key);
-                        JToken newItem = newUserInfo.GetValue(pair.Key);
-
-                        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
-                        {
-                            afterObj.Add(pair.Key, newItem);
-                            beforeObj.Add(pair.Key, oldItem);
-                        }
-                    }
-                }
-
-                Debug.WriteLine("old = " + oldUserInfo);
-                Debug.WriteLine("new = " + newUserInfo);
-                Debug.WriteLine("result = " + afterObj);
-                Debug.WriteLine("result = " + beforeObj);
+                newUserInfo.Add("dutyName", apiDutyName);             
 
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
@@ -609,9 +580,10 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@userNickname", apiNickname));
                     cmd.Parameters.Add(new SqlParameter("@userPwd", apiUserPwd));
                     cmd.Parameters.Add(new SqlParameter("@dutyTypeId", apiUserDutyId));
-                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(beforeObj)));
-                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(afterObj)));
+                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(oldUserInfo)));
+                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(newUserInfo)));
                     SqlDataReader reader = cmd.ExecuteReader();
+                    Response.Clear();
 
                     //判斷是否有此人員帳號存在
                     if (reader.HasRows)

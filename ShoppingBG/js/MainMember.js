@@ -106,6 +106,7 @@ function DeleteMember(memberId) {
 
 //彈跳會員修改視窗的內容
 function ModifyMemberBlock(memberId) {
+    console.log('memberId', memberId);
     $('#overlay').show();
     $.ajax({
         url: '/ajax/AjaxMember.aspx?fn=GetSearchMemberById',

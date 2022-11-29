@@ -80,7 +80,7 @@
                 <p class="dutyBlockTitle">職責新增</p>
                 <div class="inputBlock">
                     <label for="addDutyName" class="labelAddDutyName"">職責名稱： </label>
-                    <input type="text" class="addDutyName" id="inputDutyName" autocomplete="off" oninput="NoSpaceKey('inputDutyName')" value=""/><br/>
+                    <input type="text" class="addDutyName" id="inputDutyName" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('inputDutyName')" value=""/><br/>
                 </div>
                 <div class="chkAddDutyBlock">
                      <label for="manageDuty">職責管理</label>
@@ -115,7 +115,7 @@
                 <p class="dutyBlockTitle">職責查詢</p>
                 <div class="inputSearchDutyBlock">
                     <label for="searchDutyName">請輸入欲查詢職責名稱：</label>
-                    <input type="text" class="searchDutyName" id="searchDutyName" autocomplete="off" oninput="NoSpaceKey('searchDutyName')" value=""/>
+                    <input type="text" class="searchDutyName" id="searchDutyName" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('searchDutyName')" value=""/>
                     <button class="btnSearchDuty" onclick="GetSearchDutyByName()">確定</button>
                     <button class="btnSearchDuty" onclick="ClearSearchDuty()">清除</button>
                 </div>
@@ -126,11 +126,11 @@
                 <p class="userBlockTitle">人員新增</p>
                     <div class="addUserInputblock">
                         <label for="addUserAccount" class="labelAddUserName">帳號： </label>
-                        <input type="text" class="userInfo" id="addUserAccount" autocomplete="off" oninput="NoSpaceKey('addUserAccount')" value=""/><br/>
+                        <input type="text" class="userInfo" id="addUserAccount" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('addUserAccount')" value=""/><br/>
                     </div>
                     <div class="addUserInputblock">
                         <label for="addNickName" class="labelUserInfo">暱稱： </label>
-                        <input type="text" class="userInfo" id="addNickName" autocomplete="off" oninput="NoSpaceKey('addNickName')" value=""/><br/>
+                        <input type="text" class="userInfo" id="addNickName" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('addNickName')" value=""/><br/>
                     </div>
                     <div class="addUserInputblock">
                         <label for="addNickName" class="labelUserInfo">密碼： </label>
@@ -147,7 +147,7 @@
                 <p class="dutyBlockTitle">人員查詢</p>
                 <div class="DutyTypeInputblock">
                         <label for="searchDutyName">請輸入帳號名稱:</label>
-                        <input type="text" class="searchUserAccount" id="searchUserAccount" autocomplete="off" oninput="NoSpaceKey('searchUserAccount')" value=""/>
+                        <input type="text" class="searchUserAccount" id="searchUserAccount" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('searchUserAccount')" value=""/>
                         <label for="dutyType" class="labUserSearchDutyType">職責名稱： </label>
                         <select name="dutyType" class="searchDutyTypeMenu" id="allDutyMenu"></select>
                         <button class="btnSearchUser" onclick="GetSearchUser()">確定</button>
@@ -160,19 +160,19 @@
                 <p class="productBlockTitle">產品新增</p>
                      <div class="addProductInputblock">
                         <label for="addProductTitle" class="labelAddProductTitle">圖片路徑： </label>
-                        <input type="text" class="productPic" id="addProductPic" autocomplete="off" value=""/><br/>
+                        <input type="text" class="productPic" id="addProductPic" autocomplete="off" oninput="NoSmallerthanKey('addProductPic')" value=""/><br/>
                     </div>
                     <div class="addProductInputblock">
                         <label for="addProductTitle" class="labelAddProductTitle">標題： </label>
-                        <input type="text" class="productInfo" id="addProductTitle" autocomplete="off" value=""/><br/>
+                        <input type="text" class="productInfo" id="addProductTitle" oninput="NoSmallerthanKey('addProductTitle')" autocomplete="off" value=""/><br/>
                     </div>
                     <div class="addProductInputblock">
                         <label for="addUnitPrice" class="labelProductInfo">單價： </label>
-                        <input type="text" class="productInfo" id="addUnitPrice" autocomplete="off" oninput="NoSpaceKey('addUnitPrice')" value=""/><span class="ntd">元</span><br/>
+                        <input type="text" class="productInfo" id="addUnitPrice" autocomplete="off"  value=""/><span class="ntd">元</span><br/>
                     </div>
                     <div class="addProductInputblock">
                         <label for="addInventoryQtn" class="labelInventoryQtn">庫存數量： </label>
-                        <input type="text" class="inventoryQtn" id="inventoryQtn" autocomplete="off" oninput="NoSpaceKey('inventoryQtn')" value="" /><br/>
+                        <input type="text" class="inventoryQtn" id="inventoryQtn" autocomplete="off"  value="" /><br/>
                     </div>                
                     <div class="addProductInputblock">
                         <label for="productType" class="labelProductType">產品類別： </label>
@@ -180,7 +180,7 @@
                     </div>
                     <div class="detainInputblock">
                         <label for="addProductDetail" class="labelProductDetail">產品詳情： </label>
-                        <textarea class="detailInfo" id="productDetail"></textarea><br/>
+                        <textarea class="detailInfo" id="productDetail" oninput="NoSmallerthanKey('productDetail')" ></textarea><br/>
                     </div> 
                     <button class="btnAddProduct" id="btnProductConfirm" onclick="AddProduct()">確定</button>                
            </div>
@@ -189,7 +189,7 @@
                     <p class="productBlockTitle">產品查詢</p>
                     <div class="productTypeInputblock">
                         <label for="searchProductTitle">請輸入標題關鍵字：</label>
-                        <input type="text" class="searchProductTitle" id="searchProductTitle" autocomplete="off" oninput="NoSpaceKey('searchProductTitle')" value=""/>
+                        <input type="text" class="searchProductTitle" id="searchProductTitle" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('searchProductTitle')" value=""/>
                         <label for="productType" class="labSearchProductType">產品類別： </label>
                         <select name="productType" class="searchProductTypeMenu" id="allProductTypeMenu"></select>
                         <button class="btnSearchProduct" onclick="GetSearchProduct()">確定</button>
@@ -202,7 +202,7 @@
                     <p class="memberBlockTitle">會員查詢</p>
                     <div class="memberInputblock">
                         <label for="searchMemberTitle">請輸入會員身份証字號：</label>
-                        <input type="text" class="searchMemberTitle" id="searchMemberIdNo" autocomplete="off" oninput="NoSpaceKey('searchMemberIdNo')" value=""/>
+                        <input type="text" class="searchMemberTitle" id="searchMemberIdNo" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('searchMemberIdNo')" value=""/>
                         <button class="btnSearchMember" onclick="GetSearchMember()">確定</button>
                         <button class="btnSearchMember" onclick="ClearSearchMember()">清除</button>
                     </div>
@@ -267,7 +267,7 @@
                 <p class="orderBlockTitle">訂單查詢</p>
                 <div class="orderInputblock">
                         <label for="searchOrderByNum">輸入訂單編號或會員身份証字號：</label>
-                        <input type="text" class="searchOrderByNum" id="searchOrderByNum" autocomplete="off" oninput="NoSpaceKey('searchOrderByNum')" value=""/>                        
+                        <input type="text" class="searchOrderByNum" id="searchOrderByNum" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('searchOrderByNum')" value=""/>                        
                         <button class="btnSearchOrder" onclick="GetSearchpOrder()">確定</button>
                         <button class="btnSearchOrder" onclick="ClearSearchOrder()">清除</button>
                 </div>
@@ -281,7 +281,7 @@
             <p class="modifyDuty">職責修改</p>
                 <div class="modifyDutyInputBlock">
                     <label for="modifyDutyName" class="labelModifyDutyName"">職責名稱: </label>
-                    <input type="text" class="modifyDutyNameInput" id="modifyDutyName" autocomplete="off" oninput="NoSpaceKey('modifyDutyName')" value=""/><br/>
+                    <input type="text" class="modifyDutyNameInput" id="modifyDutyName" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('modifyDutyName')" value=""/><br/>
                 </div>
                 <div class="chkModifyDutyBox">
                     <div class="chkModifyDutyBlock">
@@ -324,7 +324,7 @@
             <div class="modifyUserInputBox">
                 <div class="modifyUserInputBlock">
                     <label for="addNickname" class="labelUserInfo">暱稱： </label>
-                    <input type="text" class="modifyNickname" id="modifyNickname" autocomplete="off" oninput="NoSpaceKey('modifyNickname')" value=""/><br/>
+                    <input type="text" class="modifyNickname" id="modifyNickname" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('modifyNickname')" value=""/><br/>
                 </div>
                 <div class="modifyUserInputBlock">
                     <label for="modifyUserPwd" class="labelUserInfo">密碼： </label>
@@ -349,12 +349,12 @@
             </div>
             <div class="modifyProductInputBlock">
                  <label for="modifyProductTitle" class="labelProduct">標題： </label>
-                 <input type="text" class="modifyProductTitle" id="modifyProductTitle" autocomplete="off" value="" /><br/>
+                 <input type="text" class="modifyProductTitle" id="modifyProductTitle" autocomplete="off" oninput="NoSmallerthanKey('modifyProductTitle')" value="" /><br/>
             </div>
             <div class="modifyProductInputBox">
                 <div class="modifyProductInputBlock">
                     <label for="modifyUnitPrice" class="labelProduct">單價： </label>
-                    <input type="text" class="modifyUnitPrice" id="modifyUnitPrice" autocomplete="off" oninput="NoSpaceKey('modifyUnitPrice')" value=""/><br/>
+                    <input type="text" class="modifyUnitPrice" id="modifyUnitPrice" autocomplete="off"  value=""/><br/>
                 </div>
                 <div class="modifyProductInputBlock">
                     <label for="modifyUserPwd" class="labelProduct">庫存數量： </label>
@@ -366,7 +366,7 @@
                 </div>
                 <div class="modifyProductInputBlock">
                         <label for="modifyProductDetail" class="labelProduct">產品詳情： </label>
-                        <textarea class="modifyDetailInfo" id="modifyProductDetail"></textarea><br/>
+                        <textarea class="modifyDetailInfo" id="modifyProductDetail" oninput="NoSmallerthanKey('modifyProductDetail')"></textarea><br/>
                 </div> 
             </div>
                 <div class="btnModifyBlock">
@@ -384,19 +384,19 @@
                 </div>
                 <div class="modifyMemberBox">
                     <label for="modifyPhone">聯絡電話：</label>                   
-                    <input type="text" class="modifyPhone" id="modifyPhone" autocomplete="off" oninput="NoSpaceKey('modifyPhone')" value=""/>
+                    <input type="text" class="modifyPhone" id="modifyPhone" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('modifyPhone')" value=""/>
                 </div>
                 <div class="modifyMemberBox">
                     <label for="modifyPwd">密碼：</label>                   
-                    <input type="text" class="modifyPwd" id="modifyPwd" autocomplete="off" oninput="NoSpaceKey('modifyPwd')" value=""/>
+                    <input type="text" class="modifyPwd" id="modifyPwd" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('modifyPwd')" value=""/>
                 </div>
                 <div class="modifyMemberBox">
                      <label for="lastNameInput">姓：</label>
-                     <input type="text" class="lastNameInput" id="lastNameInput" autocomplete="off" oninput="NoSpaceKey('lastNameInput')" value="" />
+                     <input type="text" class="lastNameInput" id="lastNameInput" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('lastNameInput')" value="" />
                 </div >
                 <div class="modifyMemberBox">
                     <label for="lastNameInput">名：</label>
-                    <input type="text" class="firstNameInput" id="firstNameInput" autocomplete="off" oninput="NoSpaceKey('firstNameInput')" value=""/>                  
+                    <input type="text" class="firstNameInput" id="firstNameInput" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('firstNameInput')" value=""/>                  
                 </div>
                 <div class="modifyGender">                
                     <label class="modifyGenderTitle">性別：</label>
@@ -415,19 +415,19 @@
                 </div>               
                 <div class="modifyMemberBox">
                     <label for="modifyMail">E-mail：</label>                   
-                    <input type="text" class="modifyMail" id="modifyMail" autocomplete="off" oninput="NoSpaceKey('modifyMail')" value=""/>                  
+                    <input type="text" class="modifyMail" id="modifyMail" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('modifyMail')" value=""/>                  
                 </div>                
                 <div class="modifyMemberBox">
                     <label for="modifyAddress">住址：</label>                   
-                    <input type="text" class="modifyAddress" id="modifyAddress" autocomplete="off" oninput="NoSpaceKey('modifyAddress')" value=""/>
+                    <input type="text" class="modifyAddress" id="modifyAddress" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('modifyAddress')" value=""/>
                 </div>
                 <div class="modifyMemberBox">
                     <label for="modifyPoints">點數：</label>
-                    <input type="text" class="modifyPoints" id="modifyPoints" autocomplete="off" oninput="NoSpaceKey('modifyPoints')" value=""/>
+                    <input type="text" class="modifyPoints" id="modifyPoints" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('modifyPoints')" value=""/>
                 </div>
                 <div class="modifyMemberBox">
                     <label for="modifyLevel">等級：</label>
-                    <input type="text" class="modifyLevel" id="modifyLevel" autocomplete="off" oninput="NoSpaceKey('modifyLevel')" value=""/>
+                    <input type="text" class="modifyLevel" id="modifyLevel" autocomplete="off" oninput="NoSpaceNoSmallerthanKey('modifyLevel')" value=""/>
                 </div>
             </div>
             <div class="btnModifyBlock">

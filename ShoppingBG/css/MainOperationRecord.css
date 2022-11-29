@@ -10,6 +10,10 @@
     width: 90px;
 }
 
+.beforeAndAfterColumn {
+    text-align: left;
+}
+
 .createTimeForRecord {
     width: 120px;
 }

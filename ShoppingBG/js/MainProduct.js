@@ -383,3 +383,11 @@ function PrintProductTable(jsonResult) {
     $('#allProductList').append(tableRow);
     $('#allProductList').show();
 }
+
+//不能輸入<
+function NoSmallerthanKey(inputName) {
+    var id = '#' + inputName;
+    var inputText = $(id).val();
+    inputText = inputText.replace(/[<]/, '');
+    $(id).val(inputText);
+}

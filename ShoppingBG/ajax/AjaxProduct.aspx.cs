@@ -19,7 +19,6 @@ namespace ShoppingBG.ajax
 {
     public partial class AjaxProduct : DutyAuthority
     {
-        public static JObject oldProductInfo = new JObject();
         public enum ProductMsg
         {
             /// <summary>
@@ -97,7 +96,7 @@ namespace ShoppingBG.ajax
                     break;
 
                 case "ModifyProduct":
-                    ModifyProduct();
+                    ModifyProduct(GetSearchProductById());
                     break;
             }
         }
@@ -449,7 +448,7 @@ namespace ShoppingBG.ajax
         /// <summary>
         /// 產品修改視窗中用來搜尋選中產品的資料
         /// </summary>
-        protected void GetSearchProductById() {
+        protected JObject GetSearchProductById() {
             ProductMsg msgValue = ProductMsg.WrongConnection;
             int apiProductId = 0;
             bool idIsConvToInt = int.TryParse(Request.Form["getProductId"], out apiProductId);
@@ -494,7 +493,7 @@ namespace ShoppingBG.ajax
                     ///讀取產品表格
                     dt = ds.Tables[1];
                     List<ProductInfo> productInfoArray = new List<ProductInfo>();
-                    JObject productData = new JObject();
+                    JObject oldProductInfo = new JObject();
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         DataRow row = dt.Rows[i];
@@ -510,22 +509,23 @@ namespace ShoppingBG.ajax
                             ProductTypeName = row.ItemArray[7].ToString()
                         };
                         productInfoArray.Add(productInfo);
-                        productData.Add("productPic", row.ItemArray[1].ToString());
-                        productData.Add("productTitle", row.ItemArray[2].ToString());
-                        productData.Add("productUnitPrice", Convert.ToInt32(row.ItemArray[3]));
-                        productData.Add("productQtn", Convert.ToInt16(row.ItemArray[4]));
-                        productData.Add("productDetail", row.ItemArray[6].ToString());
-                        productData.Add("productTypeName", row.ItemArray[7].ToString());
+                        oldProductInfo.Add("productPic", row.ItemArray[1].ToString());
+                        oldProductInfo.Add("productTitle", row.ItemArray[2].ToString());
+                        oldProductInfo.Add("productUnitPrice", Convert.ToInt32(row.ItemArray[3]));
+                        oldProductInfo.Add("productQtn", Convert.ToInt16(row.ItemArray[4]));
+                        oldProductInfo.Add("productDetail", row.ItemArray[6].ToString());
+                        oldProductInfo.Add("productTypeName", row.ItemArray[7].ToString());
                     }
                     productTypeCombo.ProductTypeArray = productTypeArray;
                     productTypeCombo.ProductInfoArray = productInfoArray;
-                    oldProductInfo = productData;
                     Response.Write(JsonConvert.SerializeObject(productTypeCombo));
+                    return oldProductInfo;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     Bglogger(ex.Message);
+                    return (JObject)false;
                 }
                 finally
                 {
@@ -533,13 +533,13 @@ namespace ShoppingBG.ajax
                     conn.Dispose();
                 }
             }
-
+            return (JObject)false;
         }
 
         /// <summary>
         /// 將產品修改資料存入DB
         /// </summary>
-        protected void ModifyProduct() {
+        protected void ModifyProduct(JObject oldProductInfo) {
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             ProductMsg msgValue = ProductMsg.WrongConnection;
             string productId = Request.Form["getProductId"];
@@ -555,7 +555,6 @@ namespace ShoppingBG.ajax
             int apiProductTypeId = 0;
             bool typeIdIsConvToInt = int.TryParse(Request.Form["getProType"], out apiProductTypeId);
             string apiProductDetail = Request.Form["getProductDetail"].ToString();
-
 
             ///空字串驗証
             if (string.IsNullOrEmpty(apiProductTitle) || string.IsNullOrEmpty(proTypeName) ||
@@ -596,41 +595,13 @@ namespace ShoppingBG.ajax
             }
             else
             {
-                JObject newproductInfo = new JObject();
-                JObject afterObj = new JObject();
-                JObject beforeObj = new JObject();
-                newproductInfo.Add("productPic", apiProductPicPath);
-                newproductInfo.Add("productTitle", apiProductTitle);
-                newproductInfo.Add("productUnitPrice", apiUnitPrice);
-                newproductInfo.Add("productQtn", apiInventoryQtn);
-                newproductInfo.Add("productDetail", apiProductDetail);
-                newproductInfo.Add("productTypeName", proTypeName);
-                IEnumerator<KeyValuePair<String, JToken>> oldObjEnum = oldProductInfo.GetEnumerator();
-                IEnumerator<KeyValuePair<String, JToken>> newObjEnum = newproductInfo.GetEnumerator();
-
-                while (oldObjEnum.MoveNext())
-                {
-                    KeyValuePair<String, JToken> pair = oldObjEnum.Current;
-                    JToken jt;
-
-                    if (newproductInfo.TryGetValue(pair.Key, out jt))
-                    {
-                        JTokenEqualityComparer cmp = new JTokenEqualityComparer();
-                        JToken oldItem = oldProductInfo.GetValue(pair.Key);
-                        JToken newItem = newproductInfo.GetValue(pair.Key);
-
-                        if (cmp.GetHashCode(oldItem) != cmp.GetHashCode(newItem))
-                        {
-                            afterObj.Add(pair.Key, newItem);
-                            beforeObj.Add(pair.Key, oldItem);
-                        }
-                    }
-                }
-
-                Debug.WriteLine("old = " + oldProductInfo);
-                Debug.WriteLine("new = " + newproductInfo);
-                Debug.WriteLine("result = " + afterObj);
-                Debug.WriteLine("result = " + beforeObj);
+                JObject newProductInfo = new JObject();                
+                newProductInfo.Add("productPic", apiProductPicPath);
+                newProductInfo.Add("productTitle", apiProductTitle);
+                newProductInfo.Add("productUnitPrice", apiUnitPrice);
+                newProductInfo.Add("productQtn", apiInventoryQtn);
+                newProductInfo.Add("productDetail", apiProductDetail);
+                newProductInfo.Add("productTypeName", proTypeName);           
 
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
@@ -648,9 +619,10 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@qtn", apiInventoryQtn));
                     cmd.Parameters.Add(new SqlParameter("@productTypeId", apiProductTypeId));
                     cmd.Parameters.Add(new SqlParameter("@detail", apiProductDetail));
-                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject( beforeObj)));
-                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(afterObj)));
+                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(oldProductInfo)));
+                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(newProductInfo)));
                     SqlDataReader reader = cmd.ExecuteReader();
+                    Response.Clear();
 
                     //判斷是否有此人員帳號存在
                     if (reader.HasRows)
