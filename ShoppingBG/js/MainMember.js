@@ -124,7 +124,7 @@ function ModifyMemberBlock(memberId) {
                     //for ModifyMember()裡的變數MemberInfo
                     dataId = memberId;                  
                     //顯示跟選擇列資料一樣的資料
-                    $('#idNoShown').text(jsonResult.idNumber.toUpperCase());
+                    $('#idNoShown').text(jsonResult.idNo.toUpperCase());
                     $('#lastNameInput').val(jsonResult.lastName);
                     $('#firstNameInput').val(jsonResult.firstName);
                     $('#modifyPhone').val(jsonResult.tel);
@@ -168,6 +168,7 @@ function CancelMemberModifyBlock() {
 
 //會員修改資料儲存到DB
 function ModifyMember() {
+    var idNo = $('#idNoShown').text();
     var tel = $('#modifyPhone').val();
     var lastname = $('#lastNameInput').val();
     var firstname = $('#firstNameInput').val();
@@ -185,7 +186,7 @@ function ModifyMember() {
     var level = $('#modifyLevel').val();
     var points = $('#modifyPoints').val();
 
-    if (!tel || !pwd || !lastname || !firstname || !mail ||
+    if (!idNo || !tel || !pwd || !lastname || !firstname || !mail ||
         !birth || !gender || !level || !points) {
         alert('有輸入框未填');  
     } else if (tel.length != 10) {
@@ -204,6 +205,7 @@ function ModifyMember() {
             type: 'POST',
             data: {
                 getId: dataId,
+                getIdNo: idNo,
                 getTel: tel,
                 getPwd: pwd,
                 getGender: Number(gender),

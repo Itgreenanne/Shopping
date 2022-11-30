@@ -373,8 +373,8 @@ function PrintProductTable(jsonResult) {
             '<td class="unitPrice">' + jsonResult[i].ProductUnitPrice + '</td>' +
             '<td class="productQtn">' + jsonResult[i].ProductQtn + '</td>' +
             '<td class="productType">' + jsonResult[i].ProductTypeName + '</td>' +
-            '<td style="text-align: left;">' + jsonResult[i].ProductDetail + '</td>' +
-            '<td> <button onclick="DeleteProduct(\'' + jsonResult[i].ProductId + '\')">' +
+            '<td class="productDetail">' + jsonResult[i].ProductDetail + '</td>' +
+            '<td class="productOperation"> <button onclick="DeleteProduct(\'' + jsonResult[i].ProductId + '\')">' +
             '刪除' + '</button>' + ' ' +
             '<button onclick="ModifyProductBlock(\'' + jsonResult[i].ProductId + '\')">修改</button></td>' +
             '</tr>';

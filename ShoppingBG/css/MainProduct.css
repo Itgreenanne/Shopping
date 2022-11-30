@@ -166,6 +166,14 @@ th {
     width: 100px;
 }
 
+.productDetail {
+    text-align: left;
+}
+
+.productOperation {
+    width: 98px;
+}
+
 .productTable tr:nth-child(even) {
     background: #FFF;
 }

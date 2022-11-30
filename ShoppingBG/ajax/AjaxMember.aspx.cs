@@ -127,7 +127,7 @@ namespace ShoppingBG.ajax
                     while (reader.Read())
                     {
                         memberInfo.Add("memberId", Convert.ToInt32(reader["f_id"]));
-                        memberInfo.Add("idNumber", reader["f_idNumber"].ToString());
+                        memberInfo.Add("idNo", reader["f_idNumber"].ToString());
                         memberInfo.Add("lastName", reader["f_lastname"].ToString());
                         memberInfo.Add("firstName", reader["f_firstname"].ToString());
                         memberInfo.Add("gender", Convert.ToInt16(reader["f_gender"]));
@@ -300,6 +300,7 @@ namespace ShoppingBG.ajax
         {
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WrongConnection;
+            string idNo = Request.Form["getIdNo"];
             string tel = Request.Form["getTel"];
             string pwd = Request.Form["getPwd"];
             string lastName = Request.Form["getLastName"];
@@ -317,7 +318,7 @@ namespace ShoppingBG.ajax
             bool pointsIsConvToInt = int.TryParse(Request.Form["getPoints"], out apiPoints);
 
             //空字串驗証
-            if (string.IsNullOrEmpty(tel) || string.IsNullOrEmpty(pwd) || string.IsNullOrEmpty(lastName) || 
+            if (string.IsNullOrEmpty(idNo) || string.IsNullOrEmpty(tel) || string.IsNullOrEmpty(pwd) || string.IsNullOrEmpty(lastName) || 
                 string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(birth) || string.IsNullOrEmpty(mail))
             {
                 msgValue = MsgType.NullEmptyInput;
@@ -353,7 +354,7 @@ namespace ShoppingBG.ajax
                 JObject oldMemberInfo = new JObject();
                 oldMemberInfo = GetData(apiId);
                 JObject newMemberInfo = new JObject();
-                
+                newMemberInfo.Add("idNo", idNo);
                 newMemberInfo.Add("tel", tel);
                 newMemberInfo.Add("pwd", pwd);
                 newMemberInfo.Add("lastName", lastName);

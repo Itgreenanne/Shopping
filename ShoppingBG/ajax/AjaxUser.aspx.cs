@@ -97,7 +97,7 @@ namespace ShoppingBG.ajax
                     break;
 
                 case "ModifyUser":
-                    ModifyUser(GetSearchUserById());
+                    ModifyUser();
                     break;
             }
         }
@@ -434,7 +434,7 @@ namespace ShoppingBG.ajax
         /// <summary>
         /// 人員修改視窗中用來搜尋選中人員的資料
         /// </summary>
-        private JObject GetSearchUserById()
+        private void GetSearchUserById()
         {
             MsgType msgValue = MsgType.WrongConnection;
             int apiUserId = 0;
@@ -480,7 +480,6 @@ namespace ShoppingBG.ajax
                     ///讀取人員表格
                     dt = ds.Tables[1];
                     List<UserDataArray> userArray = new List<UserDataArray>();
-                    JObject userInfo = new JObject();
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         DataRow row = dt.Rows[i];
@@ -494,20 +493,15 @@ namespace ShoppingBG.ajax
                             DutyName = row.ItemArray[5].ToString()
                         }; userArray.Add(userdata);
 
-                        userInfo.Add("userNickname", row.ItemArray[2].ToString());
-                        userInfo.Add("userPwd", row.ItemArray[3].ToString());
-                        userInfo.Add("dutyName", row.ItemArray[5].ToString());
                     }
                     userDutyCombo.UserDataArray = userArray;
                     userDutyCombo.DutyInfoArray = dutyArray;
                     Response.Write(JsonConvert.SerializeObject(userDutyCombo));
-                    return userInfo;
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     Bglogger(ex.Message);
-                    return (JObject)false;
                 }
                 finally
                 {
@@ -515,13 +509,12 @@ namespace ShoppingBG.ajax
                     conn.Dispose();
                 }
             }
-            return (JObject)false;
         }
 
         /// <summary>
         /// 將人員修改資料存入DB
         /// </summary>
-        private void ModifyUser(JObject oldUserInfo)
+        private void ModifyUser()
         {
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             MsgType msgValue = MsgType.WrongConnection;
@@ -561,12 +554,6 @@ namespace ShoppingBG.ajax
             }
             else
             {
-                JObject newUserInfo = new JObject();
-              
-                newUserInfo.Add("userNickname", apiNickname);
-                newUserInfo.Add("userPwd", apiUserPwd);
-                newUserInfo.Add("dutyName", apiDutyName);             
-
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
                 SqlCommand cmd = new SqlCommand("pro_shoppingBG_modifyUser", conn);
@@ -579,13 +566,9 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@userId", apiUserId));
                     cmd.Parameters.Add(new SqlParameter("@userNickname", apiNickname));
                     cmd.Parameters.Add(new SqlParameter("@userPwd", apiUserPwd));
-                    cmd.Parameters.Add(new SqlParameter("@dutyTypeId", apiUserDutyId));
-                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(oldUserInfo)));
-                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(newUserInfo)));
+                    cmd.Parameters.Add(new SqlParameter("@dutyTypeId", apiUserDutyId));                   
                     SqlDataReader reader = cmd.ExecuteReader();
-                    Response.Clear();
 
-                    //判斷是否有此人員帳號存在
                     if (reader.HasRows)
                     {
                         while (reader.Read())

@@ -96,7 +96,7 @@ namespace ShoppingBG.ajax
                     break;
 
                 case "ModifyProduct":
-                    ModifyProduct(GetSearchProductById());
+                    ModifyProduct();
                     break;
             }
         }
@@ -448,7 +448,7 @@ namespace ShoppingBG.ajax
         /// <summary>
         /// 產品修改視窗中用來搜尋選中產品的資料
         /// </summary>
-        protected JObject GetSearchProductById() {
+        protected void GetSearchProductById() {
             ProductMsg msgValue = ProductMsg.WrongConnection;
             int apiProductId = 0;
             bool idIsConvToInt = int.TryParse(Request.Form["getProductId"], out apiProductId);
@@ -493,7 +493,6 @@ namespace ShoppingBG.ajax
                     ///讀取產品表格
                     dt = ds.Tables[1];
                     List<ProductInfo> productInfoArray = new List<ProductInfo>();
-                    JObject oldProductInfo = new JObject();
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         DataRow row = dt.Rows[i];
@@ -509,23 +508,15 @@ namespace ShoppingBG.ajax
                             ProductTypeName = row.ItemArray[7].ToString()
                         };
                         productInfoArray.Add(productInfo);
-                        oldProductInfo.Add("productPic", row.ItemArray[1].ToString());
-                        oldProductInfo.Add("productTitle", row.ItemArray[2].ToString());
-                        oldProductInfo.Add("productUnitPrice", Convert.ToInt32(row.ItemArray[3]));
-                        oldProductInfo.Add("productQtn", Convert.ToInt16(row.ItemArray[4]));
-                        oldProductInfo.Add("productDetail", row.ItemArray[6].ToString());
-                        oldProductInfo.Add("productTypeName", row.ItemArray[7].ToString());
                     }
                     productTypeCombo.ProductTypeArray = productTypeArray;
                     productTypeCombo.ProductInfoArray = productInfoArray;
-                    Response.Write(JsonConvert.SerializeObject(productTypeCombo));
-                    return oldProductInfo;
+                    Response.Write(JsonConvert.SerializeObject(productTypeCombo));                 
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     Bglogger(ex.Message);
-                    return (JObject)false;
                 }
                 finally
                 {
@@ -533,13 +524,12 @@ namespace ShoppingBG.ajax
                     conn.Dispose();
                 }
             }
-            return (JObject)false;
         }
 
         /// <summary>
         /// 將產品修改資料存入DB
         /// </summary>
-        protected void ModifyProduct(JObject oldProductInfo) {
+        protected void ModifyProduct() {
             UserInfo userInfo = Session["userInfo"] != null ? (UserInfo)Session["userInfo"] : null;
             ProductMsg msgValue = ProductMsg.WrongConnection;
             string productId = Request.Form["getProductId"];
@@ -595,14 +585,6 @@ namespace ShoppingBG.ajax
             }
             else
             {
-                JObject newProductInfo = new JObject();                
-                newProductInfo.Add("productPic", apiProductPicPath);
-                newProductInfo.Add("productTitle", apiProductTitle);
-                newProductInfo.Add("productUnitPrice", apiUnitPrice);
-                newProductInfo.Add("productQtn", apiInventoryQtn);
-                newProductInfo.Add("productDetail", apiProductDetail);
-                newProductInfo.Add("productTypeName", proTypeName);           
-
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
                 SqlCommand cmd = new SqlCommand("pro_shoppingBG_modifyProduct", conn);
@@ -618,13 +600,9 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@unitPrice", apiUnitPrice));
                     cmd.Parameters.Add(new SqlParameter("@qtn", apiInventoryQtn));
                     cmd.Parameters.Add(new SqlParameter("@productTypeId", apiProductTypeId));
-                    cmd.Parameters.Add(new SqlParameter("@detail", apiProductDetail));
-                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(oldProductInfo)));
-                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(newProductInfo)));
+                    cmd.Parameters.Add(new SqlParameter("@detail", apiProductDetail));                   
                     SqlDataReader reader = cmd.ExecuteReader();
-                    Response.Clear();
 
-                    //判斷是否有此人員帳號存在
                     if (reader.HasRows)
                     {
                         while (reader.Read())

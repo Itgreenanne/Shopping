@@ -356,13 +356,13 @@ function PrintDutyTable(jsonResult) {
        
         tableRow +=
             '<tr>' +
-            '<td>' + getMark(jsonResult[i], 'dutyName') + '</td>' +
-            '<td>' + getMark(jsonResult[i], 'mangDuty') + '</td>' +
-            '<td>' + getMark(jsonResult[i], 'mangUser') + '</td>' +
-            '<td>' + getMark(jsonResult[i], 'mangProType') + '</td>' +
-            '<td>' + getMark(jsonResult[i], 'mangProduct') + '</td>' +
-            '<td>' + getMark(jsonResult[i], 'mangOrder') + '</td>' +
-            '<td>' + getMark(jsonResult[i], 'mangRecord') + '</td>' +
+            '<td>' + GetMark(jsonResult[i], 'dutyName') + '</td>' +
+            '<td>' + GetMark(jsonResult[i], 'mangDuty') + '</td>' +
+            '<td>' + GetMark(jsonResult[i], 'mangUser') + '</td>' +
+            '<td>' + GetMark(jsonResult[i], 'mangProType') + '</td>' +
+            '<td>' + GetMark(jsonResult[i], 'mangProduct') + '</td>' +
+            '<td>' + GetMark(jsonResult[i], 'mangOrder') + '</td>' +
+            '<td>' + GetMark(jsonResult[i], 'mangRecord') + '</td>' +
             '<td class="operationCol"> <button onclick="DeleteDuty(\'' + jsonResult[i].dutyId + '\')">' +
             '刪除' + '</button>' + ' ' +
             '<button onclick="ModifyDutyReadFront(\'' + jsonResult[i].dutyId + '\')">' + '修改(前)' + '</button>' + ' ' +
@@ -375,7 +375,7 @@ function PrintDutyTable(jsonResult) {
 }
 
 //將chkbox的0與1轉換成''與V
-function getMark(jsonData, key) {
+function GetMark(jsonData, key) {
     if (jsonData[key] === 0) {
         return '';
     } else if (jsonData[key] === 1) {
