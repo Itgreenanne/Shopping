@@ -354,6 +354,7 @@ namespace ShoppingBG.ajax
                 JObject oldMemberInfo = new JObject();
                 oldMemberInfo = GetData(apiId);
                 JObject newMemberInfo = new JObject();
+                newMemberInfo.Add("memberId", apiId);
                 newMemberInfo.Add("idNo", idNo);
                 newMemberInfo.Add("tel", tel);
                 newMemberInfo.Add("pwd", pwd);
@@ -365,6 +366,14 @@ namespace ShoppingBG.ajax
                 newMemberInfo.Add("address", address);
                 newMemberInfo.Add("points", apiPoints);
                 newMemberInfo.Add("level", apiLevel);
+                JProperty[] oldInfo = oldMemberInfo.Properties().ToArray<JProperty>();
+                JProperty[] newInfo = newMemberInfo.Properties().ToArray<JProperty>();
+                Dictionary<string, string> oldPair = oldInfo.ToDictionary(p => p.Name, p => p.Value.ToString());
+                Dictionary<string, string> newPair = newInfo.ToDictionary(p => p.Name, p => p.Value.ToString());
+                Dictionary<string, string> before = oldPair.Where(p => p.Value != newPair[p.Key].ToString()).ToDictionary(p => p.Key, p => p.Value);
+                Dictionary<string, string> after = newPair.Where(p => p.Value != oldPair[p.Key].ToString()).ToDictionary(p => p.Key, p => p.Value);
+
+
 
                 string strConnString = WebConfigurationManager.ConnectionStrings["shoppingBG"].ConnectionString;
                 SqlConnection conn = new SqlConnection(strConnString);
@@ -386,8 +395,8 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@address", address));
                     cmd.Parameters.Add(new SqlParameter("@level", apiLevel));
                     cmd.Parameters.Add(new SqlParameter("@points", apiPoints));
-                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(oldMemberInfo)));
-                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(newMemberInfo)));
+                    cmd.Parameters.Add(new SqlParameter("@before", JsonConvert.SerializeObject(before)));
+                    cmd.Parameters.Add(new SqlParameter("@after", JsonConvert.SerializeObject(after)));
                     SqlDataReader reader = cmd.ExecuteReader();
                     Response.Clear();
 

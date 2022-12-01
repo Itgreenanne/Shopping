@@ -42,5 +42,8 @@ namespace ShoppingBG.models
         /// 操作紀錄管理
         /// </summary>
         public int mangRecord { get; set; }
+
+
+
     }
 }

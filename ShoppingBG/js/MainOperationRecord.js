@@ -1,4 +1,4 @@
-﻿//搜尋全部操作紀錄
+﻿//讀取所有操作紀錄資料
 function GetSearchAllOperationRecord() { 
         $.ajax({
             url: '/ajax/AjaxOperationRecord.aspx?fn=GetSearchAllOperationRecord',
@@ -124,7 +124,6 @@ function GetSearchOperationRecordByFunction() {
     }
 }
 
-
 //清除輸入日期框及表格
 function ClearRecord() {
     $('#startDateForRecord').val('');
@@ -135,7 +134,6 @@ function ClearRecord() {
 
 //列印起迄日期間操作紀錄的表格
 function PrintOperationRecord(jsonResult) {
-    console.log(jsonResult);
     $('#operationRecordList').html('');
     var typeArr = ['', '職責', '人員', '產品', '會員', '訂單'];
     var functionType = ['', '新增', '刪除', '修改'];
@@ -150,15 +148,17 @@ function PrintOperationRecord(jsonResult) {
         '</tr>';
 
     for (var i = 0; i < jsonResult.length; i++) {
-             
-        var operationDetail = DataConversionList(jsonResult[i].function, jsonResult[i].type, jsonResult[i].before, jsonResult[i].after);
+
+        //接收資料解析完後的函數，此變數代表'修改'資料解析完後的before跟after資料，新增跟刪除只有after欄位資料
+        var beforeAndAfterDataColumn = DataConversionList(jsonResult[i].function, jsonResult[i].type, jsonResult[i].before,
+            jsonResult[i].after);
 
         tableRow +=
             '<tr>' +
             '<td class="dataIdColumn">' + jsonResult[i].userAccount + '</td>' +
             '<td class="typeColumn">' + (typeArr[(jsonResult[i].type)]) + '</td>' +
             '<td class="functionColumn">' + (functionType[(jsonResult[i].function)]) + '</td>' +
-            operationDetail +
+            beforeAndAfterDataColumn +
             '<td class="createTimeForRecord">' + jsonResult[i].createTime + '</td>' +
             '</tr>';    
     }
@@ -168,9 +168,10 @@ function PrintOperationRecord(jsonResult) {
 }
 
 //資料種類轉換函式的選單
-//functionIndex=3為修改，其餘新增刪除function=1和=2 則共用資料解析函式
+//functionIndex=3為修改，其餘新增刪除functionIndex=1和=2 則共用資料解析函式
 // 1: 職責，2: 人員，3: 產品，4: 會員
 function DataConversionList(functionIndex, dataTypeIndex, beforeObj, afterObj) {
+    //修改資料的選項
     if (functionIndex == 3)
     {
         switch (dataTypeIndex) {
@@ -187,11 +188,13 @@ function DataConversionList(functionIndex, dataTypeIndex, beforeObj, afterObj) {
                 return MemberDataParsedForModify(beforeObj, afterObj);
                 break;
         }
-    } else
+    }
+    //新增與刪除資料
+    else
     {
         switch (dataTypeIndex) {
             case 1:
-                return DutyDataParsedForAddAndDelete(afterObj);
+                return DutyDataParsedForAddAndDelete(beforeObj, afterObj);
                 break;
             case 2:
                 return UserDataParsedForAddAndDelete(afterObj);
@@ -206,123 +209,170 @@ function DataConversionList(functionIndex, dataTypeIndex, beforeObj, afterObj) {
     }
 }
 
-//職責修改前後欄位內容轉為中文，chk box的0與1改為'無'與'有'，並在有差異的資料以紅色字顯示
+//職責修改前後欄位內容轉為中文，chk box的0與1改為'無'與'有'，
+//並在有差異的資料以紅色字顯示，並以html元素顯示
 function DutyDataParsedForModify(beforeObj, afterObj) {
+    console.log(beforeObj);
+    console.log(afterObj);
     var jsonBeforeObj = JSON.parse(beforeObj);
     var jsonAfterObj = JSON.parse(afterObj);
-    var keyMap = KeyMapping(1);
+    //到KeyMapping函式取得中文的欄位名，1: 職責，2: 人員，3: 產品，4: 會員
+    //var keyMap = KeyMapping(1);
 
-    var dataRow = '<td class="beforeAndAfterColumn">';
     //將before跟 after 的key跟chk的value改為中文
     for (var key in jsonBeforeObj, jsonAfterObj)
     {
-        var newKey = keyMap[key];
-        //將欄位名稱根據KeyMapping匹配後改為中文 並將有英文名稱的舊欄位刪除
-        if (newKey) {
-            jsonBeforeObj[newKey] = jsonBeforeObj[key];
-            jsonAfterObj[newKey] = jsonAfterObj[key];
-            delete jsonBeforeObj[key];
-            delete jsonAfterObj[key];
-        }
-
         //將before跟 after 的chk box value改為中文
-        jsonBeforeObj[newKey] = GetMarkInChinese(jsonBeforeObj[newKey]);
-        jsonAfterObj[newKey] = GetMarkInChinese(jsonAfterObj[newKey]);        
-
-        //將before欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色       
-        dataRow += CompareAndColorData(newKey, jsonAfterObj[newKey], jsonBeforeObj[newKey]);
+        jsonBeforeObj[key] = GetMarkInChinese(jsonBeforeObj[key]);
+        jsonAfterObj[key] = GetMarkInChinese(jsonAfterObj[key]);           
     }
 
-    dataRow += '</td><td class="beforeAndAfterColumn">';
-
-     //將after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
-    for (var newKey in jsonBeforeObj, jsonAfterObj)
-    {
-        dataRow += CompareAndColorData(newKey, jsonBeforeObj[newKey], jsonAfterObj[newKey]);
-    }
-
-    dataRow += '</td>';
+    dataRow = OperationDetailTableData(1, jsonBeforeObj, jsonAfterObj);
     return dataRow;
 }
+
+//將before與after的資料以html元素顯示，只有function是修改才會用到此函式
+function OperationDetailTableData(dataType, obj1, obj2) {
+    //到KeyMapping函式取得中文的欄位名，1: 職責，2: 人員，3: 產品，4: 會員
+    var keyMap = KeyMapping(dataType);
+    console.log(obj1);
+    console.log(obj2);
+   
+
+    //判斷obj1或obj2是否為空字串 如果是的話 就不要跑進去回圈
+    if (obj1) {
+        var before = '';
+        var obj = obj1;
+        for (var key in obj) {
+            console.log(obj[key]);
+            var newKey = keyMap[key];
+
+            if (newKey) {
+                obj[newKey] = obj[key];
+            }
+            if (obj2) {
+                if (obj[key] != obj2[key]) {
+
+                    if (key == 'userPwd') {
+                        obj[newKey] = '*********';
+                    }
+                    before += '<font style="color: red">' + newKey + ': ' + obj[newKey] + '</font></br>';
+
+                } else {
+                    if (key == 'userPwd') {
+                        obj[newKey] = '*********';
+                    }
+                    before += newKey + ': ' + obj[newKey] + '</br>';
+                }
+            } else {
+                after = '';
+                if (key == 'userPwd') {
+                    obj[newKey] = '*********';
+                }
+                before += newKey + ': ' + obj[newKey] + '</br>';
+            }
+        }        
+    }
+    if (obj2) {
+        var after = '';
+        var obj = obj2;
+        for (var key in obj) {
+
+            var newKey = keyMap[key];
+
+            if (newKey) {
+                obj[newKey] = obj[key];
+            }
+            if (obj1) {
+                if (obj[key] != obj1[key]) {
+
+                    if (key == 'userPwd') {
+                        obj[newKey] = '*********';
+                    }
+                    after += '<font style="color: red">' + newKey + ': ' + obj[newKey] + '</font></br>';
+
+                } else {
+                    if (key == 'userPwd') {
+                        obj[newKey] = '*********';
+                    }
+                    after += newKey + ': ' + obj[newKey] + '</br>';
+                }
+            } else {
+                before = '';
+                if (key == 'userPwd') {
+                    obj[newKey] = '*********';
+                }
+                after += newKey + ': ' + obj[newKey] + '</br>';
+            }
+        }
+    }
+
+    return '<td>' + before + '</td><td>' + after + '</td>';
+}
+
+
 
 //職責新增與刪改後欄位內容轉為中文，chk box的true與false改為'無'與'有'
-function DutyDataParsedForAddAndDelete(afterObj) {
-    var jsonAfterObj = JSON.parse(afterObj);
-    var keyMap = KeyMapping(1);
-    var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
-
-    //將before跟 after 的key跟chk的value改為中文
-    for (var key in jsonAfterObj) {
-        var newKey = keyMap[key];
-        //將欄位名稱根據上面陣列匹配後改為中文
-        if (newKey) {
-            jsonAfterObj[newKey] = jsonAfterObj[key];
-            delete jsonAfterObj[key];
+function DutyDataParsedForAddAndDelete(beforeObj, afterObj) {
+    if (beforeObj) {
+        var jsonBeforeObj = JSON.parse(beforeObj);
+        for (var key in jsonBeforeObj) {
+            //將before 的chk box value改為中文
+            jsonBeforeObj[key] = GetMarkInChinese(jsonBeforeObj[key]);
         }
-
-        //將before跟 after 的chk box value改為中文
-        jsonAfterObj[newKey] = GetMarkInChinese(jsonAfterObj[newKey]);
-        dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
-    }  
-
-    dataRow += '</td>';
+    }
+    if (afterObj) {
+        var jsonAfterObj = JSON.parse(afterObj);
+        for (var key in jsonAfterObj) {
+            //將after 的chk box value改為中文
+            jsonAfterObj[key] = GetMarkInChinese(jsonAfterObj[key]);
+        }
+    }    
+    dataRow = OperationDetailTableData(1, jsonBeforeObj, jsonAfterObj);
     return dataRow;
 }
 
+
+////職責新增與刪改後欄位內容轉為中文，chk box的true與false改為'無'與'有'
+//function DutyDataParsedForAddAndDelete(afterObj) {
+//    var jsonAfterObj = JSON.parse(afterObj);
+//    //到KeyMapping函式取得中文的欄位名，1: 職責，2: 人員，3: 產品，4: 會員
+//    var keyMap = KeyMapping(1);
+//    var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
+
+//    //將before跟 after 的key跟chk的value改為中文
+//    for (var key in jsonAfterObj) {
+//        var newKey = keyMap[key];
+//        //將欄位名稱根據上面陣列匹配後改為中文
+//        if (newKey) {
+//            jsonAfterObj[newKey] = jsonAfterObj[key];
+//            delete jsonAfterObj[key];
+//        }
+
+//        //將before跟 after 的chk box value改為中文
+//        jsonAfterObj[newKey] = GetMarkInChinese(jsonAfterObj[newKey]);
+//        dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
+//    }  
+
+//    dataRow += '</td>';
+//    return dataRow;
+//}
+
 //將人員資料輸出改為中文，並在有差異的資料以紅色字顯示
+//並以html元素顯示
 function UserDataParsedForModify(beforeObj, afterObj) {
     var jsonBeforeObj = JSON.parse(beforeObj);
     var jsonAfterObj = JSON.parse(afterObj);
-    var keyMap = KeyMapping(2);
-    var dataRow = '<td class="beforeAndAfterColumn">';
+    //到KeyMapping函式取得中文的欄位名，1: 職責，2: 人員，3: 產品，4: 會員    
 
-    //將json key改為KeyMapping裡的的中文名稱 並刪除英文名稱的舊欄位
-    for (var key in jsonBeforeObj, jsonAfterObj)
-    {
-        var newKey = keyMap[key];
-
-        //將欄位名稱根據上面陣列匹配後改為中文
-        if (newKey) {
-            jsonBeforeObj[newKey] = jsonBeforeObj[key];
-            jsonAfterObj[newKey] = jsonAfterObj[key];
-            delete jsonBeforeObj[key];
-            delete jsonAfterObj[key];
-        }
-
-        if (jsonBeforeObj[newKey] != jsonAfterObj[newKey]) {
-            if (newKey == '人員密碼') {
-                jsonBeforeObj[newKey] = '****';
-            }
-            dataRow += '<font style="color: red">' + newKey + ': ' + jsonBeforeObj[newKey] + '</font></br>';
-
-        } else {
-            dataRow += newKey + ': ' + jsonBeforeObj[newKey] + '</br>';
-        }
-    }
-
-    dataRow += '</td><td class="beforeAndAfterColumn">';
-
-    //將after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
-    for (var newKey in jsonBeforeObj, jsonAfterObj) {
-    
-        if (jsonBeforeObj[newKey] != jsonAfterObj[newKey]) {
-            if (newKey == '人員密碼') {
-                jsonAfterObj[newKey] = '****';
-            }
-            dataRow += '<font style="color: red">' + newKey + ': ' + jsonAfterObj[newKey] + '</font></br>';
-
-        } else {
-            dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
-        }
-    }
-
-    dataRow += '</td>';
+    dataRow = OperationDetailTableData(2, jsonBeforeObj, jsonAfterObj);
     return dataRow;
 }
 
 //人員新增與刪改後欄位內容轉為中文，人員密碼只顯示****
 function UserDataParsedForAddAndDelete(afterObj) {
     var jsonAfterObj = JSON.parse(afterObj);
+    //到KeyMapping函式取得中文的欄位名，1: 職責，2: 人員，3: 產品，4: 會員
     var keyMap = KeyMapping(2);
     var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
 
@@ -336,7 +386,7 @@ function UserDataParsedForAddAndDelete(afterObj) {
         }
 
         if (newKey == '人員密碼') {
-            jsonAfterObj[newKey] = '****';
+            jsonAfterObj[newKey] = '*********';
         }
 
         dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
@@ -346,49 +396,30 @@ function UserDataParsedForAddAndDelete(afterObj) {
     return dataRow;
 }
 
-//將產品資料輸出改為中文
+//將產品修改前後資料輸出轉為中文並以html元素顯示
 function ProductDataParsedForModify(beforeObj, afterObj) {
     var jsonBeforeObj = JSON.parse(beforeObj);
     var jsonAfterObj = JSON.parse(afterObj);
-    var keyMap = KeyMapping(3);
-    var dataRow = '<td class="beforeAndAfterColumn">';
+
 
     //將json key改為上面物件的中文名稱
-    for (var key in jsonBeforeObj, jsonAfterObj) {
-
-        var newKey = keyMap[key];
-
-        if (newKey) {
-            jsonBeforeObj[newKey] = jsonBeforeObj[key];
-            jsonAfterObj[newKey] = jsonAfterObj[key];
-            delete jsonBeforeObj[key];
-            delete jsonAfterObj[key];
-        }
+    for (var key in jsonBeforeObj, jsonAfterObj) {       
 
         //詳情如有換行符號\n 在表格顯示時也執行換行
-        if (newKey == '詳情') {
-            jsonBeforeObj[newKey] = jsonBeforeObj[newKey].replaceAll('\n', '</br>');
-            jsonAfterObj[newKey] = jsonAfterObj[newKey].replaceAll('\n', '</br>');
-        }
-
-        dataRow += CompareAndColorData(newKey, jsonAfterObj[newKey], jsonBeforeObj[newKey]);
+        if (key == 'productDetail') {
+            jsonBeforeObj[key] = jsonBeforeObj[key].replaceAll('\n', '</br>');
+            jsonAfterObj[key] = jsonAfterObj[key].replaceAll('\n', '</br>');
+        }      
     }
 
-    dataRow += '</td><td class="beforeAndAfterColumn">';
-
-    //將after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
-    for (var newKey in jsonBeforeObj, jsonAfterObj) {
-
-        dataRow += CompareAndColorData(newKey, jsonBeforeObj[newKey], jsonAfterObj[newKey]);
-    }
-
-    dataRow += '</td>';
+    dataRow = OperationDetailTableData(3, jsonBeforeObj, jsonAfterObj);
     return dataRow;
 }
 
-//產品新增與刪改後欄位內容轉為中文，人員密碼只顯示****
+//產品新增與刪改後欄位內容轉為中文並以html元素顯示
 function ProductDataParsedForAddAndDelete(afterObj) {
     var jsonAfterObj = JSON.parse(afterObj);
+    //到KeyMapping函式取得中文的欄位名，1: 職責，2: 人員，3: 產品，4: 會員
     var keyMap = KeyMapping(3);
     var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
 
@@ -402,8 +433,8 @@ function ProductDataParsedForAddAndDelete(afterObj) {
         }
 
         //詳情如有換行符號\n 在表格顯示時也執行換行
-        if (newKey == '詳情') {
-            jsonAfterObj[newKey] = jsonAfterObj[newKey].replaceAll('\n', '</br>');
+        if (key == 'productDetail') {
+            jsonAfterObj[key] = jsonAfterObj[key].replaceAll('\n', '</br>');
         }
 
         dataRow += newKey + ': ' + jsonAfterObj[newKey] + '</br>';
@@ -413,17 +444,14 @@ function ProductDataParsedForAddAndDelete(afterObj) {
     return dataRow;
 }
 
-//將會員資料輸出改為中文
+//將會員資料輸出改為中文並以html元素顯示
 function MemberDataParsedForModify(beforeObj, afterObj) {
     var jsonBeforeObj = JSON.parse(beforeObj);
     var jsonAfterObj = JSON.parse(afterObj);
-    var keyMap = KeyMapping(4);
-    var dataRow = '<td class="beforeAndAfterColumn">';
+    //到KeyMapping函式取得中文的欄位名，1: 職責，2: 人員，3: 產品，4: 會員
 
     //將json key改為上面物件的中文名稱
     for (var key in jsonBeforeObj, jsonAfterObj) {
-
-        var newKey = keyMap[key];
 
         //將資料庫會員性別欄位由數字轉中文：1 = M，2 = F，3 = O
         if (key == 'gender')
@@ -431,32 +459,16 @@ function MemberDataParsedForModify(beforeObj, afterObj) {
            jsonBeforeObj[key] = GetGender(jsonBeforeObj[key]);
            jsonAfterObj[key] = GetGender(jsonAfterObj[key]);
         }
-
-        if (newKey) {
-            jsonBeforeObj[newKey] = jsonBeforeObj[key];
-            jsonAfterObj[newKey] = jsonAfterObj[key];
-            delete jsonBeforeObj[key];
-            delete jsonAfterObj[key];
-        }
-
-        dataRow += CompareAndColorData(newKey, jsonAfterObj[newKey], jsonBeforeObj[newKey]);
     }
 
-    dataRow += '</td><td class="beforeAndAfterColumn">';
-
-    //將after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
-    for (var newKey in jsonBeforeObj, jsonAfterObj) {
-
-        dataRow += CompareAndColorData(newKey, jsonBeforeObj[newKey], jsonAfterObj[newKey]);
-    }
-
-    dataRow += '</td>'
+    dataRow = OperationDetailTableData(4, jsonBeforeObj, jsonAfterObj);
     return dataRow;
 }
 
 //會員新增與刪改後欄位內容轉為中文
 function MemberDataParsedForAddAndDelete(afterObj) {
     var jsonAfterObj = JSON.parse(afterObj);
+    //到KeyMapping函式取得中文的欄位名，1: 職責，2: 人員，3: 產品，4: 會員
     var keyMap = KeyMapping(4);
     var dataRow = '<td class="beforeAndAfterColumn"></td><td class="beforeAndAfterColumn">';
 
@@ -481,21 +493,6 @@ function MemberDataParsedForAddAndDelete(afterObj) {
     return dataRow;
 }
 
-//將before跟after欄位有變更的資料文字變紅色，沒變更的資料則還是顯示黑色
-function CompareAndColorData(newKey, obj1, obj2) {
-
-    var dataProcessed;
-    //資料裡有換行符號就換行
-
-    if (obj1 != obj2) {
-        dataProcessed = '<font style="color: red">' + newKey + ': ' + obj2 + '</font></br>';
-
-    } else {
-        dataProcessed = newKey + ': ' + obj2 + '</br>';
-    }
-    return dataProcessed;
-}
-
 //將before跟 after 的chk box value改為中文
 function GetMarkInChinese(obj) {
     if (obj == 0) {
@@ -507,14 +504,12 @@ function GetMarkInChinese(obj) {
     }
 }
 
-
 //將資料的各英文欄位名稱轉為中文欄位名稱的物件
 // 1: 職責，2: 人員，3: 產品，4: 會員
 function KeyMapping(dataType) {
-    var data = {};
     switch (dataType) {
         case 1:            
-            return data = {
+            return {
                 'dutyName': '職責名稱',
                 'mangDuty': '職責管理',
                 'mangUser': '人員管理',
@@ -525,7 +520,7 @@ function KeyMapping(dataType) {
             };
             break;
         case 2:
-            return data = {
+            return {
                 'userAccount': '帳號',
                 'userNickname': '暱稱',
                 'userPwd': '人員密碼',
@@ -533,7 +528,7 @@ function KeyMapping(dataType) {
             };
             break;
         case 3:
-            return data = {
+            return {
                 'productPic': '圖片',
                 'productTitle': '標題',
                 'productUnitPrice': '單價',
@@ -543,7 +538,7 @@ function KeyMapping(dataType) {
             };
             break;
         case 4:
-            return data = {
+            return {
                 'idNo': '身份証字號',
                 'tel': '聯絡電話',
                 'pwd': '密碼',
