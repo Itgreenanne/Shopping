@@ -100,6 +100,7 @@ namespace ShoppingBG.ajax
             bool apiMangUser = Convert.ToBoolean(Request.Form["getMangUser"]);
             bool apiMangProType = Convert.ToBoolean(Request.Form["getMangProType"]);
             bool apiMangProduct = Convert.ToBoolean(Request.Form["getMangProduct"]);
+            bool apiMangMember = Convert.ToBoolean(Request.Form["getMangMember"]);
             bool apiMangOrder = Convert.ToBoolean(Request.Form["getMangOrder"]);
             bool apiMangRecord = Convert.ToBoolean(Request.Form["getMangRecord"]);
 
@@ -137,6 +138,7 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@mangUser", apiMangUser));
                     cmd.Parameters.Add(new SqlParameter("@mangProType", apiMangProType));
                     cmd.Parameters.Add(new SqlParameter("@mangProduct", apiMangProduct));
+                    cmd.Parameters.Add(new SqlParameter("@mangMember", apiMangMember));
                     cmd.Parameters.Add(new SqlParameter("@mangOrder", apiMangOrder));
                     cmd.Parameters.Add(new SqlParameter("@mangRecord", apiMangRecord));
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -285,6 +287,7 @@ namespace ShoppingBG.ajax
                         dutyinfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
                         dutyinfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
                         dutyinfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
+                        dutyinfo.Add("mangMember", Convert.ToInt16(reader["f_manageMember"]));
                         dutyinfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
                         dutyinfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
                         resultArray.Add(dutyinfo);
@@ -343,6 +346,7 @@ namespace ShoppingBG.ajax
                             dutyinfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
                             dutyinfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
                             dutyinfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
+                            dutyinfo.Add("mangMember", Convert.ToInt16(reader["f_manageMember"]));
                             dutyinfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
                             dutyinfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
                             resultArray.Add(dutyinfo);
@@ -419,6 +423,7 @@ namespace ShoppingBG.ajax
                         dutyInfo.Add("mangUser", Convert.ToInt16(reader["f_manageUser"]));
                         dutyInfo.Add("mangProType", Convert.ToInt16(reader["f_manageProductType"]));
                         dutyInfo.Add("mangProduct", Convert.ToInt16(reader["f_manageProduct"]));
+                        dutyInfo.Add("mangMember", Convert.ToInt16(reader["f_manageMember"]));
                         dutyInfo.Add("mangOrder", Convert.ToInt16(reader["f_manageOrder"]));
                         dutyInfo.Add("mangRecord", Convert.ToInt16(reader["f_manageRecord"]));
                     }
@@ -491,6 +496,7 @@ namespace ShoppingBG.ajax
                                 dutyName = reader["f_name"].ToString(),
                                 mangDuty = Convert.ToInt16(reader["f_manageDuty"]),
                                 mangOrder = Convert.ToInt16(reader["f_manageOrder"]),
+                                mangMember = Convert.ToInt16(reader["f_manageMember"]),
                                 mangProduct = Convert.ToInt16(reader["f_manageProduct"]),
                                 mangProType = Convert.ToInt16(reader["f_manageProductType"]),
                                 mangRecord = Convert.ToInt16(reader["f_manageRecord"]),
@@ -536,6 +542,7 @@ namespace ShoppingBG.ajax
             bool apiMangUser = Convert.ToBoolean(Request.Form["getMangUser"]);
             bool apiMangProType = Convert.ToBoolean(Request.Form["getMangProType"]);
             bool apiMangProduct = Convert.ToBoolean(Request.Form["getMangProduct"]);
+            bool apiMangMember = Convert.ToBoolean(Request.Form["getMangMember"]);
             bool apiMangOrder = Convert.ToBoolean(Request.Form["getMangOrder"]);
             bool apiMangRecord = Convert.ToBoolean(Request.Form["getMangRecord"]);          
 
@@ -567,6 +574,7 @@ namespace ShoppingBG.ajax
                     cmd.Parameters.Add(new SqlParameter("@mangUser", apiMangUser));
                     cmd.Parameters.Add(new SqlParameter("@mangProType", apiMangProType));
                     cmd.Parameters.Add(new SqlParameter("@mangProduct", apiMangProduct));
+                    cmd.Parameters.Add(new SqlParameter("@mangMember", apiMangMember));
                     cmd.Parameters.Add(new SqlParameter("@mangOrder", apiMangOrder));
                     cmd.Parameters.Add(new SqlParameter("@mangRecord", apiMangRecord));                    
                     SqlDataReader reader = cmd.ExecuteReader();

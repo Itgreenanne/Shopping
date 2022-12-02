@@ -97,17 +97,21 @@
                 <div class="chkAddDutyBlock">
                      <label for="manageProduct">產品管理</label>
                      <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageProduct" value="1"/>
-                </div>
+                </div>               
                 <div class="chkAddDutyBlock">
                      <label for="manageOrder">訂單管理</label>
                      <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageOrder" value="1"/>
-                </div> 
+                </div>
                 <div class="chkAddDutyBlock">
                      <label for="manageRecord">操作紀錄管理</label>
-                     <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageRecord" value="1"/><br/>
-                </div> 
-                     <button class="btnAddDuty" id="dutyConfirm" onclick="AddDuty()">確定</button>
-                     <div class="message" id="megAddDuty"></div>
+                     <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageRecord" value="1"/>
+                </div><br/>
+                 <div class="chkAddDutyBlock">
+                     <label for="manageMember">會員管理</label>
+                     <input name="chkDutyType" type="checkbox" class="chkAddDuty" id="manageMember" value="1"/>
+                </div><br/>
+                <button class="btnAddDuty" id="dutyConfirm" onclick="AddDuty()">確定</button>
+                <div class="message" id="megAddDuty"></div>
                               
             </div>
 
@@ -243,9 +247,9 @@
                     <p class="dutyBlockTitle">操作紀錄查詢</p>
                     <div class="DutyTypeInputblock">
                         <label for="startDateForOrder">紀錄建立時間起日：</label>
-                        <input type="date" class="orderReportDateInput" id="startDateForRecord" onchange="NoLaterThanEndDate(this.value)" />
+                        <input type="date" class="orderReportDateInput" id="startDateForRecord" onchange="NoLaterThanEndDateForRecord(this.value)" />
                         <label for="endDateForOrder" class="labUserSearchDutyType">紀錄建立時間迄日： </label>
-                        <input type="date" class="orderReportDateInput" id="endDateForRecord" onchange="NoEarlierThanStartDate(this.value)"/>
+                        <input type="date" class="orderReportDateInput" id="endDateForRecord" onchange="NoEarlierThanStartDateForRecord(this.value)"/>
                         <button class="btnSearchUser" onclick="GetSearchOperationRecordByDate()">確定</button>
                         <button class="btnSearchUser" onclick="ClearRecord()">清除</button>
                         <button class="btnAllRecord" onclick="GetSearchAllOperationRecord()">顯示全部</button>
@@ -299,7 +303,7 @@
                     <div class="chkModifyDutyBlock">
                         <label for="manageProduct">產品管理</label>
                         <input name="chkDutyType" type="checkbox" class="chkModifyDuty" id="manageProductMod" value="1"/>
-                    </div>
+                    </div>                 
                     <div class="chkModifyDutyBlock">
                         <label for="manageOrder">訂單管理</label>
                         <input name="chkDutyType" type="checkbox" class="chkModifyDuty" id="manageOrderMod" value="1"/>
@@ -307,6 +311,10 @@
                     <div class="chkModifyDutyBlock">
                         <label for="manageRecord">操作紀錄管理</label>
                         <input name="chkDutyType" type="checkbox" class="chkModifyDuty" id="manageRecordMod" value="1"/><br/>
+                    </div><br/>
+                     <div class="chkModifyDutyBlock">
+                        <label for="manageProduct">會員管理</label>
+                        <input name="chkDutyType" type="checkbox" class="chkModifyDuty" id="manageMemberMod" value="1"/>
                     </div>
                 </div>
                 <div class="btnModifyBlock">

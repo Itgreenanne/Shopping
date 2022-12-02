@@ -90,6 +90,7 @@ namespace ShoppingBG.ajax
                             userInfo.MangUser = Convert.ToInt16(reader["f_manageUser"]);
                             userInfo.MangProType = Convert.ToInt16(reader["f_manageProductType"]);
                             userInfo.MangProduct = Convert.ToInt16(reader["f_manageProduct"]);
+                            userInfo.MangMember = Convert.ToInt16(reader["f_manageMember"]);
                             userInfo.MangOrder = Convert.ToInt16(reader["f_manageOrder"]);
                             userInfo.MangRecord = Convert.ToInt16(reader["f_manageRecord"]);
                             userInfo.UserIp = GetIp();

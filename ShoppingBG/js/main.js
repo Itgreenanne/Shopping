@@ -155,6 +155,7 @@ function DutyAuthorization(userInfo) {
     $('#user').hide();
     $('#productType').hide();
     $('#product').hide();
+    $('#searchMember').hide();
     $('#order').hide();
     $('#operationRecord').hide();
 
@@ -169,6 +170,9 @@ function DutyAuthorization(userInfo) {
     }
     if (userInfo.mangProduct == 1) {
         $('#product').show();
+    }
+    if (userInfo.mangMember == 1) {
+        $('#searchMember').show();
     }
     if (userInfo.mangOrder == 1) {
         $('#order').show();

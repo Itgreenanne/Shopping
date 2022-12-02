@@ -95,7 +95,6 @@
   <ItemGroup>
     <Content Include="ajax\AjaxDuty.aspx" />
     <Content Include="ajax\AjaxLogin.aspx" />
-    <Content Include="ajax\AjaxLogout.aspx" />
     <Content Include="ajax\AjaxMain.aspx" />
     <Content Include="ajax\AjaxUser.aspx" />
     <Content Include="ajax\AjaxProduct.aspx" />
@@ -137,13 +136,6 @@
     </Compile>
     <Compile Include="ajax\AjaxLogin.aspx.designer.cs">
       <DependentUpon>AjaxLogin.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ajax\AjaxLogout.aspx.cs">
-      <DependentUpon>AjaxLogout.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ajax\AjaxLogout.aspx.designer.cs">
-      <DependentUpon>AjaxLogout.aspx</DependentUpon>
     </Compile>
     <Compile Include="ajax\AjaxMain.aspx.cs">
       <DependentUpon>AjaxMain.aspx</DependentUpon>

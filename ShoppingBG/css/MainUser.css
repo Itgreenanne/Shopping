@@ -47,6 +47,10 @@
     height: 60px;
 }
 
+
+.searchUserAccount {
+    margin-left: 10px;
+}
 .searchUserBlock {
     width: 1000px;
     text-align: left;

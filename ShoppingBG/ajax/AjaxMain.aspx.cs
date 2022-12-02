@@ -36,6 +36,7 @@ namespace ShoppingBG.ajax
                     result.Add("mangUser", userInfo.MangUser);
                     result.Add("mangProType", userInfo.MangProType);
                     result.Add("mangProduct", userInfo.MangProduct);
+                    result.Add("mangMember", userInfo.MangMember);
                     result.Add("mangOrder", userInfo.MangOrder);
                     result.Add("mangRecord", userInfo.MangRecord);
                 }

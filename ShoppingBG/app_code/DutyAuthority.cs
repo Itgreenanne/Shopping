@@ -69,6 +69,7 @@ namespace ShoppingBG.app_code
                         userInfoCompare.MangUser = Convert.ToInt16(reader["f_manageUser"]);
                         userInfoCompare.MangProType = Convert.ToInt16(reader["f_manageProductType"]);
                         userInfoCompare.MangProduct = Convert.ToInt16(reader["f_manageProduct"]);
+                        userInfoCompare.MangMember = Convert.ToInt16(reader["f_manageMember"]);
                         userInfoCompare.MangOrder = Convert.ToInt16(reader["f_manageOrder"]);
                         userInfoCompare.MangRecord = Convert.ToInt16(reader["f_manageRecord"]);
                     }
@@ -77,7 +78,7 @@ namespace ShoppingBG.app_code
                 if ( userInfoCompare.Pwd != userInfo.Pwd
                     || userInfoCompare.DutyName != userInfo.DutyName || userInfoCompare.MangDuty != userInfo.MangDuty
                     || userInfoCompare.MangUser != userInfo.MangUser || userInfoCompare.MangProType != userInfo.MangProType
-                    || userInfoCompare.MangProduct != userInfo.MangProduct || userInfoCompare.MangOrder != userInfo.MangOrder
+                    || userInfoCompare.MangProduct != userInfo.MangProduct || userInfoCompare.MangMember != userInfo.MangMember || userInfoCompare.MangOrder != userInfo.MangOrder
                     || userInfoCompare.MangRecord != userInfo.MangRecord)
                 {
                     JObject msgReturn = new JObject();

@@ -8,6 +8,7 @@ function AddDuty() {
     var manageUser = $('#manageUser').is(':checked');
     var manageProductType = $('#manageProductType').is(':checked');
     var manageProduct = $('#manageProduct').is(':checked');
+    var manageMember = $('#manageMember').is(':checked');
     var manageOrder = $('#manageOrder').is(':checked');
     var manageRecord = $('#manageRecord').is(':checked');
     $('#megAddDuty').text('');
@@ -26,6 +27,7 @@ function AddDuty() {
                 getMangUser: manageUser,
                 getMangProType: manageProductType,
                 getMangProduct: manageProduct,
+                getMangMember: manageMember,
                 getMangOrder: manageOrder,
                 getMangRecord: manageRecord
             },
@@ -198,6 +200,9 @@ function ModifyDutyReadFront(id) {
     if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangProduct == 1) {
         $('#manageProductMod').prop('checked', true);
     }
+    if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangMember == 1) {
+        $('#manageMemberMod').prop('checked', true);
+    }
     if (dutyInfoGlobal.find(function (x) { return x.dutyId === +id }).mangOrder == 1) {
         $('#manageOrderMod').prop('checked', true);
     }
@@ -244,6 +249,9 @@ function ModifyDutyReadBack(dutyId) {
                     if (jsonResult.mangProduct == 1) {
                         $('#manageProductMod').prop('checked', true);
                     }
+                    if (jsonResult.mangMember == 1) {
+                        $('#manageMemberMod').prop('checked', true);
+                    }
                     if (jsonResult.mangOrder == 1) {
                         $('#manageOrderMod').prop('checked', true);
                     }
@@ -273,6 +281,7 @@ function ModifyDuty() {
     var manageUser = $('#manageUserMod').is(':checked');
     var manageProductType = $('#manageProductTypeMod').is(':checked');
     var manageProduct = $('#manageProductMod').is(':checked');
+    var manageMember = $('#manageMemberMod').is(':checked');
     var manageOrder = $('#manageOrderMod').is(':checked');
     var manageRecord = $('#manageRecordMod').is(':checked');
 
@@ -295,6 +304,7 @@ function ModifyDuty() {
                 getMangUser: manageUser,
                 getMangProType: manageProductType,
                 getMangProduct: manageProduct,
+                getMangMember: manageMember,
                 getMangOrder: manageOrder,
                 getMangRecord: manageRecord
             },
@@ -347,6 +357,7 @@ function PrintDutyTable(jsonResult) {
         '<th>' + '人員管理' + '</th>' +
         '<th>' + '產品類別管理' + '</th>' +
         '<th>' + '產品管理' + '</th>' +
+        '<th>' + '會員管理' + '</th>' +
         '<th>' + '訂單管理' + '</th>' +
         '<th>' + '操作紀錄管理' + '</th>' +
         '<th>' + '設定' + '</th>' +
@@ -361,6 +372,7 @@ function PrintDutyTable(jsonResult) {
             '<td>' + GetMark(jsonResult[i], 'mangUser') + '</td>' +
             '<td>' + GetMark(jsonResult[i], 'mangProType') + '</td>' +
             '<td>' + GetMark(jsonResult[i], 'mangProduct') + '</td>' +
+            '<td>' + GetMark(jsonResult[i], 'mangMember') + '</td>' +
             '<td>' + GetMark(jsonResult[i], 'mangOrder') + '</td>' +
             '<td>' + GetMark(jsonResult[i], 'mangRecord') + '</td>' +
             '<td class="operationCol"> <button onclick="DeleteDuty(\'' + jsonResult[i].dutyId + '\')">' +

@@ -55,6 +55,11 @@ namespace ShoppingBG.models
         /// </summary>
         public int MangProduct { get; set; }
         /// <summary>
+        /// 會員管理
+        /// </summary>
+        public int MangMember { get; set; }
+
+        /// <summary>
         /// 訂單管理
         /// </summary>
         public int MangOrder { get; set; }
